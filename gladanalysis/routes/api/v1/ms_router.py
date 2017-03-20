@@ -13,6 +13,7 @@ from gladanalysis.responders import ErrorResponder
 from gladanalysis.utils.http import request_to_microservice
 
 #dates should be year then julian dates
+#test build
 #example request: localhost:9000/gladanalysis?geostore=939a166f7e824f62eb967f7cfb3462ee&period=2016-1,2017-1-1&confidence=3
 
 @endpoints.route('/gladanalysis', methods=['GET'])
