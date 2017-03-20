@@ -1,0 +1,6 @@
+
+settings={
+    'logging': {
+        'level': 'WARN'
+    }
+}

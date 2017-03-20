@@ -1,0 +1,8 @@
+develop:
+  extends:
+    file: base.yml
+    service: base
+  container_name: glad-sql-analysis
+  environment:
+    DEBUG: "True"
+  command: test

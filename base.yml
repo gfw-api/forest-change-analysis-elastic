@@ -1,0 +1,7 @@
+base:
+  build: .
+  ports:
+    - "62000:62000"
+  environment:
+    PORT: 62000
+  container_name: glad-sql-analysis

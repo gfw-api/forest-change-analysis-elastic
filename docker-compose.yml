@@ -1,0 +1,13 @@
+prod:
+  image: vizzuality/glad-sql-analysis:0.0.1${STAGING}
+  ports:
+    - "62000"
+  env_file:
+    - prod.env
+  command: start
+  dns: ${DNS_SERVER}
+  restart: always
+  log_driver: "syslog"
+  log_opt:
+      syslog-address: ${SYSLOG_ADDRESS}
+      tag: glad-sql-analysis${STAGING}
