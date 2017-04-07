@@ -1,11 +1,8 @@
 import os
-import json
-import csv
-import StringIO
 import logging
 import datetime
 
-from flask import jsonify, request, Response, stream_with_context
+from flask import jsonify, request
 import requests
 
 from . import endpoints
@@ -13,9 +10,7 @@ from gladanalysis.responders import ErrorResponder
 from gladanalysis.utils.http import request_to_microservice
 
 #dates should be year then julian dates
-#example request: localhost:9000/gladanalysis?geostore=939a166f7e824f62eb967f7cfb3462ee&period=2016-1,2017-1-1&confidence=3
-
-#cch test comment AS
+#example request: "localhost:9000/gladanalysis?geostore=939a166f7e824f62eb967f7cfb3462ee&period=2016-1-1,2017-1-1&confidence=3"
 
 @endpoints.route('/gladanalysis', methods=['GET'])
 def query_glad():
@@ -43,10 +38,15 @@ def query_glad():
     period_from = period.split(',')[0]
     period_to = period.split(',')[1]
 
-    from_year = period_from.split("-")[0]
-    from_date = period_from.split("-")[1]
-    to_year = period_to.split("-")[0]
-    to_date = period_to.split("-")[1]
+    from_year, from_date = date_to_julian_day(period_from)
+    to_year, to_date = date_to_julian_day(period_to)
+
+    if None in (from_year, to_year):
+        return jsonify({'errors': [{
+                'status': '400',
+                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
+                }]
+            }), 400
 
     if (from_year == '2015') and (to_year == '2017'):
         sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
@@ -66,6 +66,12 @@ def query_glad():
     elif (from_year == '2017') and (to_year == '2017'):
         sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where year = '2017' and julian_day >= %s and julian_day <= %s" %(from_date, to_date)
         download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where year = '2017' and julian_day >= %s and julian_day <= %s" %(from_date, to_date)
+    else:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'GLAD period must be between 2015 and 2017'
+            }]
+        }), 400
 
     if conf == '3':
         confidence = "and confidence = '3'"
@@ -96,3 +102,16 @@ def query_glad():
     standard_format['attributes']["areaHa"] = area
 
     return jsonify({'data': standard_format}), 200
+
+
+def date_to_julian_day(input_date):
+
+    try:
+        date_obj = datetime.datetime.strptime(input_date, '%Y-%m-%d')
+        time_tuple = date_obj.timetuple()
+        logging.info(time_tuple.tm_year)
+        return str(time_tuple.tm_year), str(time_tuple.tm_yday)
+
+    except ValueError:
+        return None, None
+
