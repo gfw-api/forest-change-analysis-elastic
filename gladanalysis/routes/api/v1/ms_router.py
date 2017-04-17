@@ -120,3 +120,69 @@ def date_to_julian_day(input_date):
     except ValueError:
         return None, None
 
+@endpoints.route('/terraianalysis', methods=['GET'])
+def query_terrai():
+
+    logging.info('QUERYING TERRA I')
+
+    geostore = request.args.get('geostore', None)
+    period = request.args.get('period', None)
+
+    if not geostore or not period:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'geostore and period should be set'
+            }]
+        }), 400
+
+    if len(period.split(',')) < 2:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Period needs 2 arguments'
+            }]
+        }), 400
+
+    period_from = period.split(',')[0]
+    period_to = period.split(',')[1]
+
+    from_year, from_date = date_to_julian_day(period_from)
+    to_year, to_date = date_to_julian_day(period_to)
+
+    if None in (from_year, to_year):
+        return jsonify({'errors': [{
+                'status': '400',
+                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
+                }]
+            }), 400
+
+    #create conditions that issue correct sql
+    sql = "?sql=select count(day) from index_bb80312e-b514-48ad-9252-336408603591 where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (from_year + 1), to_year, to_year, to_date)
+    download_sql = "?sql=select lat, long, confidence, year, julian_day from index_bb80312e-b514-48ad-9252-336408603591 where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (from_year + 1), to_year, to_year, to_date)
+
+    #format request parameters to Terra I
+    url = 'http://production-api.globalforestwatch.org/query/'
+    datasetID = 'bb80312e-b514-48ad-9252-336408603591'
+    f = '&format=json'
+
+    full = url + datasetID + sql + "&geostore=" + geostore + f
+    r = requests.get(url=full)
+    data = r.json()
+
+    #format response to geostore to recieve area ha
+    area_url = 'http://staging-api.globalforestwatch.org/geostore/' + geostore
+    r_area = requests.get(url=area_url)
+    area_resp = r_area.json()
+    area = area_resp['data']['attributes']['areaHa']
+
+    #standardize response
+    standard_format = {}
+    standard_format["type"] = "terrai-alerts"
+    standard_format["id"] = "undefined"
+    standard_format["attributes"] = {}
+    standard_format["attributes"]["value"] = data["data"][0]["COUNT(day)"]
+    standard_format['attributes']["areaHa"] = area
+    standard_format["attributes"]["downloadUrls"] = {}
+    standard_format["attributes"]["downloadUrls"]["csv"] = "/download/bb80312e-b514-48ad-9252-336408603591" + download_sql + "&geostore=" + geostore + "&format=csv"
+    standard_format["attributes"]["downloadUrls"]["json"] = "/download/bb80312e-b514-48ad-9252-336408603591" + download_sql + "&geostore=" + geostore + "&format=json"
+
+    return jsonify({'data': standard_format}), 200
