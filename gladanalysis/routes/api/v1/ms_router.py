@@ -169,7 +169,7 @@ def query_terrai():
     data = r.json()
 
     #format response to geostore to recieve area ha
-    area_url = 'http://staging-api.globalforestwatch.org/geostore/' + geostore
+    area_url = 'http://production-api.globalforestwatch.org/geostore/' + geostore
     r_area = requests.get(url=area_url)
     area_resp = r_area.json()
     area = area_resp['data']['attributes']['areaHa']
