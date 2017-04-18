@@ -156,12 +156,12 @@ def query_terrai():
             }), 400
 
     #create conditions that issue correct sql
-    sql = "?sql=select count(day) from index_bb80312e-b514-48ad-9252-336408603591 where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
-    download_sql = "?sql=select lat, long, confidence, year, julian_day from index_bb80312e-b514-48ad-9252-336408603591 where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
+    sql = "?sql=select count(day) from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
+    download_sql = "?sql=select lat, long, confidence, year, julian_day from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
 
     #format request parameters to Terra I
-    url = 'http://production-api.globalforestwatch.org/query/'
-    datasetID = 'bb80312e-b514-48ad-9252-336408603591'
+    url = 'http://staging-api.globalforestwatch.org/query/'
+    datasetID = '67cf7c03-7365-4a1f-8401-d42c3706b7de'
     f = '&format=json'
 
     full = url + datasetID + sql + "&geostore=" + geostore + f
@@ -169,7 +169,7 @@ def query_terrai():
     data = r.json()
 
     #format response to geostore to recieve area ha
-    area_url = 'http://production-api.globalforestwatch.org/geostore/' + geostore
+    area_url = 'http://staging-api.globalforestwatch.org/geostore/' + geostore
     r_area = requests.get(url=area_url)
     area_resp = r_area.json()
     area = area_resp['data']['attributes']['areaHa']
@@ -182,7 +182,7 @@ def query_terrai():
     standard_format["attributes"]["value"] = data["data"][0]["COUNT(day)"]
     standard_format['attributes']["areaHa"] = area
     standard_format["attributes"]["downloadUrls"] = {}
-    standard_format["attributes"]["downloadUrls"]["csv"] = "/download/bb80312e-b514-48ad-9252-336408603591" + download_sql + "&geostore=" + geostore + "&format=csv"
-    standard_format["attributes"]["downloadUrls"]["json"] = "/download/bb80312e-b514-48ad-9252-336408603591" + download_sql + "&geostore=" + geostore + "&format=json"
+    standard_format["attributes"]["downloadUrls"]["csv"] = "/download/67cf7c03-7365-4a1f-8401-d42c3706b7de" + download_sql + "&geostore=" + geostore + "&format=csv"
+    standard_format["attributes"]["downloadUrls"]["json"] = "/download/67cf7c03-7365-4a1f-8401-d42c3706b7de" + download_sql + "&geostore=" + geostore + "&format=json"
 
     return jsonify({'data': standard_format}), 200
