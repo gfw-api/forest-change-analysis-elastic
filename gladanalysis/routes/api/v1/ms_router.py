@@ -157,7 +157,7 @@ def query_terrai():
 
     #create conditions that issue correct sql
     sql = "?sql=select count(day) from index_bb80312e-b514-48ad-9252-336408603591 where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
-    download_sql = "?sql=select lat, long, confidence, year, julian_day from index_bb80312e-b514-48ad-9252-336408603591 where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (from_year + 1), to_year, to_year, to_date)
+    download_sql = "?sql=select lat, long, confidence, year, julian_day from index_bb80312e-b514-48ad-9252-336408603591 where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
 
     #format request parameters to Terra I
     url = 'http://production-api.globalforestwatch.org/query/'
