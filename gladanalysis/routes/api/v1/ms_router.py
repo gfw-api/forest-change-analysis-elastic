@@ -49,7 +49,7 @@ def query_glad():
             }), 400
 
     #create conditions that issue correct sql
-    if from_year < 2015 or to_year > 2017:
+    if (int(from_year) < 2015 or int(to_year) > 2017):
         return jsonify({'errors': [{
             'status': '400',
             'title': 'GLAD period must be between 2015 and 2017'
