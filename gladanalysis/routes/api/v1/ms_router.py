@@ -172,7 +172,7 @@ def query_terrai():
 
     return jsonify({'data': standard_format}), 200
 
-@endpoints.route('/gladanalysis/admin/<iso_code>/<admin_id>', methods=['GET'])
+@endpoints.route('/gladanalysis/admin/<iso_code>/<admin_id>', methods=['POST'])
 def glad_country(iso_code, admin_id):
 
     logging.info('Running GADM level glad analysis')
