@@ -10,11 +10,11 @@
             "path": "/api/v1/ms/gladanalysis/admin/:iso_code"
         }]
     }, {
-        "url": "/v1/glad-alerts/admin/:iso_code/:admin_id",
+        "url": "/v1/gladanalysis/admin/:iso_code/:admin_id",
         "method": "GET",
         "endpoints": [{
             "method": "GET",
-            "path": "/api/v1/ms/glad-alerts/admin/:iso_code/:admin_id"
+            "path": "/api/v1/ms/gladanalysis/admin/:iso_code/:admin_id"
         }]
     }, {
         "url": "/v1/gladanalysis",
