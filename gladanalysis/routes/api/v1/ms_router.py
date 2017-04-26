@@ -79,9 +79,15 @@ def query_glad():
             'title': 'GLAD period must be between 2015 and 2017'
             }]
         }), 400
+    elif (from_year == '2015') and (to_year == '2017'):
+        sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
+        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
+    elif (from_year == to_year)
+	    sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
+        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
     else:
-        sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year >= %s and year <= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
-        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year >= %s and year <= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
+	    sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
+        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
 
     #create condition to look for confidence filter
     if conf == '3':
@@ -205,9 +211,15 @@ def glad_country(iso_code, admin_id):
             'title': 'GLAD period must be between 2015 and 2017'
             }]
         }), 400
+    elif (from_year == '2015') and (to_year == '2017'):
+        sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
+        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
+    elif (from_year == to_year)
+	    sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
+        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
     else:
-        sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year >= %s and year <= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
-        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year >= %s and year <= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
+	    sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
+        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
 
     #get geostore id from admin areas and total area of geostore request
     geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s/%s'%(iso_code, admin_id)
