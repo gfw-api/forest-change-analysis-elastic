@@ -9,8 +9,32 @@ from . import endpoints
 from gladanalysis.responders import ErrorResponder
 from gladanalysis.utils.http import request_to_microservice
 
-# dates should be year then julian dates
-# example request: "localhost:9000/gladanalysis?geostore=939a166f7e824f62eb967f7cfb3462ee&period=2016-1-1,2017-1-1&confidence=3"
+def date_to_julian_day(input_date):
+    #Helper function to transform dates
+
+    try:
+        date_obj = datetime.datetime.strptime(input_date, '%Y-%m-%d')
+        time_tuple = date_obj.timetuple()
+        logging.info(time_tuple.tm_year)
+        return str(time_tuple.tm_year), str(time_tuple.tm_yday)
+
+    except ValueError:
+        return None, None
+
+def stardardize_response(data, count, download_sql, geostore, area):
+    #Helper function to standardize API responses
+
+    standard_format = {}
+    standard_format["type"] = "glad-alerts"
+    standard_format["id"] = "undefined"
+    standard_format["attributes"] = {}
+    standard_format["attributes"]["value"] = data["data"][0][count]
+    standard_format["attributes"]["downloadUrls"] = {}
+    standard_format["attributes"]["downloadUrls"]["csv"] = "/download/274b4818-be18-4890-9d10-eae56d2a82e5" + download_sql + "&geostore=" + geostore + "&format=csv"
+    standard_format["attributes"]["downloadUrls"]["json"] = "/download/274b4818-be18-4890-9d10-eae56d2a82e5" + download_sql + "&geostore=" + geostore + "&format=json"
+    standard_format['attributes']["areaHa"] = area
+
+    return standard_format
 
 @endpoints.route('/gladanalysis', methods=['GET'])
 def query_glad():
@@ -80,30 +104,10 @@ def query_glad():
     area_resp = r_area.json()
     area = area_resp['data']['attributes']['areaHa']
 
-    #standardize response
-    standard_format = {}
-    standard_format["type"] = "glad-alerts"
-    standard_format["id"] = "undefined"
-    standard_format["attributes"] = {}
-    standard_format["attributes"]["value"] = data["data"][0]["COUNT(julian_day)"]
-    standard_format["attributes"]["downloadUrls"] = {}
-    standard_format["attributes"]["downloadUrls"]["csv"] = "/download/274b4818-be18-4890-9d10-eae56d2a82e5" + download_sql + "&geostore=" + geostore + "&format=csv"
-    standard_format["attributes"]["downloadUrls"]["json"] = "/download/274b4818-be18-4890-9d10-eae56d2a82e5" + download_sql + "&geostore=" + geostore + "&format=json"
-    standard_format['attributes']["areaHa"] = area
+    standard_format = stardardize_response(data, "COUNT(julian_day)", download_sql, geostore, area)
 
     return jsonify({'data': standard_format}), 200
 
-
-def date_to_julian_day(input_date):
-
-    try:
-        date_obj = datetime.datetime.strptime(input_date, '%Y-%m-%d')
-        time_tuple = date_obj.timetuple()
-        logging.info(time_tuple.tm_year)
-        return str(time_tuple.tm_year), str(time_tuple.tm_yday)
-
-    except ValueError:
-        return None, None
 
 @endpoints.route('/terraianalysis', methods=['GET'])
 def query_terrai():
@@ -159,16 +163,7 @@ def query_terrai():
     area_resp = r_area.json()
     area = area_resp['data']['attributes']['areaHa']
 
-    #standardize response
-    standard_format = {}
-    standard_format["type"] = "terrai-alerts"
-    standard_format["id"] = "undefined"
-    standard_format["attributes"] = {}
-    standard_format["attributes"]["value"] = data["data"][0]["COUNT(day)"]
-    standard_format['attributes']["areaHa"] = area
-    standard_format["attributes"]["downloadUrls"] = {}
-    standard_format["attributes"]["downloadUrls"]["csv"] = "/download/67cf7c03-7365-4a1f-8401-d42c3706b7de" + download_sql + "&geostore=" + geostore + "&format=csv"
-    standard_format["attributes"]["downloadUrls"]["json"] = "/download/67cf7c03-7365-4a1f-8401-d42c3706b7de" + download_sql + "&geostore=" + geostore + "&format=json"
+    standard_format = stardardize_response(data, "COUNT(day)", download_sql, geostore, area)
 
     return jsonify({'data': standard_format}), 200
 
@@ -236,15 +231,6 @@ def glad_country(iso_code, admin_id):
     r = requests.get(url=full)
     glad_data = r.json()
 
-    #standardize response
-    standard_format = {}
-    standard_format["type"] = "glad-alerts"
-    standard_format["id"] = "undefined"
-    standard_format["attributes"] = {}
-    standard_format["attributes"]["value"] = glad_data["data"][0]["COUNT(julian_day)"]
-    standard_format["attributes"]["downloadUrls"] = {}
-    standard_format["attributes"]["downloadUrls"]["csv"] = "/download/274b4818-be18-4890-9d10-eae56d2a82e5" + download_sql + "&geostore=" + geostore + "&format=csv"
-    standard_format["attributes"]["downloadUrls"]["json"] = "/download/274b4818-be18-4890-9d10-eae56d2a82e5" + download_sql + "&geostore=" + geostore + "&format=json"
-    standard_format['attributes']["areaHa"] = area_ha
+    standard_format = stardardize_response(glad_data, "COUNT(julian_day)", download_sql, geostore, area_ha)
 
     return jsonify({'data': standard_format}), 200
