@@ -21,7 +21,7 @@ def date_to_julian_day(input_date):
     except ValueError:
         return None, None
 
-def stardardize_response(data, count, download_sql, geostore, area):
+def standardize_response(data, count, download_sql, geostore, area):
     #Helper function to standardize API responses
 
     standard_format = {}
@@ -110,7 +110,7 @@ def query_glad():
     area_resp = r_area.json()
     area = area_resp['data']['attributes']['areaHa']
 
-    standard_format = stardardize_response(data, "COUNT(julian_day)", download_sql, geostore, area)
+    standard_format = standardize_response(data, "COUNT(julian_day)", download_sql, geostore, area)
 
     return jsonify({'data': standard_format}), 200
 
@@ -169,7 +169,7 @@ def query_terrai():
     area_resp = r_area.json()
     area = area_resp['data']['attributes']['areaHa']
 
-    standard_format = stardardize_response(data, "COUNT(day)", download_sql, geostore, area)
+    standard_format = standardize_response(data, "COUNT(day)", download_sql, geostore, area)
 
     return jsonify({'data': standard_format}), 200
 
@@ -243,6 +243,6 @@ def glad_country(iso_code, admin_id):
     r = requests.get(url=full)
     glad_data = r.json()
 
-    standard_format = stardardize_response(glad_data, "COUNT(julian_day)", download_sql, geostore, area_ha)
+    standard_format = standardize_response(glad_data, "COUNT(julian_day)", download_sql, geostore, area_ha)
 
     return jsonify({'data': standard_format}), 200
