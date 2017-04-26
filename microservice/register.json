@@ -1,42 +1,34 @@
 {
-	"name": "#(service.name)",
-	"endpoints": [{
-		"path": "/v1/gladanalysis",
-		"method": "GET",
-		"binary": true,
-		"redirect": {
-			"method": "GET",
-			"path": "/api/v1/ms/gladanalysis"
-		}
-	},{
-		"path": "/v1/terraianalysis",
-		"method": "GET",
-		"binary": true,
-		"redirect": {
-			"method": "GET",
-			"path": "/api/v1/ms/terraianalysis"
-		}},{
-		"path": "/v1/gladanalysis/admin/:iso_code/:admin_id",
-		"method": "POST",
-		"binary": true,
-		"redirect": {
-			"method": "POST",
-			"path": "/api/v1/ms/gladanalysis/admin/:iso_code/:admin_id"
-		},
-		"filters": [{
-			"name": "iso_code",
-			"path": "/v1/admin/:iso_code",
-			"method": "GET",
-			"params": {
-				"dataset": "dataset"
-			},
-			"compare": {
-				"data": {
-					"attributes": {
-						"provider": "gee"
-					}
-				}
-			}
-		}]
-	}]
+    "id": "#(service.id)",
+    "name": "#(service.name)",
+    "tags": ["gfw"],
+    "urls": [{
+        "url": "/v1/gladanalysis/admin/:iso_code",
+        "method": "GET",
+        "endpoints": [{
+            "method": "GET",
+            "path": "/api/v1/ms/gladanalysis/admin/:iso_code"
+        }]
+    }, {
+        "url": "/v1/glad-alerts/admin/:iso_code/:admin_id",
+        "method": "GET",
+        "endpoints": [{
+            "method": "GET",
+            "path": "/api/v1/ms/glad-alerts/admin/:iso_code/:admin_id"
+        }]
+    }, {
+        "url": "/v1/gladanalysis",
+        "method": "GET",
+        "endpoints": [{
+            "method": "GET",
+            "path": "/api/v1/ms/gladanalysis"
+        }]
+    }, {
+        "url": "/v1/terraianalysis",
+        "method": "GET",
+        "endpoints": [{
+            "method": "GET",
+            "path": "/api/v1/ms/terraianalysis"
+        }]
+    }]
 }
