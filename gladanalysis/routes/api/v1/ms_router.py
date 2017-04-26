@@ -204,7 +204,7 @@ def glad_country(iso_code, admin_id):
             }), 400
 
     #format SQL statements
-    if from_year < 2015 or to_year > 2017:
+    if (int(from_year) < 2015 or int(to_year) > 2017):
         return jsonify({'errors': [{
             'status': '400',
             'title': 'GLAD period must be between 2015 and 2017'
