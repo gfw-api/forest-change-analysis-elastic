@@ -22,6 +22,21 @@
 		"redirect": {
 			"method": "POST",
 			"path": "/api/v1/ms/gladanalysis/admin/:iso_code/:admin_id"
-		}
+		},
+		"filters": [{
+			"name": "iso_code",
+			"path": "/v1/admin/:iso_code",
+			"method": "GET",
+			"params": {
+				"dataset": "dataset"
+			},
+			"compare": {
+				"data": {
+					"attributes": {
+						"provider": "gee"
+					}
+				}
+			}
+		}]
 	}]
 }
