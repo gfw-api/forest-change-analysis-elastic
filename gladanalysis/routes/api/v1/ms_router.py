@@ -401,7 +401,7 @@ def terrai_admin(iso_code, admin_id):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/terraianalysis/admin/<iso_code>', methods=['GET'])
-def terrai_admin(iso_code):
+def terrai_country(iso_code):
 
     logging.info('QUERYING TERRA I AT COUNTRY LEVEL')
 
