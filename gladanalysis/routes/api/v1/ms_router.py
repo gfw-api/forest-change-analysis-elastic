@@ -174,7 +174,7 @@ def query_terrai():
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/gladanalysis/admin/<iso_code>/<admin_id>', methods=['GET'])
-def glad_country(iso_code, admin_id):
+def glad_admin(iso_code, admin_id):
 
     logging.info('Running GADM level glad analysis')
 
@@ -234,7 +234,80 @@ def glad_country(iso_code, admin_id):
     datasetID = '274b4818-be18-4890-9d10-eae56d2a82e5'
     f = '&format=json'
 
-    if conf == 'true':
+    if conf == 'true' or conf == "True":
+        confidence = "and confidence = '3'"
+    else:
+        confidence = ""
+
+    full = glad_url + datasetID + sql + confidence + "&geostore=" + geostore + f
+    r = requests.get(url=full)
+    glad_data = r.json()
+
+    standard_format = standardize_response(glad_data, "COUNT(julian_day)", download_sql, geostore, area_ha)
+
+    return jsonify({'data': standard_format}), 200
+
+@endpoints.route('/gladanalysis/admin/<iso_code>', methods=['GET'])
+def glad_country(iso_code):
+
+    logging.info('Running country level glad analysis')
+
+    #accept period parameter
+    period = request.args.get('period', None)
+    conf = request.args.get('gladConfirmOnly', None)
+
+    #format date and format error responses
+    if len(period.split(',')) < 2:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Period needs 2 arguments'
+            }]
+        }), 400
+
+    period_from = period.split(',')[0]
+    period_to = period.split(',')[1]
+
+    from_year, from_date = date_to_julian_day(period_from)
+    to_year, to_date = date_to_julian_day(period_to)
+
+    if None in (from_year, to_year):
+        return jsonify({'errors': [{
+                'status': '400',
+                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
+                }]
+            }), 400
+
+    #format SQL statements
+    if (int(from_year) < 2015 or int(to_year) > 2017):
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'GLAD period must be between 2015 and 2017'
+            }]
+        }), 400
+    elif (from_year == '2015') and (to_year == '2017'):
+        sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
+        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
+    elif (from_year == to_year):
+    	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
+        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
+    else:
+    	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
+        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
+
+    #get geostore id from admin areas and total area of geostore request
+    geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s'%(iso_code)
+    r = requests.get(url=geostore_url)
+    geostore_data = r.json()
+    geostore = geostore_data['data']['id']
+    area_ha = geostore_data['data']['attributes']['areaHa']
+
+    #format request to elastic database of glad alerts
+
+    glad_url = 'http://staging-api.globalforestwatch.org/query/'
+    datasetID = '274b4818-be18-4890-9d10-eae56d2a82e5'
+    f = '&format=json'
+
+    if conf == 'true' or conf == "True":
         confidence = "and confidence = '3'"
     else:
         confidence = ""
