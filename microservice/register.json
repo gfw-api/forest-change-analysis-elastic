@@ -30,5 +30,19 @@
             "method": "GET",
             "path": "/api/v1/ms/terraianalysis"
         }]
+		}, {
+	       "url": "/v1/terraianalysis/admin/:iso_code/:admin_id",
+	       "method": "GET",
+	       "endpoints": [{
+	           "method": "GET",
+	           "path": "/api/v1/ms/terraianalysis/admin/:iso_code/:admin_id"
+	        }]
+		}, {
+	       "url": "/v1/terraianalysis/admin/:iso_code",
+	       "method": "GET",
+	       "endpoints": [{
+	           "method": "GET",
+	           "path": "/api/v1/ms/terraianalysis/admin/:iso_code"
+	        }]
     }]
 }
