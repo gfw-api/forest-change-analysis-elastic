@@ -9,6 +9,8 @@ from . import endpoints
 from gladanalysis.responders import ErrorResponder
 from gladanalysis.utils.http import request_to_microservice
 
+#comments: can probs put sql calls in a single function
+
 def date_to_julian_day(input_date):
     #Helper function to transform dates
 
@@ -330,5 +332,136 @@ def glad_country(iso_code):
     glad_data = r.json()
 
     standard_format = standardize_response(glad_data, "COUNT(julian_day)", download_sql, geostore, area_ha)
+
+    return jsonify({'data': standard_format}), 200
+
+@endpoints.route('/terraianalysis/admin/<iso_code>/<admin_id>', methods=['GET'])
+def terrai_admin(iso_code, admin_id):
+    logging.info('QUERYING TERRA I AT GADM LEVEL')
+
+    period = request.args.get('period', None)
+
+    if not iso_code or not admin_id:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'ISO code and Admin ID should be set'
+            }]
+        }), 400
+
+
+    if not period:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'time period should be set'
+            }]
+        }), 400
+
+    if len(period.split(',')) < 2:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Period needs 2 arguments'
+            }]
+        }), 400
+
+    period_from = period.split(',')[0]
+    period_to = period.split(',')[1]
+
+    from_year, from_date = date_to_julian_day(period_from)
+    to_year, to_date = date_to_julian_day(period_to)
+
+    if None in (from_year, to_year):
+        return jsonify({'errors': [{
+                'status': '400',
+                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
+                }]
+            }), 400
+
+    #create conditions that issue correct sql
+    sql = "?sql=select count(day) from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
+    download_sql = "?sql=select lat, long, confidence, year, day from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
+
+    #get geostore id from admin areas and total area of geostore request
+    geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s/%s'%(iso_code, admin_id)
+    r = requests.get(url=geostore_url)
+    geostore_data = r.json()
+    geostore = geostore_data['data']['id']
+    area_ha = geostore_data['data']['attributes']['areaHa']
+
+    #format request parameters to Terra I
+    url = 'http://staging-api.globalforestwatch.org/query/'
+    datasetID = '67cf7c03-7365-4a1f-8401-d42c3706b7de'
+    f = '&format=json'
+
+    full = url + datasetID + sql + "&geostore=" + geostore + f
+    r = requests.get(url=full)
+    data = r.json()
+
+    standard_format = standardize_response(data, "COUNT(day)", download_sql, geostore, area_ha)
+
+    return jsonify({'data': standard_format}), 200
+
+@endpoints.route('/terraianalysis/admin/<iso_code>', methods=['GET'])
+def terrai_admin(iso_code):
+
+    logging.info('QUERYING TERRA I AT COUNTRY LEVEL')
+
+    period = request.args.get('period', None)
+
+    if not iso_code:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'ISO code should be set'
+            }]
+        }), 400
+
+
+    if not period:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'time period should be set'
+            }]
+        }), 400
+
+    if len(period.split(',')) < 2:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Period needs 2 arguments'
+            }]
+        }), 400
+
+    period_from = period.split(',')[0]
+    period_to = period.split(',')[1]
+
+    from_year, from_date = date_to_julian_day(period_from)
+    to_year, to_date = date_to_julian_day(period_to)
+
+    if None in (from_year, to_year):
+        return jsonify({'errors': [{
+                'status': '400',
+                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
+                }]
+            }), 400
+
+    #create conditions that issue correct sql
+    sql = "?sql=select count(day) from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
+    download_sql = "?sql=select lat, long, confidence, year, day from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
+
+    #get geostore id from admin areas and total area of geostore request
+    geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s'%(iso_code)
+    r = requests.get(url=geostore_url)
+    geostore_data = r.json()
+    geostore = geostore_data['data']['id']
+    area_ha = geostore_data['data']['attributes']['areaHa']
+
+    #format request parameters to Terra I
+    url = 'http://staging-api.globalforestwatch.org/query/'
+    datasetID = '67cf7c03-7365-4a1f-8401-d42c3706b7de'
+    f = '&format=json'
+
+    full = url + datasetID + sql + "&geostore=" + geostore + f
+    r = requests.get(url=full)
+    data = r.json()
+
+    standard_format = standardize_response(data, "COUNT(day)", download_sql, geostore, area_ha)
 
     return jsonify({'data': standard_format}), 200
