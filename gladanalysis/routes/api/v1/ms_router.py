@@ -182,8 +182,14 @@ def glad_admin(iso_code, admin_id):
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
 
-    #format date and format error responses
+    if not iso_code or not admin_id:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'ISO code and GADM ID should be set'
+            }]
+        }), 400
 
+    #format date and format error responses
     if len(period.split(',')) < 2:
         return jsonify({'errors': [{
             'status': '400',
@@ -255,6 +261,13 @@ def glad_country(iso_code):
     #accept period parameter
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
+
+    if not iso_code:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'ISO code should be set'
+            }]
+        }), 400
 
     #format date and format error responses
     if len(period.split(',')) < 2:
