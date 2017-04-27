@@ -38,6 +38,41 @@ def standardize_response(data, count, download_sql, geostore, area):
 
     return standard_format
 
+def format_glad_sql(from_year, from_date, to_year, to_date):
+
+    if (int(from_year) < 2015 or int(to_year) > 2017):
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'GLAD period must be between 2015 and 2017'
+            }]
+        }), 400
+    elif (from_year == '2015') and (to_year == '2017'):
+        sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
+        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
+        return (sql, download_sql)
+    elif (from_year == to_year):
+    	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
+        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
+        return (sql, download_sql)
+    else:
+    	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
+        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
+        return (sql, download_sql)
+
+def format_terrai_sql(from_year, from_date, to_year, to_date):
+
+    #create conditions that issue correct sql
+    if (int(from_year) < 2004 or int(to_year) > 2017):
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Terra I period must be between 2004 and 2017'
+            }]
+        }), 400
+    else:
+        sql = "?sql=select count(day) from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
+        download_sql = "?sql=select lat, long, confidence, year, day from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
+        return (sql, download_sql)
+
 @endpoints.route('/gladanalysis', methods=['GET'])
 def query_glad():
     """Query GLAD"""
@@ -74,22 +109,9 @@ def query_glad():
                 }]
             }), 400
 
-    #create conditions that issue correct sql
-    if (int(from_year) < 2015 or int(to_year) > 2017):
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'GLAD period must be between 2015 and 2017'
-            }]
-        }), 400
-    elif (from_year == '2015') and (to_year == '2017'):
-        sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
-        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
-    elif (from_year == to_year):
-    	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
-        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
-    else:
-    	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
-        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
+    #send to sql formatter function
+    sql = format_glad_sql(from_year, from_date, to_year, to_date)[0]
+    download_sql = format_glad_sql(from_year, from_date, to_year, to_date)[1]
 
     #create condition to look for confidence filter
     if conf == '3':
@@ -153,8 +175,8 @@ def query_terrai():
             }), 400
 
     #create conditions that issue correct sql
-    sql = "?sql=select count(day) from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
-    download_sql = "?sql=select lat, long, confidence, year, day from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
+    sql = format_terrai_sql(from_year, from_date, to_year, to_date)[0]
+    download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)[1]
 
     #format request parameters to Terra I
     url = 'http://staging-api.globalforestwatch.org/query/'
@@ -212,22 +234,9 @@ def glad_admin(iso_code, admin_id):
                 }]
             }), 400
 
-    #format SQL statements
-    if (int(from_year) < 2015 or int(to_year) > 2017):
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'GLAD period must be between 2015 and 2017'
-            }]
-        }), 400
-    elif (from_year == '2015') and (to_year == '2017'):
-        sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
-        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
-    elif (from_year == to_year):
-    	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
-        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
-    else:
-    	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
-        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
+    #send to sql formatter function
+    sql = format_glad_sql(from_year, from_date, to_year, to_date)[0]
+    download_sql = format_glad_sql(from_year, from_date, to_year, to_date)[1]
 
     #get geostore id from admin areas and total area of geostore request
     geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s/%s'%(iso_code, admin_id)
@@ -292,22 +301,9 @@ def glad_country(iso_code):
                 }]
             }), 400
 
-    #format SQL statements
-    if (int(from_year) < 2015 or int(to_year) > 2017):
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'GLAD period must be between 2015 and 2017'
-            }]
-        }), 400
-    elif (from_year == '2015') and (to_year == '2017'):
-        sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
-        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
-    elif (from_year == to_year):
-    	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
-        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
-    else:
-    	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
-        download_sql = "?sql=select lat, long, confidence, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
+    #send to sql formatter function
+    sql = format_glad_sql(from_year, from_date, to_year, to_date)[0]
+    download_sql = format_glad_sql(from_year, from_date, to_year, to_date)[1]
 
     #get geostore id from admin areas and total area of geostore request
     geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s'%(iso_code)
@@ -376,9 +372,9 @@ def terrai_admin(iso_code, admin_id):
                 }]
             }), 400
 
-    #create conditions that issue correct sql
-    sql = "?sql=select count(day) from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
-    download_sql = "?sql=select lat, long, confidence, year, day from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
+    #send dates to sql formatter 
+    sql = format_terrai_sql(from_year, from_date, to_year, to_date)[0]
+    download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)[1]
 
     #get geostore id from admin areas and total area of geostore request
     geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s/%s'%(iso_code, admin_id)
@@ -442,9 +438,9 @@ def terrai_country(iso_code):
                 }]
             }), 400
 
-    #create conditions that issue correct sql
-    sql = "?sql=select count(day) from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
-    download_sql = "?sql=select lat, long, confidence, year, day from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
+    #send dates to sql formatter
+    sql = format_terrai_sql(from_year, from_date, to_year, to_date)[0]
+    download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)[1]
 
     #get geostore id from admin areas and total area of geostore request
     geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s'%(iso_code)
