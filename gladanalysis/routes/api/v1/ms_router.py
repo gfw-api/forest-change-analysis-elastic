@@ -23,21 +23,6 @@ def date_to_julian_day(input_date):
     except ValueError:
         return None, None
 
-def standardize_response(data, count, download_sql, geostore, area):
-    #Helper function to standardize API responses
-
-    standard_format = {}
-    standard_format["type"] = "glad-alerts"
-    standard_format["id"] = "undefined"
-    standard_format["attributes"] = {}
-    standard_format["attributes"]["value"] = data["data"][0][count]
-    standard_format["attributes"]["downloadUrls"] = {}
-    standard_format["attributes"]["downloadUrls"]["csv"] = "/download/274b4818-be18-4890-9d10-eae56d2a82e5" + download_sql + "&geostore=" + geostore + "&format=csv"
-    standard_format["attributes"]["downloadUrls"]["json"] = "/download/274b4818-be18-4890-9d10-eae56d2a82e5" + download_sql + "&geostore=" + geostore + "&format=json"
-    standard_format['attributes']["areaHa"] = area
-
-    return standard_format
-
 def format_glad_sql(from_year, from_date, to_year, to_date):
 
     if (int(from_year) < 2015 or int(to_year) > 2017):
@@ -72,6 +57,71 @@ def format_terrai_sql(from_year, from_date, to_year, to_date):
         sql = "?sql=select count(day) from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
         download_sql = "?sql=select lat, long, confidence, year, day from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
         return (sql, download_sql)
+
+def make_glad_request(sql, confidence, geostore):
+
+    #format request to glad dataset
+    url = 'http://staging-api.globalforestwatch.org/query/'
+    datasetID = '274b4818-be18-4890-9d10-eae56d2a82e5'
+    f = '&format=json'
+
+    full = url + datasetID + sql + confidence + "&geostore=" + geostore + f
+    r = requests.get(url=full)
+    data = r.json()
+    return data
+
+def make_terrai_request(sql, geostore):
+
+    #format request to glad dataset
+    url = 'http://staging-api.globalforestwatch.org/query/'
+    datasetID = '67cf7c03-7365-4a1f-8401-d42c3706b7de'
+    f = '&format=json'
+
+    full = url + datasetID + sql + "&geostore=" + geostore + f
+    r = requests.get(url=full)
+    data = r.json()
+    return data
+
+def make_area_request(geostore):
+
+    area_url = 'http://staging-api.globalforestwatch.org/geostore/' + geostore
+    r_area = requests.get(url=area_url)
+    area_resp = r_area.json()
+    area = area_resp['data']['attributes']['areaHa']
+    return area
+
+def make_gadm_request(iso_code, admin_id):
+
+    geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s/%s'%(iso_code, admin_id)
+    r = requests.get(url=geostore_url)
+    geostore_data = r.json()
+    geostore = geostore_data['data']['id']
+    area_ha = geostore_data['data']['attributes']['areaHa']
+    return (geostore, area_ha)
+
+def make_country_request(iso_code):
+
+    geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s'%(iso_code)
+    r = requests.get(url=geostore_url)
+    geostore_data = r.json()
+    geostore = geostore_data['data']['id']
+    area_ha = geostore_data['data']['attributes']['areaHa']
+    return (geostore, area_ha)
+
+def standardize_response(data, count, download_sql, geostore, area):
+    #Helper function to standardize API responses
+
+    standard_format = {}
+    standard_format["type"] = "glad-alerts"
+    standard_format["id"] = "undefined"
+    standard_format["attributes"] = {}
+    standard_format["attributes"]["value"] = data["data"][0][count]
+    standard_format["attributes"]["downloadUrls"] = {}
+    standard_format["attributes"]["downloadUrls"]["csv"] = "/download/274b4818-be18-4890-9d10-eae56d2a82e5" + download_sql + "&geostore=" + geostore + "&format=csv"
+    standard_format["attributes"]["downloadUrls"]["json"] = "/download/274b4818-be18-4890-9d10-eae56d2a82e5" + download_sql + "&geostore=" + geostore + "&format=json"
+    standard_format['attributes']["areaHa"] = area
+
+    return standard_format
 
 @endpoints.route('/gladanalysis', methods=['GET'])
 def query_glad():
@@ -119,21 +169,13 @@ def query_glad():
     else:
         confidence = ""
 
-    #format request to glad dataset
-    url = 'http://staging-api.globalforestwatch.org/query/'
-    datasetID = '274b4818-be18-4890-9d10-eae56d2a82e5'
-    f = '&format=json'
+    #query glad database
+    data = make_glad_request(sql, confidence, geostore)
 
-    full = url + datasetID + sql + confidence + "&geostore=" + geostore + f
-    r = requests.get(url=full)
-    data = r.json()
+    #make request to geostore to get area in hectares
+    area = make_area_request(geostore)
 
-    #format response to geostore to recieve area ha
-    area_url = 'http://staging-api.globalforestwatch.org/geostore/' + geostore
-    r_area = requests.get(url=area_url)
-    area_resp = r_area.json()
-    area = area_resp['data']['attributes']['areaHa']
-
+    #standardize response
     standard_format = standardize_response(data, "COUNT(julian_day)", download_sql, geostore, area)
 
     return jsonify({'data': standard_format}), 200
@@ -179,19 +221,10 @@ def query_terrai():
     download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)[1]
 
     #format request parameters to Terra I
-    url = 'http://staging-api.globalforestwatch.org/query/'
-    datasetID = '67cf7c03-7365-4a1f-8401-d42c3706b7de'
-    f = '&format=json'
+    data = make_terrai_request(sql, geostore)
 
-    full = url + datasetID + sql + "&geostore=" + geostore + f
-    r = requests.get(url=full)
-    data = r.json()
-
-    #format response to geostore to recieve area ha
-    area_url = 'http://staging-api.globalforestwatch.org/geostore/' + geostore
-    r_area = requests.get(url=area_url)
-    area_resp = r_area.json()
-    area = area_resp['data']['attributes']['areaHa']
+    #get area from geostore
+    area = make_area_request(geostore)
 
     standard_format = standardize_response(data, "COUNT(day)", download_sql, geostore, area)
 
@@ -239,28 +272,18 @@ def glad_admin(iso_code, admin_id):
     download_sql = format_glad_sql(from_year, from_date, to_year, to_date)[1]
 
     #get geostore id from admin areas and total area of geostore request
-    geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s/%s'%(iso_code, admin_id)
-    r = requests.get(url=geostore_url)
-    geostore_data = r.json()
-    geostore = geostore_data['data']['id']
-    area_ha = geostore_data['data']['attributes']['areaHa']
-
-    #format request to elastic database of glad alerts
-
-    glad_url = 'http://staging-api.globalforestwatch.org/query/'
-    datasetID = '274b4818-be18-4890-9d10-eae56d2a82e5'
-    f = '&format=json'
+    geostore = make_gadm_request(iso_code, admin_id)[0]
+    area_ha = make_gadm_request(iso_code, admin_id)[1]
 
     if conf == 'true' or conf == "True":
         confidence = "and confidence = '3'"
     else:
         confidence = ""
 
-    full = glad_url + datasetID + sql + confidence + "&geostore=" + geostore + f
-    r = requests.get(url=full)
-    glad_data = r.json()
+    #query glad database
+    data = make_glad_request(sql, confidence, geostore)
 
-    standard_format = standardize_response(glad_data, "COUNT(julian_day)", download_sql, geostore, area_ha)
+    standard_format = standardize_response(data, "COUNT(julian_day)", download_sql, geostore, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -306,28 +329,18 @@ def glad_country(iso_code):
     download_sql = format_glad_sql(from_year, from_date, to_year, to_date)[1]
 
     #get geostore id from admin areas and total area of geostore request
-    geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s'%(iso_code)
-    r = requests.get(url=geostore_url)
-    geostore_data = r.json()
-    geostore = geostore_data['data']['id']
-    area_ha = geostore_data['data']['attributes']['areaHa']
-
-    #format request to elastic database of glad alerts
-
-    glad_url = 'http://staging-api.globalforestwatch.org/query/'
-    datasetID = '274b4818-be18-4890-9d10-eae56d2a82e5'
-    f = '&format=json'
+    geostore = make_country_request(iso_code)[0]
+    area_ha = make_country_request(iso_code)[1]
 
     if conf == 'true' or conf == "True":
         confidence = "and confidence = '3'"
     else:
         confidence = ""
 
-    full = glad_url + datasetID + sql + confidence + "&geostore=" + geostore + f
-    r = requests.get(url=full)
-    glad_data = r.json()
+    #make request to glad database
+    data = make_glad_request(sql, confidence, geostore)
 
-    standard_format = standardize_response(glad_data, "COUNT(julian_day)", download_sql, geostore, area_ha)
+    standard_format = standardize_response(data, "COUNT(julian_day)", download_sql, geostore, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -372,25 +385,16 @@ def terrai_admin(iso_code, admin_id):
                 }]
             }), 400
 
-    #send dates to sql formatter 
+    #send dates to sql formatter
     sql = format_terrai_sql(from_year, from_date, to_year, to_date)[0]
     download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)[1]
 
     #get geostore id from admin areas and total area of geostore request
-    geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s/%s'%(iso_code, admin_id)
-    r = requests.get(url=geostore_url)
-    geostore_data = r.json()
-    geostore = geostore_data['data']['id']
-    area_ha = geostore_data['data']['attributes']['areaHa']
+    geostore = make_gadm_request(iso_code, admin_id)[0]
+    area_ha = make_gadm_request(iso_code, admin_id)[1]
 
-    #format request parameters to Terra I
-    url = 'http://staging-api.globalforestwatch.org/query/'
-    datasetID = '67cf7c03-7365-4a1f-8401-d42c3706b7de'
-    f = '&format=json'
-
-    full = url + datasetID + sql + "&geostore=" + geostore + f
-    r = requests.get(url=full)
-    data = r.json()
+    #Make request to terra i dataset
+    data = make_terrai_request(sql, geostore)
 
     standard_format = standardize_response(data, "COUNT(day)", download_sql, geostore, area_ha)
 
@@ -443,20 +447,11 @@ def terrai_country(iso_code):
     download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)[1]
 
     #get geostore id from admin areas and total area of geostore request
-    geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s'%(iso_code)
-    r = requests.get(url=geostore_url)
-    geostore_data = r.json()
-    geostore = geostore_data['data']['id']
-    area_ha = geostore_data['data']['attributes']['areaHa']
+    geostore = make_country_request(iso_code)[0]
+    area_ha = make_country_request(iso_code)[1]
 
-    #format request parameters to Terra I
-    url = 'http://staging-api.globalforestwatch.org/query/'
-    datasetID = '67cf7c03-7365-4a1f-8401-d42c3706b7de'
-    f = '&format=json'
-
-    full = url + datasetID + sql + "&geostore=" + geostore + f
-    r = requests.get(url=full)
-    data = r.json()
+    #make request to terra i dataset
+    data = make_terrai_request(sql, geostore)
 
     standard_format = standardize_response(data, "COUNT(day)", download_sql, geostore, area_ha)
 
