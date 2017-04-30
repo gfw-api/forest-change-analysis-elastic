@@ -114,7 +114,7 @@ def make_use_request(use_type, use_id):
     r = requests.get(url=area_url)
     geostore_data = r.json()
     geostore = geostore_data['data']['id']
-    area = area_resp['data']['attributes']['areaHa']
+    area = geostore_data['data']['attributes']['areaHa']
     return (geostore, area)
 
 def make_wdpa_request(wdpa_id):
@@ -123,7 +123,7 @@ def make_wdpa_request(wdpa_id):
     r = requests.get(url=area_url)
     geostore_data = r.json()
     geostore = geostore_data['data']['id']
-    area = area_resp['data']['attributes']['areaHa']
+    area = geostore_data['data']['attributes']['areaHa']
     return (geostore, area)
 
 def standardize_response(data, count, download_sql, geostore, area):
