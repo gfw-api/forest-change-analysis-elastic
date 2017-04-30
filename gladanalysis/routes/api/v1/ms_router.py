@@ -598,10 +598,10 @@ def glad_wdpa(wdpa_id):
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
 
-    if not use_type or not use_id:
+    if not wdpa_id:
         return jsonify({'errors': [{
             'status': '400',
-            'title': 'Use type and use ID should be set'
+            'title': 'WDPA ID should be set'
             }]
         }), 400
 
@@ -658,10 +658,10 @@ def terrai_wdpa(wdpa_id):
 
     period = request.args.get('period', None)
 
-    if not use_type or not use_id:
+    if not wdpa_id:
         return jsonify({'errors': [{
             'status': '400',
-            'title': 'Use type and use ID should be set'
+            'title': 'WDPA should be set'
             }]
         }), 400
 
