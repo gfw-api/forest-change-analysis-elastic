@@ -111,8 +111,8 @@ def make_country_request(iso_code):
 def make_use_request(use_type, use_id):
 
     area_url = 'http://staging-api.globalforestwatch.org/geostore/use/%s/%s' %(use_type, use_id)
-    r_area = requests.get(url=area_url)
-    area_resp = r_area.json()
+    r = requests.get(url=area_url)
+    geostore_data = r.json()
     geostore = geostore_data['data']['id']
     area = area_resp['data']['attributes']['areaHa']
     return (geostore, area)
@@ -120,8 +120,8 @@ def make_use_request(use_type, use_id):
 def make_wdpa_request(wdpa_id):
 
     area_url = 'http://staging-api.globalforestwatch.org/geostore/wdpa/%s' %(wdpa_id)
-    r_area = requests.get(url=area_url)
-    area_resp = r_area.json()
+    r = requests.get(url=area_url)
+    geostore_data = r.json()
     geostore = geostore_data['data']['id']
     area = area_resp['data']['attributes']['areaHa']
     return (geostore, area)
