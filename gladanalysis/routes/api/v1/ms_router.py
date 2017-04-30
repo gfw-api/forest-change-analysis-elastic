@@ -108,6 +108,24 @@ def make_country_request(iso_code):
     area_ha = geostore_data['data']['attributes']['areaHa']
     return (geostore, area_ha)
 
+def make_use_request(use_type, use_id):
+
+    area_url = 'http://staging-api.globalforestwatch.org/geostore/use/%s/%s' %(use_type, use_id)
+    r_area = requests.get(url=area_url)
+    area_resp = r_area.json()
+    geostore = geostore_data['data']['id']
+    area = area_resp['data']['attributes']['areaHa']
+    return (geostore, area)
+
+def make_wdpa_request(wdpa_id):
+
+    area_url = 'http://staging-api.globalforestwatch.org/geostore/wdpa/%s' %(wdpa_id)
+    r_area = requests.get(url=area_url)
+    area_resp = r_area.json()
+    geostore = geostore_data['data']['id']
+    area = area_resp['data']['attributes']['areaHa']
+    return (geostore, area)
+
 def standardize_response(data, count, download_sql, geostore, area):
     #Helper function to standardize API responses
 
@@ -130,7 +148,7 @@ def query_glad():
 
     geostore = request.args.get('geostore', None)
     period = request.args.get('period', None)
-    conf = request.args.get('confidence', None)
+    conf = request.args.get('gladConfirmOnly', None)
 
     if not geostore or not period:
         return jsonify({'errors': [{
@@ -164,7 +182,7 @@ def query_glad():
     download_sql = format_glad_sql(from_year, from_date, to_year, to_date)[1]
 
     #create condition to look for confidence filter
-    if conf == '3':
+    if conf == 'true' or conf == 'True':
         confidence = "and confidence = '3'"
     else:
         confidence = ""
@@ -414,7 +432,6 @@ def terrai_country(iso_code):
             }]
         }), 400
 
-
     if not period:
         return jsonify({'errors': [{
             'status': '400',
@@ -454,5 +471,237 @@ def terrai_country(iso_code):
     data = make_terrai_request(sql, geostore)
 
     standard_format = standardize_response(data, "COUNT(day)", download_sql, geostore, area_ha)
+
+    return jsonify({'data': standard_format}), 200
+
+@endpoints.route('/gladanalysis/use/<use_type>/<use_id>', methods=['GET'])
+def glad_use(use_type, use_id):
+
+    logging.info('QUERY GLAD BY LAND USE DATA')
+
+    period = request.args.get('period', None)
+    conf = request.args.get('gladConfirmOnly', None)
+
+    if not use_type or not use_id:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Use type and use ID should be set'
+            }]
+        }), 400
+
+    if not period:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'time period should be set'
+            }]
+        }), 400
+
+    if len(period.split(',')) < 2:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Period needs 2 arguments'
+            }]
+        }), 400
+
+    period_from = period.split(',')[0]
+    period_to = period.split(',')[1]
+
+    from_year, from_date = date_to_julian_day(period_from)
+    to_year, to_date = date_to_julian_day(period_to)
+
+    if None in (from_year, to_year):
+        return jsonify({'errors': [{
+                'status': '400',
+                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
+                }]
+            }), 400
+
+    #send to sql formatter function
+    sql = format_glad_sql(from_year, from_date, to_year, to_date)[0]
+    download_sql = format_glad_sql(from_year, from_date, to_year, to_date)[1]
+
+    geostore = make_use_request(use_type, use_id)[0]
+    area = make_use_request(use_type, use_id)[1]
+
+    if conf == 'true' or conf == "True":
+        confidence = "and confidence = '3'"
+    else:
+        confidence = ""
+
+    #make request to glad database
+    data = make_glad_request(sql, confidence, geostore)
+
+    standard_format = standardize_response(data, "COUNT(julian_day)", download_sql, geostore, area)
+
+    return jsonify({'data': standard_format}), 200
+
+@endpoints.route('/terraianalysis/use/<use_type>/<use_id>', methods=['GET'])
+def terrai_use(use_type, use_id):
+
+    logging.info('QUERY GLAD BY LAND USE DATA')
+
+    period = request.args.get('period', None)
+
+    if not use_type or not use_id:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Use type and use ID should be set'
+            }]
+        }), 400
+
+    if not period:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'time period should be set'
+            }]
+        }), 400
+
+    if len(period.split(',')) < 2:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Period needs 2 arguments'
+            }]
+        }), 400
+
+    period_from = period.split(',')[0]
+    period_to = period.split(',')[1]
+
+    from_year, from_date = date_to_julian_day(period_from)
+    to_year, to_date = date_to_julian_day(period_to)
+
+    if None in (from_year, to_year):
+        return jsonify({'errors': [{
+                'status': '400',
+                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
+                }]
+            }), 400
+
+    #send to sql formatter function
+    sql = format_terrai_sql(from_year, from_date, to_year, to_date)[0]
+    download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)[1]
+
+    geostore = make_use_request(use_type, use_id)[0]
+    area = make_use_request(use_type, use_id)[1]
+
+    #make request to glad database
+    data = make_terrai_request(sql, geostore)
+
+    standard_format = standardize_response(data, "COUNT(day)", download_sql, geostore, area)
+
+    return jsonify({'data': standard_format}), 200
+
+@endpoints.route('/gladanalysis/wdpa/<wdpa_id>', methods=['GET'])
+def glad_wdpa(wdpa_id):
+
+    logging.info('QUERY GLAD BY WDPA DATA')
+
+    period = request.args.get('period', None)
+    conf = request.args.get('gladConfirmOnly', None)
+
+    if not use_type or not use_id:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Use type and use ID should be set'
+            }]
+        }), 400
+
+    if not period:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'time period should be set'
+            }]
+        }), 400
+
+    if len(period.split(',')) < 2:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Period needs 2 arguments'
+            }]
+        }), 400
+
+    period_from = period.split(',')[0]
+    period_to = period.split(',')[1]
+
+    from_year, from_date = date_to_julian_day(period_from)
+    to_year, to_date = date_to_julian_day(period_to)
+
+    if None in (from_year, to_year):
+        return jsonify({'errors': [{
+                'status': '400',
+                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
+                }]
+            }), 400
+
+    #send to sql formatter function
+    sql = format_glad_sql(from_year, from_date, to_year, to_date)[0]
+    download_sql = format_glad_sql(from_year, from_date, to_year, to_date)[1]
+
+    geostore = make_wdpa_request(wdpa_id)[0]
+    area = make_wdpa_request(wdpa_id)[1]
+
+    if conf == 'true' or conf == "True":
+        confidence = "and confidence = '3'"
+    else:
+        confidence = ""
+
+    #make request to glad database
+    data = make_glad_request(sql, confidence, geostore)
+
+    standard_format = standardize_response(data, "COUNT(julian_day)", download_sql, geostore, area)
+
+    return jsonify({'data': standard_format}), 200
+
+@endpoints.route('/terraianalysis/wdpa/<wdpa_id>', methods=['GET'])
+def terrai_wdpa(wdpa_id):
+
+    logging.info('QUERY TERRA I BY WDPA')
+
+    period = request.args.get('period', None)
+
+    if not use_type or not use_id:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Use type and use ID should be set'
+            }]
+        }), 400
+
+    if not period:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'time period should be set'
+            }]
+        }), 400
+
+    if len(period.split(',')) < 2:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Period needs 2 arguments'
+            }]
+        }), 400
+
+    period_from = period.split(',')[0]
+    period_to = period.split(',')[1]
+
+    from_year, from_date = date_to_julian_day(period_from)
+    to_year, to_date = date_to_julian_day(period_to)
+
+    if None in (from_year, to_year):
+        return jsonify({'errors': [{
+                'status': '400',
+                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
+                }]
+            }), 400
+
+    #send to sql formatter function
+    sql = format_terrai_sql(from_year, from_date, to_year, to_date)[0]
+    download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)[1]
+
+    geostore = make_wdpa_request(wdpa_id)[0]
+    area = make_wdpa_request(wdpa_id)[1]
+
+    #make request to glad database
+    data = make_terrai_request(sql, geostore)
+
+    standard_format = standardize_response(data, "COUNT(day)", download_sql, geostore, area)
 
     return jsonify({'data': standard_format}), 200

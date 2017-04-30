@@ -38,6 +38,34 @@
 	           "path": "/api/v1/ms/terraianalysis/admin/:iso_code"
 	        }]
 		}, {
+	       "url": "/v1/terraianalysis/use/:use_type/:use_id",
+	       "method": "GET",
+	       "endpoints": [{
+	           "method": "GET",
+	           "path": "/api/v1/ms/terraianalysis/admin/:use_type/:use_id"
+	        }]
+		}, {
+	       "url": "/v1/gladanalysis/use/:use_type/:use_id",
+	       "method": "GET",
+	       "endpoints": [{
+	           "method": "GET",
+	           "path": "/api/v1/ms/gladanalysis/admin/:use_type/:use_id"
+	        }]
+		}, {
+	       "url": "/v1/terraianalysis/wdpa/:wdpa_id",
+	       "method": "GET",
+	       "endpoints": [{
+	           "method": "GET",
+	           "path": "/api/v1/ms/terraianalysis/wdpa/:wdpa_id"
+	        }]
+		}, {
+	       "url": "/v1/gladanalysis/wdpa/:wdpa_id",
+	       "method": "GET",
+	       "endpoints": [{
+	           "method": "GET",
+	           "path": "/api/v1/ms/gladanalysis/wdpa/:wdpa_id"
+	        }]
+		}, {
 	       "url": "/v1/terraianalysis",
 	       "method": "GET",
 	       "endpoints": [{
