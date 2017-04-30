@@ -42,14 +42,14 @@
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
-	           "path": "/api/v1/ms/terraianalysis/admin/:use_type/:use_id"
+	           "path": "/api/v1/ms/terraianalysis/use/:use_type/:use_id"
 	        }]
 		}, {
 	       "url": "/v1/gladanalysis/use/:use_type/:use_id",
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
-	           "path": "/api/v1/ms/gladanalysis/admin/:use_type/:use_id"
+	           "path": "/api/v1/ms/gladanalysis/use/:use_type/:use_id"
 	        }]
 		}, {
 	       "url": "/v1/terraianalysis/wdpa/:wdpa_id",
