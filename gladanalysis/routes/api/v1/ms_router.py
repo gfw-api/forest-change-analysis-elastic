@@ -717,7 +717,7 @@ def terrai_wdpa(wdpa_id):
 
     return jsonify({'data': standard_format}), 200
 
-@endpoints.route('/gladanalysis/date-range>', methods=['GET'])
+@endpoints.route('/gladanalysis/date-range', methods=['GET'])
 def date_range():
 
     max_sql = '?sql=select MAX(julian_day)from index_e663eb0904de4f39b87135c6c2ed10b5 where year = 2017'
