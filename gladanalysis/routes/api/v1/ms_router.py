@@ -135,8 +135,7 @@ def get_date(dataset_id, sql, value):
     r = requests.get(url=full)
     values = r.json()
     date_value = values['data'][0][value]
-    date = int(date_value)
-    return date
+    return date_value
 
 def standardize_response(data, count, download_sql, geostore, area):
     #Helper function to standardize API responses
