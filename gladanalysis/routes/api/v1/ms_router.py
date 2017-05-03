@@ -723,14 +723,15 @@ def date_range():
     max_sql = '?sql=select MAX(julian_day)from index_e663eb0904de4f39b87135c6c2ed10b5 where year = 2017'
     min_sql = '?sql=select MIN(julian_day)from index_e663eb0904de4f39b87135c6c2ed10b5 where year = 2015'
 
-    min_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', min_sql, 'MIN(julian_day)')
+    # min_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', min_sql, 'MIN(julian_day)')
     max_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', max_sql, 'MAX(julian_day)')
 
     max_value = max_julian + 1700
-    min_value = min_julian = 1500
+    # min_value = min_julian + 1500
+    min_value = min_julian + 1501
 
     max_day = datetime.datetime.strptime(str(max_value), '%y%j').date()
-    min_day= datetime.datetime.strptime(str(min_value), '%y%j').date()
+    min_day = datetime.datetime.strptime(str(min_value), '%y%j').date()
 
     max_date = max_day.strftime('%Y-%m-%d')
     min_date = min_day.strftime('%Y-%m-%d')
