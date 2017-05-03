@@ -66,6 +66,13 @@
 	           "path": "/api/v1/ms/gladanalysis/wdpa/:wdpa_id"
 	        }]
 		}, {
+	       "url": "/v1/gladanalysis/date-range",
+	       "method": "GET",
+	       "endpoints": [{
+	           "method": "GET",
+	           "path": "/api/v1/ms/gladanalysis/date-range"
+	        }]
+		}, {
 	       "url": "/v1/terraianalysis",
 	       "method": "GET",
 	       "endpoints": [{

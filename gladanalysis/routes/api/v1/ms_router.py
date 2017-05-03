@@ -126,6 +126,17 @@ def make_wdpa_request(wdpa_id):
     area = geostore_data['data']['attributes']['areaHa']
     return (geostore, area)
 
+def get_date(dataset_id, sql):
+
+    url = 'http://staging-api.globalforestwatch.org/query/'
+    f = '&format=json'
+
+    full = url + dataset_id + sql + f
+    r = requests.get(url=full)
+    values = r.json()
+    date = values['data']
+    return date
+
 def standardize_response(data, count, download_sql, geostore, area):
     #Helper function to standardize API responses
 
@@ -705,3 +716,27 @@ def terrai_wdpa(wdpa_id):
     standard_format = standardize_response(data, "COUNT(day)", download_sql, geostore, area)
 
     return jsonify({'data': standard_format}), 200
+
+@endpoints.route('/gladanalysis/date-range>', methods=['GET'])
+def date_range():
+
+    max_sql = '?sql=select MAX(julian_day)from index_e663eb0904de4f39b87135c6c2ed10b5 where year = 2017'
+    min_sql = '?sql=select MIN(julian_day)from index_e663eb0904de4f39b87135c6c2ed10b5 where year = 2015'
+
+    min_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', min_sql)
+    max_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', max_sql)
+
+    max_day = datetime.datetime.strptime((max_julian + 1700), '%y%j').date()
+    min_day= datetime.datetime.strptime((min_julian + 1500), '%y%j').date()
+
+    max_date = max_day.strftime('%Y-%m-%d')
+    min_date = min_day.strftime('%Y-%m-%d')
+
+    response = {}
+    response['type'] = "glad-alerts"
+    response['id'] = "undefined"
+    response['attributes'] = {}
+    response['attributes']['minDate'] = min_date
+    response['attributes']['maxDate'] = max_date
+
+    return jsonify({'data': response}), 200
