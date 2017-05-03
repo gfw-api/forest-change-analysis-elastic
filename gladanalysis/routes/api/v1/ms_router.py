@@ -134,7 +134,7 @@ def get_date(dataset_id, sql):
     full = url + dataset_id + sql + f
     r = requests.get(url=full)
     values = r.json()
-    date = values['data']
+    date = values['data'][0]['MAX(julian_day)']
     return date
 
 def standardize_response(data, count, download_sql, geostore, area):
