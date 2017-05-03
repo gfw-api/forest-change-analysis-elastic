@@ -730,8 +730,8 @@ def date_range():
     max_value = max_julian + 1700
     min_value = min_julian = 1500
 
-    max_day = datetime.datetime.strptime(max_value, '%y%j').date()
-    min_day= datetime.datetime.strptime(min_value, '%y%j').date()
+    max_day = datetime.datetime.strptime(str(max_value), '%y%j').date()
+    min_day= datetime.datetime.strptime(str(min_value), '%y%j').date()
 
     max_date = max_day.strftime('%Y-%m-%d')
     min_date = min_day.strftime('%Y-%m-%d')
