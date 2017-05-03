@@ -134,7 +134,8 @@ def get_date(dataset_id, sql, value):
     full = url + dataset_id + sql + f
     r = requests.get(url=full)
     values = r.json()
-    date = values['data'][0][value]
+    date_value = values['data'][0][value]
+    date = int(date_value)
     return date
 
 def standardize_response(data, count, download_sql, geostore, area):
@@ -726,8 +727,11 @@ def date_range():
     min_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', min_sql, 'MIN(julian_day)')
     max_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', max_sql, 'MAX(julian_day)')
 
-    max_day = datetime.datetime.strptime((max_julian + 1700), '%y%j').date()
-    min_day= datetime.datetime.strptime((min_julian + 1500), '%y%j').date()
+    max_value = max_julian + 1700
+    min_ value = min_julian = 1500
+
+    max_day = datetime.datetime.strptime(max_value, '%y%j').date()
+    min_day= datetime.datetime.strptime(min_value, '%y%j').date()
 
     max_date = max_day.strftime('%Y-%m-%d')
     min_date = min_day.strftime('%Y-%m-%d')
