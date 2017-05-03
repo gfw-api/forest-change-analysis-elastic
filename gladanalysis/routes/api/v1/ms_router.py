@@ -728,7 +728,7 @@ def date_range():
     max_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', max_sql, 'MAX(julian_day)')
 
     max_value = max_julian + 1700
-    min_ value = min_julian = 1500
+    min_value = min_julian = 1500
 
     max_day = datetime.datetime.strptime(max_value, '%y%j').date()
     min_day= datetime.datetime.strptime(min_value, '%y%j').date()
