@@ -126,7 +126,7 @@ def make_wdpa_request(wdpa_id):
     area = geostore_data['data']['attributes']['areaHa']
     return (geostore, area)
 
-def get_date(dataset_id, sql):
+def get_date(dataset_id, sql, value):
 
     url = 'http://staging-api.globalforestwatch.org/query/'
     f = '&format=json'
@@ -134,7 +134,7 @@ def get_date(dataset_id, sql):
     full = url + dataset_id + sql + f
     r = requests.get(url=full)
     values = r.json()
-    date = values['data'][0]['MAX(julian_day)']
+    date = values['data'][0][value]
     return date
 
 def standardize_response(data, count, download_sql, geostore, area):
@@ -723,8 +723,8 @@ def date_range():
     max_sql = '?sql=select MAX(julian_day)from index_e663eb0904de4f39b87135c6c2ed10b5 where year = 2017'
     min_sql = '?sql=select MIN(julian_day)from index_e663eb0904de4f39b87135c6c2ed10b5 where year = 2015'
 
-    min_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', min_sql)
-    max_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', max_sql)
+    min_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', min_sql, 'MIN(julian_day)')
+    max_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', max_sql, 'MAX(julian_day)')
 
     max_day = datetime.datetime.strptime((max_julian + 1700), '%y%j').date()
     min_day= datetime.datetime.strptime((min_julian + 1500), '%y%j').date()
