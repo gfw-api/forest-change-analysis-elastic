@@ -33,15 +33,15 @@ def format_glad_sql(from_year, from_date, to_year, to_date):
         }), 400
     elif (from_year == '2015') and (to_year == '2017'):
         sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
-        download_sql = "?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
+        download_sql = "?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s)) ORDER BY year, julian_day" %(from_date, to_date)
         return (sql, download_sql)
     elif (from_year == to_year):
     	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
-        download_sql = "?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
+        download_sql = "?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s)) ORDER BY year, julian_day" %(from_year, from_date, to_date)
         return (sql, download_sql)
     else:
     	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
-        download_sql = "?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
+        download_sql = "?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s)) ORDER BY year, julian_day" %(from_year, from_date, to_year, to_date)
         return (sql, download_sql)
 
 def format_terrai_sql(from_year, from_date, to_year, to_date):
@@ -55,7 +55,7 @@ def format_terrai_sql(from_year, from_date, to_year, to_date):
         }), 400
     else:
         sql = "?sql=select count(day) from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
-        download_sql = "?sql=select lat, long, confidence, year, day from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
+        download_sql = "?sql=select lat, long, confidence, year, day from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s)) ORDER BY year, day" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
         return (sql, download_sql)
 
 def make_glad_request(sql, confidence, geostore):
