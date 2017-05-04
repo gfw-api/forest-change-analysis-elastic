@@ -55,7 +55,7 @@ def format_terrai_sql(from_year, from_date, to_year, to_date):
         }), 400
     else:
         sql = "?sql=select count(day) from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
-        download_sql = "?sql=select lat, long, confidence, year, day from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s)) ORDER BY year, day" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
+        download_sql = "?sql=select lat, long, year, day from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s)) ORDER BY year, day" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
         return (sql, download_sql)
 
 def make_glad_request(sql, confidence, geostore):
