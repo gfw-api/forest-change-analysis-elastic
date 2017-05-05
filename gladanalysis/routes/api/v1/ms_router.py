@@ -718,7 +718,7 @@ def terrai_wdpa(wdpa_id):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/gladanalysis/date-range', methods=['GET'])
-def date_range():
+def glad_date_range():
 
     max_sql = '?sql=select MAX(julian_day)from index_e663eb0904de4f39b87135c6c2ed10b5 where year = 2017'
     min_sql = '?sql=select MIN(julian_day)from index_e663eb0904de4f39b87135c6c2ed10b5 where year = 2015'
@@ -746,7 +746,7 @@ def date_range():
     return jsonify({'data': response}), 200
 
 @endpoints.route('/terraianalysis/date-range', methods=['GET'])
-def date_range():
+def terrai_date_range():
 
     max_sql = '?sql=select MAX(julian_day)from index_67cf7c0373654a1f8401d42c3706b7de where year = 2017'
     min_sql = '?sql=select MIN(julian_day)from index_67cf7c0373654a1f8401d42c3706b7de where year = 2004'
