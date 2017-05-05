@@ -73,6 +73,13 @@
 	           "path": "/api/v1/ms/gladanalysis/date-range"
 	        }]
 		}, {
+	       "url": "/v1/terraianalysis/date-range",
+	       "method": "GET",
+	       "endpoints": [{
+	           "method": "GET",
+	           "path": "/api/v1/ms/terraianalysis/date-range"
+	        }]
+		}, {
 	       "url": "/v1/terraianalysis",
 	       "method": "GET",
 	       "endpoints": [{

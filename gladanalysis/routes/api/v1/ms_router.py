@@ -744,3 +744,31 @@ def date_range():
     response['attributes']['maxDate'] = max_date
 
     return jsonify({'data': response}), 200
+
+@endpoints.route('/terraianalysis/date-range', methods=['GET'])
+def date_range():
+
+    max_sql = '?sql=select MAX(julian_day)from index_67cf7c0373654a1f8401d42c3706b7de where year = 2017'
+    min_sql = '?sql=select MIN(julian_day)from index_67cf7c0373654a1f8401d42c3706b7de where year = 2004'
+
+    # min_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', min_sql, 'MIN(julian_day)')
+    max_julian = get_date('67cf7c03-7365-4a1f-8401-d42c3706b7de', max_sql, 'MAX(day)')
+
+    max_value = max_julian + 1700
+    # min_value = min_julian + 1500
+    # min_value = 401
+
+    max_day = datetime.datetime.strptime(str(max_value), '%y%j').date()
+    min_day = datetime.datetime.strptime(str(min_value), '%y%j').date()
+
+    max_date = max_day.strftime('%Y-%m-%d')
+    min_date = '2004-01-01'
+
+    response = {}
+    response['type'] = "terrai-alerts"
+    response['id'] = "undefined"
+    response['attributes'] = {}
+    response['attributes']['minDate'] = min_date
+    response['attributes']['maxDate'] = max_date
+
+    return jsonify({'data': response}), 200
