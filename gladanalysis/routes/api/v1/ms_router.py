@@ -748,8 +748,8 @@ def glad_date_range():
 @endpoints.route('/terraianalysis/date-range', methods=['GET'])
 def terrai_date_range():
 
-    max_sql = '?sql=select MAX(julian_day)from index_67cf7c0373654a1f8401d42c3706b7de where year = 2017'
-    min_sql = '?sql=select MIN(julian_day)from index_67cf7c0373654a1f8401d42c3706b7de where year = 2004'
+    max_sql = '?sql=select MAX(day)from index_67cf7c0373654a1f8401d42c3706b7de where year = 2017'
+    min_sql = '?sql=select MIN(day)from index_67cf7c0373654a1f8401d42c3706b7de where year = 2004'
 
     # min_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', min_sql, 'MIN(julian_day)')
     max_julian = get_date('67cf7c03-7365-4a1f-8401-d42c3706b7de', max_sql, 'MAX(day)')
