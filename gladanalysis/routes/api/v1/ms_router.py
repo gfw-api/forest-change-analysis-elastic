@@ -759,7 +759,7 @@ def terrai_date_range():
     # min_value = 401
 
     max_day = datetime.datetime.strptime(str(max_value), '%y%j').date()
-    min_day = datetime.datetime.strptime(str(min_value), '%y%j').date()
+    # min_day = datetime.datetime.strptime(str(min_value), '%y%j').date()
 
     max_date = max_day.strftime('%Y-%m-%d')
     min_date = '2004-01-01'
