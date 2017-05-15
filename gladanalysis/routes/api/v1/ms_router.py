@@ -286,6 +286,61 @@ def query_terrai():
 
     return jsonify({'data': standard_format}), 200
 
+@endpoints.route('/gladanalysis/admin/<iso_code>/<admin_id>/<dist_id>', methods=['GET'])
+def glad_dist(iso_code, admin_id, dist_id):
+
+    logging.info('Running GADM level glad analysis')
+
+    #accept period parameter
+    period = request.args.get('period', None)
+    conf = request.args.get('gladConfirmOnly', None)
+
+    if not iso_code or not admin_id:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'ISO code and GADM ID should be set'
+            }]
+        }), 400
+
+    #format date and format error responses
+    if len(period.split(',')) < 2:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Period needs 2 arguments'
+            }]
+        }), 400
+
+    period_from = period.split(',')[0]
+    period_to = period.split(',')[1]
+
+    from_year, from_date = date_to_julian_day(period_from)
+    to_year, to_date = date_to_julian_day(period_to)
+
+    if None in (from_year, to_year):
+        return jsonify({'errors': [{
+                'status': '400',
+                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
+                }]
+            }), 400
+
+    #send to sql formatter function
+    sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date, iso_code, admin_id, dist_id)
+
+    #get geostore id from admin areas and total area of geostore request
+    area_ha = make_gadm_request(iso_code, admin_id)[1]
+
+    if conf == 'true' or conf == "True":
+        confidence = "and confidence = '3'"
+    else:
+        confidence = ""
+
+    #query glad database
+    data = make_glad_request(sql, confidence)
+
+    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area_ha)
+
+    return jsonify({'data': standard_format}), 200
+
 @endpoints.route('/gladanalysis/admin/<iso_code>/<admin_id>', methods=['GET'])
 def glad_admin(iso_code, admin_id):
 

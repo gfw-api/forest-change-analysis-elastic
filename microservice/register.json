@@ -31,6 +31,13 @@
 	           "path": "/api/v1/ms/terraianalysis/admin/:iso_code/:admin_id"
 	        }]
 		}, {
+	       "url": "/v1/terraianalysis/admin/:iso_code/:admin_id/:dist_id",
+	       "method": "GET",
+	       "endpoints": [{
+	           "method": "GET",
+	           "path": "/api/v1/ms/terraianalysis/admin/:iso_code/:admin_id/:dist_id"
+	        }]
+		}, {
 	       "url": "/v1/terraianalysis/admin/:iso_code",
 	       "method": "GET",
 	       "endpoints": [{
