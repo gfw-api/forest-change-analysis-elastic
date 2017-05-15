@@ -23,7 +23,12 @@ def date_to_julian_day(input_date):
     except ValueError:
         return None, None
 
-def format_glad_sql(from_year, from_date, to_year, to_date):
+def format_glad_sql(from_year, from_date, to_year, to_date, iso=None, state=None, dist=None):
+
+    select_sql = 'SELECT lat, long, confidence_text, year, julian_day '
+    count_sql = 'SELECT count(julian_day) '
+    from_sql = 'FROM index_e663eb0904de4f39b87135c6c2ed10b5 '
+    order_sql = 'ORDER BY year, julian_day'
 
     if (int(from_year) < 2015 or int(to_year) > 2017):
         return jsonify({'errors': [{
@@ -31,60 +36,34 @@ def format_glad_sql(from_year, from_date, to_year, to_date):
             'title': 'GLAD period must be between 2015 and 2017'
             }]
         }), 400
-    elif (from_year == '2015') and (to_year == '2017'):
-        sql = ("?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 "
-                "where ((year = '2015' and julian_day >= %s) "
-                "or (year = '2016') "
-                "or (year = '2017' and julian_day <= %s))"
-                %(from_date, to_date))
-        download_sql = ("?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 "
-                        "where ((year = '2015' and julian_day >= %s) "
-                        "or (year = '2016') "
-                        "or (year = '2017' and julian_day <= %s)) "
-                        "ORDER BY year, julian_day"
-                        %(from_date, to_date))
-        return (sql, download_sql)
-    elif (from_year == to_year):
-    	sql = ("?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 "
-              "where ((year = %s and julian_day >= %s and julian_day <= %s))"
-              %(from_year, from_date, to_date))
-        download_sql = ("?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 "
-                        "where ((year = %s and julian_day >= %s and julian_day <= %s)) "
-                        "ORDER BY year, julian_day"
-                        %(from_year, from_date, to_date))
-        return (sql, download_sql)
-    else:
-    	sql = ("?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 "
-                "where ((year = %s and julian_day >= %s) "
-                "or (year = %s and julian_day <= %s))"
-                %(from_year, from_date, to_year, to_date))
-        download_sql = ("?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 "
-                        "where ((year = %s and julian_day >= %s) "
-                        "or (year = %s and julian_day <= %s)) "
-                        "ORDER BY year, julian_day"
-                        %(from_year, from_date, to_year, to_date))
-        return (sql, download_sql)
 
-# def format_glad_state_sql(from_year, from_date, to_year, to_date, country_iso, state_id):
-#
-#     if (int(from_year) < 2015 or int(to_year) > 2017):
-#         return jsonify({'errors': [{
-#             'status': '400',
-#             'title': 'GLAD period must be between 2015 and 2017'
-#             }]
-#         }), 400
-#     elif (from_year == '2015') and (to_year == '2017'):
-#         sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s and country_iso = %s and state_id = %s) or (year = '2016' and country_iso = %s and state_id = %s) or (year = '2017' and julian_day <= %s and country_iso = %s and state_id = %s))" %(from_date, country_iso, state_id, country_iso, state_id, to_date)
-#         download_sql = "?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s)) ORDER BY year, julian_day" %(from_date, to_date)
-#         return (sql, download_sql)
-#     elif (from_year == to_year):
-#     	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
-#         download_sql = "?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s)) ORDER BY year, julian_day" %(from_year, from_date, to_date)
-#         return (sql, download_sql)
-#     else:
-#     	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
-#         download_sql = "?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s)) ORDER BY year, julian_day" %(from_year, from_date, to_year, to_date)
-#         return (sql, download_sql)
+    elif (from_year == '2015') and (to_year == '2017'):
+        where_template = ("WHERE ((year = '2015' and julian_day >= {d1}) or "
+        "(year = '2016') or "
+        "(year = '2017' and julian_day <= {d2}))")
+
+    elif from_year == to_year:
+        where_template = 'WHERE ((year = {Y1} and julian_day >= {d1} and julian_day <= {d2}))'
+
+    else:
+        where_template = 'WHERE ((year = {y1} and julian_day >= {d1}) or (year = {y2} and julian_day <= {d2}))'
+
+    geog_id_list = ['country_iso', 'state_id', 'dist_id']
+    geog_val_list = [iso, state, dist]
+
+    for geog_name, geog_value in zip(geog_id_list, geog_val_list):
+        if geog_value:
+            if geog_name == 'country_iso':
+                where_template += " AND ({} = '{}')".format(geog_name, geog_value)
+            else:
+                where_template += ' AND ({} = {})'.format(geog_name, geog_value)
+
+    where_sql = where_template.format(y1=from_year, d1=from_date, y2=to_year, d2=to_date)
+
+    sql = '?sql=' + ''.join([count_sql, from_sql, where_sql])
+    download_sql = '?sql=' + ''.join([select_sql, from_sql, where_sql, order_sql])
+
+    return sql, download_sql
 
 def format_terrai_sql(from_year, from_date, to_year, to_date):
 
@@ -231,8 +210,7 @@ def query_glad():
             }), 400
 
     #send to sql formatter function
-    sql = format_glad_sql(from_year, from_date, to_year, to_date)[0]
-    download_sql = format_glad_sql(from_year, from_date, to_year, to_date)[1]
+    sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
 
     #create condition to look for confidence filter
     if conf == 'true' or conf == 'True':
@@ -339,8 +317,7 @@ def glad_admin(iso_code, admin_id):
             }), 400
 
     #send to sql formatter function
-    sql = format_glad_sql(from_year, from_date, to_year, to_date)[0]
-    download_sql = format_glad_sql(from_year, from_date, to_year, to_date)[1]
+    sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
 
     #get geostore id from admin areas and total area of geostore request
     geostore = make_gadm_request(iso_code, admin_id)[0]
@@ -396,8 +373,7 @@ def glad_country(iso_code):
             }), 400
 
     #send to sql formatter function
-    sql = format_glad_sql(from_year, from_date, to_year, to_date)[0]
-    download_sql = format_glad_sql(from_year, from_date, to_year, to_date)[1]
+    sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
 
     #get geostore id from admin areas and total area of geostore request
     geostore = make_country_request(iso_code)[0]
@@ -570,8 +546,7 @@ def glad_use(use_type, use_id):
             }), 400
 
     #send to sql formatter function
-    sql = format_glad_sql(from_year, from_date, to_year, to_date)[0]
-    download_sql = format_glad_sql(from_year, from_date, to_year, to_date)[1]
+    sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
 
     geostore = make_use_request(use_type, use_id)[0]
     area = make_use_request(use_type, use_id)[1]
@@ -686,8 +661,7 @@ def glad_wdpa(wdpa_id):
             }), 400
 
     #send to sql formatter function
-    sql = format_glad_sql(from_year, from_date, to_year, to_date)[0]
-    download_sql = format_glad_sql(from_year, from_date, to_year, to_date)[1]
+    sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
 
     geostore = make_wdpa_request(wdpa_id)[0]
     area = make_wdpa_request(wdpa_id)[1]
