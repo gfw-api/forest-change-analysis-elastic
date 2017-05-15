@@ -327,7 +327,6 @@ def glad_admin(iso_code, admin_id):
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date, iso_code, admin_id)
 
     #get geostore id from admin areas and total area of geostore request
-    # geostore = make_gadm_request(iso_code, admin_id)[0]
     area_ha = make_gadm_request(iso_code, admin_id)[1]
 
     if conf == 'true' or conf == "True":
@@ -380,10 +379,9 @@ def glad_country(iso_code):
             }), 400
 
     #send to sql formatter function
-    sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
+    sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date, iso_code)
 
     #get geostore id from admin areas and total area of geostore request
-    geostore = make_country_request(iso_code)[0]
     area_ha = make_country_request(iso_code)[1]
 
     if conf == 'true' or conf == "True":
@@ -392,9 +390,9 @@ def glad_country(iso_code):
         confidence = ""
 
     #make request to glad database
-    data = make_glad_request(sql, confidence, geostore)
+    data = make_glad_request(sql, confidence)
 
-    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area_ha, geostore)
+    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
