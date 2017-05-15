@@ -338,7 +338,7 @@ def glad_admin(iso_code, admin_id):
     #query glad database
     data = make_glad_request(sql, confidence)
 
-    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area_ha, geostore)
+    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
