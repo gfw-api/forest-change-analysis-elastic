@@ -79,14 +79,18 @@ def format_terrai_sql(from_year, from_date, to_year, to_date):
         download_sql = "?sql=select lat, long, year, day from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s)) ORDER BY year, day" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
         return (sql, download_sql)
 
-def make_glad_request(sql, confidence, geostore):
+def make_glad_request(sql, confidence, geostore=None):
 
     #format request to glad dataset
     url = 'http://staging-api.globalforestwatch.org/query/'
     datasetID = '274b4818-be18-4890-9d10-eae56d2a82e5'
     f = '&format=json'
 
-    full = url + datasetID + sql + confidence + "&geostore=" + geostore + f
+    if geostore:
+        full = url + datasetID + sql + confidence + "&geostore=" + geostore + f
+    else:
+        full = url + datasetID + sql + confidence + f
+
     r = requests.get(url=full)
     data = r.json()
     return data
@@ -158,17 +162,20 @@ def get_date(datasetID, sql, value):
     date_value = values['data'][0][value]
     return date_value
 
-def standardize_response(data, count, datasetID, download_sql, geostore, area):
+def standardize_response(data, count, datasetID, download_sql, area, geostore=None):
     #Helper function to standardize API responses
-
     standard_format = {}
     standard_format["type"] = "glad-alerts"
     standard_format["id"] = "undefined"
     standard_format["attributes"] = {}
     standard_format["attributes"]["value"] = data["data"][0][count]
     standard_format["attributes"]["downloadUrls"] = {}
-    standard_format["attributes"]["downloadUrls"]["csv"] = "/download/" + datasetID + download_sql + "&geostore=" + geostore + "&format=csv"
-    standard_format["attributes"]["downloadUrls"]["json"] = "/download/" + datasetID + download_sql + "&geostore=" + geostore + "&format=json"
+    if geostore:
+        standard_format["attributes"]["downloadUrls"]["csv"] = "/download/" + datasetID + download_sql + "&geostore=" + geostore + "&format=csv"
+        standard_format["attributes"]["downloadUrls"]["json"] = "/download/" + datasetID + download_sql + "&geostore=" + geostore + "&format=json"
+    else:
+        standard_format["attributes"]["downloadUrls"]["csv"] = "/download/" + datasetID + download_sql + "&format=csv"
+        standard_format["attributes"]["downloadUrls"]["json"] = "/download/" + datasetID + download_sql + "&format=json"
     standard_format['attributes']["areaHa"] = area
 
     return standard_format
@@ -225,7 +232,7 @@ def query_glad():
     area = make_area_request(geostore)
 
     #standardize response
-    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, geostore, area)
+    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -275,7 +282,7 @@ def query_terrai():
     #get area from geostore
     area = make_area_request(geostore)
 
-    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, geostore, area)
+    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -317,10 +324,10 @@ def glad_admin(iso_code, admin_id):
             }), 400
 
     #send to sql formatter function
-    sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
+    sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date, iso_code, admin_id)
 
     #get geostore id from admin areas and total area of geostore request
-    geostore = make_gadm_request(iso_code, admin_id)[0]
+    # geostore = make_gadm_request(iso_code, admin_id)[0]
     area_ha = make_gadm_request(iso_code, admin_id)[1]
 
     if conf == 'true' or conf == "True":
@@ -329,9 +336,9 @@ def glad_admin(iso_code, admin_id):
         confidence = ""
 
     #query glad database
-    data = make_glad_request(sql, confidence, geostore)
+    data = make_glad_request(sql, confidence)
 
-    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, geostore, area_ha)
+    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area_ha, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -387,7 +394,7 @@ def glad_country(iso_code):
     #make request to glad database
     data = make_glad_request(sql, confidence, geostore)
 
-    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, geostore, area_ha)
+    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area_ha, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -443,7 +450,7 @@ def terrai_admin(iso_code, admin_id):
     #Make request to terra i dataset
     data = make_terrai_request(sql, geostore)
 
-    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, geostore, area_ha)
+    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area_ha, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -499,7 +506,7 @@ def terrai_country(iso_code):
     #make request to terra i dataset
     data = make_terrai_request(sql, geostore)
 
-    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, geostore, area_ha)
+    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area_ha, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -559,7 +566,7 @@ def glad_use(use_type, use_id):
     #make request to glad database
     data = make_glad_request(sql, confidence, geostore)
 
-    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, geostore, area)
+    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -614,7 +621,7 @@ def terrai_use(use_type, use_id):
     #make request to glad database
     data = make_terrai_request(sql, geostore)
 
-    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, geostore, area)
+    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -674,7 +681,7 @@ def glad_wdpa(wdpa_id):
     #make request to glad database
     data = make_glad_request(sql, confidence, geostore)
 
-    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, geostore, area)
+    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -729,7 +736,7 @@ def terrai_wdpa(wdpa_id):
     #make request to glad database
     data = make_terrai_request(sql, geostore)
 
-    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, geostore, area)
+    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
