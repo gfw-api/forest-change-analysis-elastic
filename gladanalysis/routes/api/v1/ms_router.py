@@ -32,17 +32,59 @@ def format_glad_sql(from_year, from_date, to_year, to_date):
             }]
         }), 400
     elif (from_year == '2015') and (to_year == '2017'):
-        sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s))" %(from_date, to_date)
-        download_sql = "?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s)) ORDER BY year, julian_day" %(from_date, to_date)
+        sql = ("?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 "
+                "where ((year = '2015' and julian_day >= %s) "
+                "or (year = '2016') "
+                "or (year = '2017' and julian_day <= %s))"
+                %(from_date, to_date))
+        download_sql = ("?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 "
+                        "where ((year = '2015' and julian_day >= %s) "
+                        "or (year = '2016') "
+                        "or (year = '2017' and julian_day <= %s)) "
+                        "ORDER BY year, julian_day"
+                        %(from_date, to_date))
         return (sql, download_sql)
     elif (from_year == to_year):
-    	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
-        download_sql = "?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s)) ORDER BY year, julian_day" %(from_year, from_date, to_date)
+    	sql = ("?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 "
+              "where ((year = %s and julian_day >= %s and julian_day <= %s))"
+              %(from_year, from_date, to_date))
+        download_sql = ("?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 "
+                        "where ((year = %s and julian_day >= %s and julian_day <= %s)) "
+                        "ORDER BY year, julian_day"
+                        %(from_year, from_date, to_date))
         return (sql, download_sql)
     else:
-    	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
-        download_sql = "?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s)) ORDER BY year, julian_day" %(from_year, from_date, to_year, to_date)
+    	sql = ("?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 "
+                "where ((year = %s and julian_day >= %s) "
+                "or (year = %s and julian_day <= %s))"
+                %(from_year, from_date, to_year, to_date))
+        download_sql = ("?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 "
+                        "where ((year = %s and julian_day >= %s) "
+                        "or (year = %s and julian_day <= %s)) "
+                        "ORDER BY year, julian_day"
+                        %(from_year, from_date, to_year, to_date))
         return (sql, download_sql)
+
+# def format_glad_state_sql(from_year, from_date, to_year, to_date, country_iso, state_id):
+#
+#     if (int(from_year) < 2015 or int(to_year) > 2017):
+#         return jsonify({'errors': [{
+#             'status': '400',
+#             'title': 'GLAD period must be between 2015 and 2017'
+#             }]
+#         }), 400
+#     elif (from_year == '2015') and (to_year == '2017'):
+#         sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s and country_iso = %s and state_id = %s) or (year = '2016' and country_iso = %s and state_id = %s) or (year = '2017' and julian_day <= %s and country_iso = %s and state_id = %s))" %(from_date, country_iso, state_id, country_iso, state_id, to_date)
+#         download_sql = "?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = '2015' and julian_day >= %s) or (year = '2016') or (year = '2017' and julian_day <= %s)) ORDER BY year, julian_day" %(from_date, to_date)
+#         return (sql, download_sql)
+#     elif (from_year == to_year):
+#     	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s))" %(from_year, from_date, to_date)
+#         download_sql = "?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s and julian_day <= %s)) ORDER BY year, julian_day" %(from_year, from_date, to_date)
+#         return (sql, download_sql)
+#     else:
+#     	sql = "?sql=select count(julian_day) from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s))" %(from_year, from_date, to_year, to_date)
+#         download_sql = "?sql=select lat, long, confidence_text, year, julian_day from index_e663eb0904de4f39b87135c6c2ed10b5 where ((year = %s and julian_day >= %s) or (year = %s and julian_day <= %s)) ORDER BY year, julian_day" %(from_year, from_date, to_year, to_date)
+#         return (sql, download_sql)
 
 def format_terrai_sql(from_year, from_date, to_year, to_date):
 
