@@ -87,8 +87,8 @@ def format_terrai_sql(from_year, from_date, to_year, to_date, iso=None, state=No
     geog_val_list = [iso, state, dist]
 
     for geog_name, geog_value in zip(geog_id_list, geog_val_list):
-	    if geog_value:
-	        if geog_name == 'country_iso':
+        if geog_value:
+            if geog_name == 'country_iso':
                 where_template += " AND ({} = '{}')".format(geog_name, geog_value)
             else:
                 where_template += ' AND ({} = {})'.format(geog_name, geog_value)
