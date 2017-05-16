@@ -73,32 +73,32 @@ def format_terrai_sql(from_year, from_date, to_year, to_date, iso=None, state=No
     order_sql = 'ORDER BY year, day'
 
 
-	if (int(from_year) < 2004 or int(to_year) > 2017):
-       return jsonify({'errors': [{
-           'status': '400',
-           'title': 'Terra I period must be between 2004 and 2017'
-           }]
-       }), 400
+    if (int(from_year) < 2004 or int(to_year) > 2017):
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Terra I period must be between 2004 and 2017'
+            }]
+        }), 400
 
-	else:
-		where_template = 'WHERE ((year = {y1} and day >= {d1}) or (year >= int({y1} + 1) and year <= {y2}) or (year = {y2} and day <= {d2}))'
+    else:
+	       where_template = 'WHERE ((year = {y1} and day >= {d1}) or (year >= int({y1} + 1) and year <= {y2}) or (year = {y2} and day <= {d2}))'
 
-	geog_id_list = ['country_iso', 'state_id', 'dist_id']
-	geog_val_list = [iso, state, dist]
+    geog_id_list = ['country_iso', 'state_id', 'dist_id']
+    geog_val_list = [iso, state, dist]
 
-	for geog_name, geog_value in zip(geog_id_list, geog_val_list):
-		if geog_value:
-			if geog_name == 'country_iso':
+    for geog_name, geog_value in zip(geog_id_list, geog_val_list):
+	    if geog_value:
+	        if geog_name == 'country_iso':
 				where_template += " AND ({} = '{}')".format(geog_name, geog_value)
 			else:
 				where_template += ' AND ({} = {})'.format(geog_name, geog_value)
 
-	where_sql = where_template.format(y1=from_year, d1=from_date, y2=to_year, d2=to_date)
+    where_sql = where_template.format(y1=from_year, d1=from_date, y2=to_year, d2=to_date)
 
-	sql = '?sql=' + ''.join([count_sql, from_sql, where_sql])
+    sql = '?sql=' + ''.join([count_sql, from_sql, where_sql])
     download_sql = '?sql=' + ''.join([select_sql, from_sql, where_sql, order_sql])
 
-	return sql, download_sql
+    return sql, download_sql
 
 def make_glad_request(sql, confidence, geostore=None):
 
