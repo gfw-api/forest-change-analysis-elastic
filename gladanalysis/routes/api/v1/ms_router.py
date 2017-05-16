@@ -874,7 +874,8 @@ def glad_date_range():
     min_sql = '?sql=select MIN(julian_day)from {} where year = 2015'.format(os.getenv('GLAD_INDEX_ID'))
 
     # min_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', min_sql, 'MIN(julian_day)')
-    max_julian = get_date('{}', max_sql, 'MAX(julian_day)').format(os.getenv('GLAD_DATASET_ID'))
+    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
+    max_julian = get_date(datasetID, max_sql, 'MAX(julian_day)')
 
     max_value = max_julian + 1700
     # min_value = min_julian + 1500
@@ -902,7 +903,8 @@ def terrai_date_range():
     min_sql = '?sql=select MIN(day)from {} where year = 2004'.format(os.getenv('TERRAI_INDEX_ID'))
 
     # min_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', min_sql, 'MIN(julian_day)')
-    max_julian = get_date('{}', max_sql, 'MAX(day)').format(os.getenv('TERRAI_DATASET_ID'))
+    datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
+    max_julian = get_date(datasetID, max_sql, 'MAX(day)')
 
     max_value = max_julian + 1700
     # min_value = min_julian + 1500
