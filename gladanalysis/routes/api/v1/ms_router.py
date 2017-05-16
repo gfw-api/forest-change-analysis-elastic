@@ -69,8 +69,8 @@ def format_terrai_sql(from_year, from_date, to_year, to_date, iso=None, state=No
 
     select_sql = 'SELECT lat, long, year, day '
     count_sql = 'SELECT count(day) '
-	from_sql = 'FROM index_67cf7c0373654a1f8401d42c3706b7de '
-	order_sql = 'ORDER BY year, day'
+    from_sql = 'FROM index_67cf7c0373654a1f8401d42c3706b7de '
+    order_sql = 'ORDER BY year, day'
 
 
 	if (int(from_year) < 2004 or int(to_year) > 2017):
