@@ -65,19 +65,40 @@ def format_glad_sql(from_year, from_date, to_year, to_date, iso=None, state=None
 
     return sql, download_sql
 
-def format_terrai_sql(from_year, from_date, to_year, to_date):
+def format_terrai_sql(from_year, from_date, to_year, to_date, iso=None, state=None, dist=None):
 
-    #create conditions that issue correct sql
-    if (int(from_year) < 2004 or int(to_year) > 2017):
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'Terra I period must be between 2004 and 2017'
-            }]
-        }), 400
-    else:
-        sql = "?sql=select count(day) from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s))" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
-        download_sql = "?sql=select lat, long, year, day from index_67cf7c0373654a1f8401d42c3706b7de where ((year = %s and day >= %s) or (year >= %s and year <= %s) or (year = %s and day <= %s)) ORDER BY year, day" %(from_year, from_date, (int(from_year) + 1), to_year, to_year, to_date)
-        return (sql, download_sql)
+    select_sql = 'SELECT lat, long, year, day '
+    count_sql = 'SELECT count(day) '
+	from_sql = 'FROM index_67cf7c0373654a1f8401d42c3706b7de '
+	order_sql = 'ORDER BY year, day'
+
+
+	if (int(from_year) < 2004 or int(to_year) > 2017):
+       return jsonify({'errors': [{
+           'status': '400',
+           'title': 'Terra I period must be between 2004 and 2017'
+           }]
+       }), 400
+
+	else:
+		where_template = 'WHERE ((year = {y1} and day >= {d1}) or (year >= int({y1} + 1) and year <= {y2}) or (year = {y2} and day <= {d2}))'
+
+	geog_id_list = ['country_iso', 'state_id', 'dist_id']
+	geog_val_list = [iso, state, dist]
+
+	for geog_name, geog_value in zip(geog_id_list, geog_val_list):
+		if geog_value:
+			if geog_name == 'country_iso':
+				where_template += " AND ({} = '{}')".format(geog_name, geog_value)
+			else:
+				where_template += ' AND ({} = {})'.format(geog_name, geog_value)
+
+	where_sql = where_template.format(y1=from_year, d1=from_date, y2=to_year, d2=to_date)
+
+	sql = '?sql=' + ''.join([count_sql, from_sql, where_sql])
+    download_sql = '?sql=' + ''.join([select_sql, from_sql, where_sql, order_sql])
+
+	return sql, download_sql
 
 def make_glad_request(sql, confidence, geostore=None):
 
@@ -95,14 +116,18 @@ def make_glad_request(sql, confidence, geostore=None):
     data = r.json()
     return data
 
-def make_terrai_request(sql, geostore):
+def make_terrai_request(sql, geostore=None):
 
     #format request to glad dataset
     url = 'http://staging-api.globalforestwatch.org/query/'
     datasetID = '67cf7c03-7365-4a1f-8401-d42c3706b7de'
     f = '&format=json'
 
-    full = url + datasetID + sql + "&geostore=" + geostore + f
+    if geostore:
+        full = url + datasetID + sql + "&geostore=" + geostore + f
+    else:
+        full = url + datasetID + sql + f
+
     r = requests.get(url=full)
     data = r.json()
     return data
@@ -273,8 +298,7 @@ def query_terrai():
             }), 400
 
     #create conditions that issue correct sql
-    sql = format_terrai_sql(from_year, from_date, to_year, to_date)[0]
-    download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)[1]
+    sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)
 
     #format request parameters to Terra I
     data = make_terrai_request(sql, geostore)
@@ -295,10 +319,10 @@ def glad_dist(iso_code, admin_id, dist_id):
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
 
-    if not iso_code or not admin_id:
+    if not iso_code or not admin_id or not dist_id:
         return jsonify({'errors': [{
             'status': '400',
-            'title': 'ISO code and GADM ID should be set'
+            'title': 'ISO code, State ID and District ID should be set'
             }]
         }), 400
 
@@ -353,7 +377,7 @@ def glad_admin(iso_code, admin_id):
     if not iso_code or not admin_id:
         return jsonify({'errors': [{
             'status': '400',
-            'title': 'ISO code and GADM ID should be set'
+            'title': 'ISO code and State ID should be set'
             }]
         }), 400
 
@@ -460,7 +484,7 @@ def terrai_admin(iso_code, admin_id):
     if not iso_code or not admin_id:
         return jsonify({'errors': [{
             'status': '400',
-            'title': 'ISO code and Admin ID should be set'
+            'title': 'ISO code and State ID should be set'
             }]
         }), 400
 
@@ -493,17 +517,70 @@ def terrai_admin(iso_code, admin_id):
             }), 400
 
     #send dates to sql formatter
-    sql = format_terrai_sql(from_year, from_date, to_year, to_date)[0]
-    download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)[1]
+    sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date, iso_code, admin_id)
 
     #get geostore id from admin areas and total area of geostore request
-    geostore = make_gadm_request(iso_code, admin_id)[0]
+    # geostore = make_gadm_request(iso_code, admin_id)[0]
     area_ha = make_gadm_request(iso_code, admin_id)[1]
 
     #Make request to terra i dataset
-    data = make_terrai_request(sql, geostore)
+    data = make_terrai_request(sql)
 
-    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area_ha, geostore)
+    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area_ha)
+
+    return jsonify({'data': standard_format}), 200
+
+@endpoints.route('/terraianalysis/admin/<iso_code>/<admin_id>/<dist_id>', methods=['GET'])
+def terrai_dist(iso_code, admin_id, dist_id):
+    logging.info('QUERYING TERRA I AT GADM LEVEL')
+
+    period = request.args.get('period', None)
+
+    if not iso_code or not admin_id or not dist_id:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'ISO code, state ID and district ID should be set'
+            }]
+        }), 400
+
+
+    if not period:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'time period should be set'
+            }]
+        }), 400
+
+    if len(period.split(',')) < 2:
+        return jsonify({'errors': [{
+            'status': '400',
+            'title': 'Period needs 2 arguments'
+            }]
+        }), 400
+
+    period_from = period.split(',')[0]
+    period_to = period.split(',')[1]
+
+    from_year, from_date = date_to_julian_day(period_from)
+    to_year, to_date = date_to_julian_day(period_to)
+
+    if None in (from_year, to_year):
+        return jsonify({'errors': [{
+                'status': '400',
+                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
+                }]
+            }), 400
+
+    #send dates to sql formatter
+    sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date, iso_code, admin_id, dist_id)
+
+    #get area of request
+    area_ha = make_gadm_request(iso_code, admin_id)[1]
+
+    #Make request to terra i dataset
+    data = make_terrai_request(sql)
+
+    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -549,17 +626,16 @@ def terrai_country(iso_code):
             }), 400
 
     #send dates to sql formatter
-    sql = format_terrai_sql(from_year, from_date, to_year, to_date)[0]
-    download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)[1]
+    sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date, iso_code)
 
     #get geostore id from admin areas and total area of geostore request
-    geostore = make_country_request(iso_code)[0]
+    # geostore = make_country_request(iso_code)[0]
     area_ha = make_country_request(iso_code)[1]
 
     #make request to terra i dataset
-    data = make_terrai_request(sql, geostore)
+    data = make_terrai_request(sql)
 
-    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area_ha, geostore)
+    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -665,8 +741,7 @@ def terrai_use(use_type, use_id):
             }), 400
 
     #send to sql formatter function
-    sql = format_terrai_sql(from_year, from_date, to_year, to_date)[0]
-    download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)[1]
+    sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)
 
     geostore = make_use_request(use_type, use_id)[0]
     area = make_use_request(use_type, use_id)[1]
@@ -780,8 +855,7 @@ def terrai_wdpa(wdpa_id):
             }), 400
 
     #send to sql formatter function
-    sql = format_terrai_sql(from_year, from_date, to_year, to_date)[0]
-    download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)[1]
+    sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)
 
     geostore = make_wdpa_request(wdpa_id)[0]
     area = make_wdpa_request(wdpa_id)[1]
