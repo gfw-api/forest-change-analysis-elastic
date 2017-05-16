@@ -25,9 +25,9 @@ def date_to_julian_day(input_date):
 
 def format_glad_sql(from_year, from_date, to_year, to_date, iso=None, state=None, dist=None):
 
-    select_sql = 'SELECT lat, long, confidence_text, year, julian_day '
+    select_sql = 'SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day '
     count_sql = 'SELECT count(julian_day) '
-    from_sql = 'FROM index_e663eb0904de4f39b87135c6c2ed10b5 '
+    from_sql = 'FROM {} '.format(os.getenv('GLAD_INDEX_ID'))
     order_sql = 'ORDER BY year, julian_day'
 
     if (int(from_year) < 2015 or int(to_year) > 2017):
@@ -67,9 +67,9 @@ def format_glad_sql(from_year, from_date, to_year, to_date, iso=None, state=None
 
 def format_terrai_sql(from_year, from_date, to_year, to_date, iso=None, state=None, dist=None):
 
-    select_sql = 'SELECT lat, long, year, day '
+    select_sql = 'SELECT lat, long, country_iso, state_id, dist_id, year, day '
     count_sql = 'SELECT count(day) '
-    from_sql = 'FROM index_67cf7c0373654a1f8401d42c3706b7de '
+    from_sql = 'FROM {} '.format(os.getenv('TERRAI_INDEX_ID'))
     order_sql = 'ORDER BY year, day'
 
 
@@ -104,7 +104,7 @@ def make_glad_request(sql, confidence, geostore=None):
 
     #format request to glad dataset
     url = 'http://staging-api.globalforestwatch.org/query/'
-    datasetID = '274b4818-be18-4890-9d10-eae56d2a82e5'
+    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
     f = '&format=json'
 
     if geostore:
@@ -120,7 +120,7 @@ def make_terrai_request(sql, geostore=None):
 
     #format request to glad dataset
     url = 'http://staging-api.globalforestwatch.org/query/'
-    datasetID = '67cf7c03-7365-4a1f-8401-d42c3706b7de'
+    datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
     f = '&format=json'
 
     if geostore:
@@ -870,11 +870,11 @@ def terrai_wdpa(wdpa_id):
 @endpoints.route('/gladanalysis/date-range', methods=['GET'])
 def glad_date_range():
 
-    max_sql = '?sql=select MAX(julian_day)from index_e663eb0904de4f39b87135c6c2ed10b5 where year = 2017'
-    min_sql = '?sql=select MIN(julian_day)from index_e663eb0904de4f39b87135c6c2ed10b5 where year = 2015'
+    max_sql = '?sql=select MAX(julian_day)from {} where year = 2017'.format(os.getenv('GLAD_INDEX_ID'))
+    min_sql = '?sql=select MIN(julian_day)from {} where year = 2015'.format(os.getenv('GLAD_INDEX_ID'))
 
     # min_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', min_sql, 'MIN(julian_day)')
-    max_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', max_sql, 'MAX(julian_day)')
+    max_julian = get_date('{}', max_sql, 'MAX(julian_day)').format(os.getenv('GLAD_DATASET_ID'))
 
     max_value = max_julian + 1700
     # min_value = min_julian + 1500
@@ -898,11 +898,11 @@ def glad_date_range():
 @endpoints.route('/terraianalysis/date-range', methods=['GET'])
 def terrai_date_range():
 
-    max_sql = '?sql=select MAX(day)from index_67cf7c0373654a1f8401d42c3706b7de where year = 2017'
-    min_sql = '?sql=select MIN(day)from index_67cf7c0373654a1f8401d42c3706b7de where year = 2004'
+    max_sql = '?sql=select MAX(day)from {} where year = 2017'.format(os.getenv('TERRAI_INDEX_ID'))
+    min_sql = '?sql=select MIN(day)from {} where year = 2004'.format(os.getenv('TERRAI_INDEX_ID'))
 
     # min_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', min_sql, 'MIN(julian_day)')
-    max_julian = get_date('67cf7c03-7365-4a1f-8401-d42c3706b7de', max_sql, 'MAX(day)')
+    max_julian = get_date('{}', max_sql, 'MAX(day)').format(os.getenv('TERRAI_DATASET_ID'))
 
     max_value = max_julian + 1700
     # min_value = min_julian + 1500
