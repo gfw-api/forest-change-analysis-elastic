@@ -93,7 +93,7 @@ def format_terrai_sql(from_year, from_date, to_year, to_date, iso=None, state=No
             else:
                 where_template += ' AND ({} = {})'.format(geog_name, geog_value)
 
-    where_sql = where_template.format(y1=from_year, d1=from_date, y1_plus_1=int(from_year + 1), y2=to_year, d2=to_date, y2_minus_1=int(to_year - 1))
+    where_sql = where_template.format(y1=int(from_year), d1=int(from_date), y1_plus_1=(int(from_year) + 1), y2=int(to_year), d2=int(to_date), y2_minus_1=(int(to_year) - 1))
 
     sql = '?sql=' + ''.join([count_sql, from_sql, where_sql])
     download_sql = '?sql=' + ''.join([select_sql, from_sql, where_sql, order_sql])
