@@ -80,6 +80,12 @@ def format_terrai_sql(from_year, from_date, to_year, to_date, iso=None, state=No
             }]
         }), 400
 
+    elif (int(from_year) == int(to_year)):
+        where_template = 'WHERE ((year = {y1} and day >= {d1} and day <= {d2}))'
+
+    elif (int(from_year) + 1) == int(to_year):
+        where_template = 'WHERE ((year = {y1} and day >= {d1}) or (year = {y2} and day <= {d2}))'
+
     else:
         where_template = 'WHERE ((year = {y1} and day >= {d1}) or (year >= {y1_plus_1} and year <= {y2_minus_1}) or (year = {y2} and day <= {d2}))'
 
