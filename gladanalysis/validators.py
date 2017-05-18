@@ -29,11 +29,23 @@ def validate_period(func):
         return func(*args, **kwargs)
     return wrapper
 
+def validate_use(func):
+    """Use Validation"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        names = ['mining', 'oilpalm', 'fiber', 'logging']
+        name = request.view_args.get('use_type')
+        if name not in names:
+            return error(status=400, detail='Name not valid')
+        return func(*args, **kwargs)
+    return wrapper
+
 def validate_admin(func):
     """validate admin arguments"""
     @wraps(func)
     def wrapper(*args, **kwargs):
         if request.method == 'GET':
+        iso_code = request.view_args.get('iso_code')
             if not iso_code:
                 return error(status=400, detail="Must specify a ISO code, and optionally a /state_id and /ditrict_id")
         return func(*args, **kwargs)
