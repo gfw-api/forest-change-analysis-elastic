@@ -45,7 +45,7 @@ def validate_admin(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         if request.method == 'GET':
-        iso_code = request.view_args.get('iso_code')
+            iso_code = request.view_args.get('iso_code')
             if not iso_code:
                 return error(status=400, detail="Must specify a ISO code, and optionally a /state_id and /ditrict_id")
         return func(*args, **kwargs)
