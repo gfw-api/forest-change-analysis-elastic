@@ -14,7 +14,6 @@ from gladanalysis.validators import validate_geostore_period, validate_period
 
 def date_to_julian_day(input_date):
     #Helper function to transform dates
-
     try:
         date_obj = datetime.datetime.strptime(input_date, '%Y-%m-%d')
         time_tuple = date_obj.timetuple()
@@ -259,26 +258,15 @@ def query_glad():
 
 
 @endpoints.route('/terraianalysis', methods=['GET'])
+@validate_geostore_period
+@validate_period
+
 def query_terrai():
 
     logging.info('QUERYING TERRA I')
 
     geostore = request.args.get('geostore', None)
     period = request.args.get('period', None)
-
-    if not geostore or not period:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'geostore and period should be set'
-            }]
-        }), 400
-
-    if len(period.split(',')) < 2:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'Period needs 2 arguments'
-            }]
-        }), 400
 
     period_from = period.split(',')[0]
     period_to = period.split(',')[1]
