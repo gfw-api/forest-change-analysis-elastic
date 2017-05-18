@@ -8,7 +8,7 @@ import requests
 from . import endpoints
 from gladanalysis.responders import ErrorResponder
 from gladanalysis.utils.http import request_to_microservice
-from gladanalysis.validators import validate_geostore, validate_period
+from gladanalysis.validators import validate_geostore, validate_period, validate_admin
 
 #Testing branch history
 
@@ -295,6 +295,8 @@ def query_terrai():
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/gladanalysis/admin/<iso_code>/<admin_id>/<dist_id>', methods=['GET'])
+@validate_period
+
 def glad_dist(iso_code, admin_id, dist_id):
 
     logging.info('Running GADM level glad analysis')
@@ -307,14 +309,6 @@ def glad_dist(iso_code, admin_id, dist_id):
         return jsonify({'errors': [{
             'status': '400',
             'title': 'ISO code, State ID and District ID should be set'
-            }]
-        }), 400
-
-    #format date and format error responses
-    if len(period.split(',')) < 2:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'Period needs 2 arguments'
             }]
         }), 400
 
@@ -405,6 +399,8 @@ def glad_admin(iso_code, admin_id):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/gladanalysis/admin/<iso_code>', methods=['GET'])
+@validate_admin
+
 def glad_country(iso_code):
 
     logging.info('Running country level glad analysis')

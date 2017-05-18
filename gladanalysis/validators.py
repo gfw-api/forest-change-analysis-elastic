@@ -28,3 +28,13 @@ def validate_period(func):
                 return error(status=400, detail="Period needs 2 arguments")
         return func(*args, **kwargs)
     return wrapper
+
+def validate_admin(func):
+    """validate admin arguments"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if request.method == 'GET':
+            if not iso_code:
+                return error(status=400, detail="Must specify a ISO code, and optionally a /state_id and /ditrict_id")
+        return func(*args, **kwargs)
+    return wrapper
