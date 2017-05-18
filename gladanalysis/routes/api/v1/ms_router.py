@@ -213,7 +213,8 @@ def standardize_response(data, count, datasetID, download_sql, area, geostore=No
     return standard_format
 
 @endpoints.route('/gladanalysis', methods=['GET'])
-@validate_geostore_period
+@validate_geostore
+@validate_period
 def query_glad():
     """Query GLAD"""
     logging.info('QUERYING GLAD')
