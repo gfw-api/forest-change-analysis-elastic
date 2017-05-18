@@ -43,7 +43,7 @@ def format_glad_sql(from_year, from_date, to_year, to_date, iso=None, state=None
         "(year = '2017' and julian_day <= {d2}))")
 
     elif from_year == to_year:
-        where_template = 'WHERE ((year = {Y1} and julian_day >= {d1} and julian_day <= {d2}))'
+        where_template = 'WHERE ((year = {y1} and julian_day >= {d1} and julian_day <= {d2}))'
 
     else:
         where_template = 'WHERE ((year = {y1} and julian_day >= {d1}) or (year = {y2} and julian_day <= {d2}))'
