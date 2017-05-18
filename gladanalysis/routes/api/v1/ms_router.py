@@ -223,13 +223,6 @@ def query_glad():
     geostore = request.args.get('geostore', None)
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
-    #
-    # if not geostore or not period:
-    #     return jsonify({'errors': [{
-    #         'status': '400',
-    #         'title': 'geostore and period should be set'
-    #         }]
-    #     }), 400
 
     if len(period.split(',')) < 2:
         return jsonify({'errors': [{
