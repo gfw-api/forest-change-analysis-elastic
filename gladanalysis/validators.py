@@ -17,13 +17,13 @@ def validate_geostore_period(func):
         return func(*args, **kwargs)
     return wrapper
 
-def validate_period(func):
-    """validate period argument"""
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if request.method == 'GET':
-            period = request.args.get('period')
-            if not period:
-                return error(status=400, detail="Time period must be set")
-        return func(*args, **kwargs)
-    return wrapper
+# def validate_period(func):
+#     """validate period argument"""
+#     @wraps(func)
+#     def wrapper(*args, **kwargs):
+#         if request.method == 'GET':
+#             period = request.args.get('period')
+#             if not period:
+#                 return error(status=400, detail="Time period must be set")
+#         return func(*args, **kwargs)
+#     return wrapper
