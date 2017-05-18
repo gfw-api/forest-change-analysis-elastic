@@ -8,7 +8,7 @@ import requests
 from . import endpoints
 from gladanalysis.responders import ErrorResponder
 from gladanalysis.utils.http import request_to_microservice
-from gladanalysis.validators import validate_geostore_period
+from gladanalysis.validators import validate_geostore_period, validate_period
 
 #Testing branch history
 
@@ -214,7 +214,7 @@ def standardize_response(data, count, datasetID, download_sql, area, geostore=No
 
 @endpoints.route('/gladanalysis', methods=['GET'])
 @validate_geostore_period
-# @validate_period
+@validate_period
 
 def query_glad():
     """Query GLAD"""
@@ -223,13 +223,6 @@ def query_glad():
     geostore = request.args.get('geostore', None)
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
-
-    if len(period.split(',')) < 2:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'Period needs 2 arguments'
-            }]
-        }), 400
 
     period_from = period.split(',')[0]
     period_to = period.split(',')[1]
