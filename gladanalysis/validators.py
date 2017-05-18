@@ -12,6 +12,6 @@ def validate_geostore(func):
         if request.method == 'GET':
             geostore = request.args.get('geostore')
             if not geostore:
-                return error(status=400, detial="Geostore must be set")
+                return error(status=400, detail="Geostore must be set")
         return func(*args, **kwargs)
     return wrapper
