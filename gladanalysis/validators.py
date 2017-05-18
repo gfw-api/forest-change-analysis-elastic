@@ -5,15 +5,14 @@ from flask import request
 
 from gladanalysis.routes.api.v1 import error
 
-def validate_geostore_period(func):
+def validate_geostore(func):
     """validate geostore argument"""
     @wraps(func)
     def wrapper(*args, **kwargs):
         if request.method == 'GET':
             geostore = request.args.get('geostore')
-            period = request.args.get('period')
-            if not geostore or not period:
-                return error(status=400, detail="Geostore and time period must be set")
+            if not geostore:
+                return error(status=400, detail="Geostore must be set")
         return func(*args, **kwargs)
     return wrapper
 
@@ -23,7 +22,9 @@ def validate_period(func):
     def wrapper(*args, **kwargs):
         if request.method == 'GET':
             period = request.args.get('period')
-            if len(period.split(',')) < 2:
+            if not period:
+                return error(status=400, detail="Time period must be set")
+            elif len(period.split(',')) < 2:
                 return error(status=400, detail="Period needs 2 arguments")
         return func(*args, **kwargs)
     return wrapper

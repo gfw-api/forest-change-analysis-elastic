@@ -8,7 +8,7 @@ import requests
 from . import endpoints
 from gladanalysis.responders import ErrorResponder
 from gladanalysis.utils.http import request_to_microservice
-from gladanalysis.validators import validate_geostore_period, validate_period
+from gladanalysis.validators import validate_geostore, validate_period
 
 #Testing branch history
 
@@ -212,7 +212,7 @@ def standardize_response(data, count, datasetID, download_sql, area, geostore=No
     return standard_format
 
 @endpoints.route('/gladanalysis', methods=['GET'])
-@validate_geostore_period
+@validate_geostore
 @validate_period
 
 def query_glad():
@@ -258,7 +258,7 @@ def query_glad():
 
 
 @endpoints.route('/terraianalysis', methods=['GET'])
-@validate_geostore_period
+@validate_geostore
 @validate_period
 
 def query_terrai():
