@@ -8,7 +8,7 @@ import requests
 from . import endpoints
 from gladanalysis.responders import ErrorResponder
 from gladanalysis.utils.http import request_to_microservice
-from gladanalysis.validators import validate_geostore, validate_period
+from gladanalysis.validators import validate_geostore_period, validate_period
 
 #Testing branch history
 
