@@ -629,13 +629,6 @@ def glad_use(use_type, use_id):
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
 
-    if not use_type or not use_id:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'Use type and use ID should be set'
-            }]
-        }), 400
-
     period_from = period.split(',')[0]
     period_to = period.split(',')[1]
 
@@ -668,6 +661,9 @@ def glad_use(use_type, use_id):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/terraianalysis/use/<use_type>/<use_id>', methods=['GET'])
+@validate_use
+@validate_period
+
 def terrai_use(use_type, use_id):
 
     logging.info('QUERY GLAD BY LAND USE DATA')
