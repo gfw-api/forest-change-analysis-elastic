@@ -472,8 +472,7 @@ def glad_use(use_type, use_id):
     #send to sql formatter function
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
 
-    geostore = make_use_request(use_type, use_id)[0]
-    area = make_use_request(use_type, use_id)[1]
+    geostore, area = GeostoreService.make_use_request(use_type, use_id)
 
     if conf == 'true' or conf == "True":
         confidence = "and confidence = '3'"
