@@ -1,9 +1,10 @@
 import json
-import requests 
+import requests
 
 
 class GeostoreService(object):
 
+    @staticmethod
     def make_use_request(use_type, use_id):
 
         area_url = 'http://staging-api.globalforestwatch.org/geostore/use/%s/%s' %(use_type, use_id)
