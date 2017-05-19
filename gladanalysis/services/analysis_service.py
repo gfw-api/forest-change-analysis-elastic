@@ -20,3 +20,20 @@ class AnalysisService(object):
         r = requests.get(url=full)
         data = r.json()
         return data
+
+    @staticmethod
+    def make_terrai_request(sql, geostore=None):
+
+        #format request to glad dataset
+        url = 'http://staging-api.globalforestwatch.org/query/'
+        datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
+        f = '&format=json'
+
+        if geostore:
+            full = url + datasetID + sql + "&geostore=" + geostore + f
+        else:
+            full = url + datasetID + sql + f
+
+        r = requests.get(url=full)
+        data = r.json()
+        return data

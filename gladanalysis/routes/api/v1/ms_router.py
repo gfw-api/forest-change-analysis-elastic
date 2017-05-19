@@ -14,22 +14,6 @@ from gladanalysis.responders import ErrorResponder
 from gladanalysis.utils.http import request_to_microservice
 from gladanalysis.validators import validate_geostore, validate_period, validate_admin, validate_use, validate_wdpa
 
-def make_terrai_request(sql, geostore=None):
-
-    #format request to glad dataset
-    url = 'http://staging-api.globalforestwatch.org/query/'
-    datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    f = '&format=json'
-
-    if geostore:
-        full = url + datasetID + sql + "&geostore=" + geostore + f
-    else:
-        full = url + datasetID + sql + f
-
-    r = requests.get(url=full)
-    data = r.json()
-    return data
-
 def standardize_response(data, count, datasetID, download_sql, area, geostore=None):
     #Helper function to standardize API responses
     standard_format = {}
@@ -101,7 +85,7 @@ def query_terrai():
     sql, download_sql = SqlService.format_terrai_sql(from_year, from_date, to_year, to_date)
 
     #format request parameters to Terra I
-    data = make_terrai_request(sql, geostore)
+    data = AnalysisService.make_terrai_request(sql, geostore)
 
     #get area from geostore
     area = GeostoreService.make_area_request(geostore)
@@ -227,7 +211,7 @@ def terrai_admin(iso_code, admin_id):
     area_ha = GeostoreService.make_gadm_request(iso_code, admin_id)
 
     #Make request to terra i dataset
-    data = make_terrai_request(sql)
+    data = AnalysisService.make_terrai_request(sql)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
     standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area_ha)
@@ -252,7 +236,7 @@ def terrai_dist(iso_code, admin_id, dist_id):
     area_ha = GeostoreService.make_gadm_request(iso_code, admin_id, dist_id)
 
     #Make request to terra i dataset
-    data = make_terrai_request(sql)
+    data = AnalysisService.make_terrai_request(sql)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
     standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area_ha)
@@ -278,7 +262,7 @@ def terrai_country(iso_code):
     area_ha = GeostoreService.make_gadm_request(iso_code)
 
     #make request to terra i dataset
-    data = make_terrai_request(sql)
+    data = AnalysisService.make_terrai_request(sql)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
     standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area_ha)
@@ -334,7 +318,7 @@ def terrai_use(use_type, use_id):
     geostore, area = GeostoreService.make_use_request(use_type, use_id)
 
     #make request to glad database
-    data = make_terrai_request(sql, geostore)
+    data = AnalysisService.make_terrai_request(sql, geostore)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
     standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area, geostore)
@@ -390,7 +374,7 @@ def terrai_wdpa(wdpa_id):
     geostore, area = GeostoreService.make_wdpa_request(wdpa_id)
 
     #make request to glad database
-    data = make_terrai_request(sql, geostore)
+    data = AnalysisService.make_terrai_request(sql, geostore)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
     standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area, geostore)
