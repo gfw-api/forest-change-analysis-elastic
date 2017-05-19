@@ -62,10 +62,13 @@ def validate_use(func):
         use_id = request.view_args.get('use_id')
 
         if not name or not use_id:
-            return error(status=400, detail="Use Type must be set (mining, oilpalm, fiber, or logging), and Use ID")
+            return error(status=400, detail="Use Type (mining, oilpalm, fiber, or logging), and Use ID must be set")
 
         elif name not in names:
             return error(status=400, detail='Use Type not valid (valid options: mining, oilpalm, fiber, or logging)')
+
+        elif re.search('[a-zA-Z]', use_id):
+            return error(status=400, detail="Use ID should be numeric")
 
         return func(*args, **kwargs)
     return wrapper
@@ -92,7 +95,7 @@ def validate_admin(func):
                 else:
                     pass
 
-            elif admin_id and dist_id:
+            elif dist_id:
                 if re.search('[a-zA-Z]', dist_id):
                     return error(status=400, detail="For state and district queries please use numbers")
 

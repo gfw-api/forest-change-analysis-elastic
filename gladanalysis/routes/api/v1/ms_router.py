@@ -321,13 +321,6 @@ def glad_admin(iso_code, admin_id):
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
 
-    if not iso_code or not admin_id:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'ISO code and State ID should be set'
-            }]
-        }), 400
-
     from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     #send to sql formatter function
@@ -360,13 +353,6 @@ def glad_country(iso_code):
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
 
-    if not iso_code:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'ISO code should be set'
-            }]
-        }), 400
-
     from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     #send to sql formatter function
@@ -396,13 +382,6 @@ def terrai_admin(iso_code, admin_id):
 
     period = request.args.get('period', None)
 
-    if not iso_code or not admin_id:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'ISO code and State ID should be set'
-            }]
-        }), 400
-
     from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     #send dates to sql formatter
@@ -428,13 +407,6 @@ def terrai_dist(iso_code, admin_id, dist_id):
 
     period = request.args.get('period', None)
 
-    if not iso_code or not admin_id or not dist_id:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'ISO code, state ID and district ID should be set'
-            }]
-        }), 400
-
     from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     #send dates to sql formatter
@@ -459,13 +431,6 @@ def terrai_country(iso_code):
     logging.info('QUERYING TERRA I AT COUNTRY LEVEL')
 
     period = request.args.get('period', None)
-
-    if not iso_code:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'ISO code should be set'
-            }]
-        }), 400
 
     from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
