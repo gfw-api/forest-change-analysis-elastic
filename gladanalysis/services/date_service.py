@@ -22,3 +22,15 @@ class DateService(object):
 
         except ValueError:
             return None, None
+
+    @staticmethod
+    def get_date(datasetID, sql, value):
+
+        url = 'http://staging-api.globalforestwatch.org/query/'
+        f = '&format=json'
+
+        full = url + datasetID + sql + f
+        r = requests.get(url=full)
+        values = r.json()
+        date_value = values['data'][0][value]
+        return date_value

@@ -127,17 +127,6 @@ def make_terrai_request(sql, geostore=None):
     data = r.json()
     return data
 
-def get_date(datasetID, sql, value):
-
-    url = 'http://staging-api.globalforestwatch.org/query/'
-    f = '&format=json'
-
-    full = url + datasetID + sql + f
-    r = requests.get(url=full)
-    values = r.json()
-    date_value = values['data'][0][value]
-    return date_value
-
 def standardize_response(data, count, datasetID, download_sql, area, geostore=None):
     #Helper function to standardize API responses
     standard_format = {}
@@ -513,7 +502,7 @@ def glad_date_range():
 
     # min_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', min_sql, 'MIN(julian_day)')
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    max_julian = get_date(datasetID, max_sql, 'MAX(julian_day)')
+    max_julian = DateService.get_date(datasetID, max_sql, 'MAX(julian_day)')
 
     max_value = max_julian + 1700
     # min_value = min_julian + 1500
@@ -542,7 +531,7 @@ def terrai_date_range():
 
     # min_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', min_sql, 'MIN(julian_day)')
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    max_julian = get_date(datasetID, max_sql, 'MAX(day)')
+    max_julian = DateService.get_date(datasetID, max_sql, 'MAX(day)')
 
     max_value = max_julian + 1700
     # min_value = min_julian + 1500
