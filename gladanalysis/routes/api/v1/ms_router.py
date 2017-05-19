@@ -152,24 +152,6 @@ def make_area_request(geostore):
     area = area_resp['data']['attributes']['areaHa']
     return area
 
-def make_gadm_request(iso_code, admin_id):
-
-    geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s/%s'%(iso_code, admin_id)
-    r = requests.get(url=geostore_url)
-    geostore_data = r.json()
-    geostore = geostore_data['data']['id']
-    area_ha = geostore_data['data']['attributes']['areaHa']
-    return (geostore, area_ha)
-
-def make_country_request(iso_code):
-
-    geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s'%(iso_code)
-    r = requests.get(url=geostore_url)
-    geostore_data = r.json()
-    geostore = geostore_data['data']['id']
-    area_ha = geostore_data['data']['attributes']['areaHa']
-    return (geostore, area_ha)
-
 def make_wdpa_request(wdpa_id):
 
     area_url = 'http://staging-api.globalforestwatch.org/geostore/wdpa/%s' %(wdpa_id)
@@ -288,8 +270,7 @@ def glad_dist(iso_code, admin_id, dist_id):
     #send to sql formatter function
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date, iso_code, admin_id, dist_id)
 
-    #get geostore id from admin areas and total area of geostore request
-    area_ha = make_gadm_request(iso_code, admin_id)[1]
+    area_ha = GeostoreService.make_gadm_request(iso_code, admin_id)
 
     if conf == 'true' or conf == "True":
         confidence = "and confidence = '3'"
@@ -322,7 +303,7 @@ def glad_admin(iso_code, admin_id):
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date, iso_code, admin_id)
 
     #get geostore id from admin areas and total area of geostore request
-    area_ha = make_gadm_request(iso_code, admin_id)[1]
+    area_ha = GeostoreService.make_gadm_request(iso_code, admin_id)
 
     if conf == 'true' or conf == "True":
         confidence = "and confidence = '3'"
@@ -355,7 +336,7 @@ def glad_country(iso_code):
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date, iso_code)
 
     #get geostore id from admin areas and total area of geostore request
-    area_ha = make_country_request(iso_code)[1]
+    area_ha = GeostoreService.make_gadm_request(iso_code)
 
     if conf == 'true' or conf == "True":
         confidence = "and confidence = '3'"
@@ -385,8 +366,7 @@ def terrai_admin(iso_code, admin_id):
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date, iso_code, admin_id)
 
     #get geostore id from admin areas and total area of geostore request
-    # geostore = make_gadm_request(iso_code, admin_id)[0]
-    area_ha = make_gadm_request(iso_code, admin_id)[1]
+    area_ha = GeostoreService.make_gadm_request(iso_code, admin_id)
 
     #Make request to terra i dataset
     data = make_terrai_request(sql)
@@ -411,7 +391,7 @@ def terrai_dist(iso_code, admin_id, dist_id):
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date, iso_code, admin_id, dist_id)
 
     #get area of request
-    area_ha = make_gadm_request(iso_code, admin_id)[1]
+    area_ha = GeostoreService.make_gadm_request(iso_code, admin_id, dist_id)
 
     #Make request to terra i dataset
     data = make_terrai_request(sql)
@@ -437,8 +417,7 @@ def terrai_country(iso_code):
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date, iso_code)
 
     #get geostore id from admin areas and total area of geostore request
-    # geostore = make_country_request(iso_code)[0]
-    area_ha = make_country_request(iso_code)[1]
+    area_ha = GeostoreService.make_gadm_request(iso_code)
 
     #make request to terra i dataset
     data = make_terrai_request(sql)

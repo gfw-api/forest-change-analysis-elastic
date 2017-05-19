@@ -13,3 +13,21 @@ class GeostoreService(object):
         geostore = geostore_data['data']['id']
         area = geostore_data['data']['attributes']['areaHa']
         return (geostore, area)
+
+    @staticmethod
+    def make_gadm_request(iso_code, admin_id=None, dist_id=None):
+
+        if not admin_id and not dist_id:
+            geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s'%(iso_code)
+
+        elif admin_id and not dist_id:
+            geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s/%s'%(iso_code, admin_id)
+
+        elif admin_id and dist_id:
+            geostore_url = 'https://staging-api.globalforestwatch.org/geostore/admin/%s/%s/%s'%(iso_code, admin_id, dist_id)
+
+        r = requests.get(url=geostore_url)
+        geostore_data = r.json()
+        geostore = geostore_data['data']['id']
+        area_ha = geostore_data['data']['attributes']['areaHa']
+        return area_ha
