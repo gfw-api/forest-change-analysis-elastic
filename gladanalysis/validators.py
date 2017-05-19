@@ -93,7 +93,7 @@ def validate_admin(func):
                     pass
 
             elif dist_id:
-                if re.search('[a-zA-Z]', admin_id):
+                if re.search('[a-zA-Z]', dist_id):
                     return error(status=400, detail="For state and district queries please use numbers")
 
                 else:
