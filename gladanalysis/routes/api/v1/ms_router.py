@@ -12,13 +12,18 @@ from gladanalysis.validators import validate_geostore, validate_period, validate
 
 #Testing branch history
 
-def date_to_julian_day(input_date):
+def date_to_julian_day(period):
     #Helper function to transform dates
     try:
-        date_obj = datetime.datetime.strptime(input_date, '%Y-%m-%d')
-        time_tuple = date_obj.timetuple()
-        logging.info(time_tuple.tm_year)
-        return str(time_tuple.tm_year), str(time_tuple.tm_yday)
+	    period_from = period.split(',')[0]
+	    period_to = period.split(',')[1]
+	    date_obj_from = datetime.datetime.strptime(period_from, '%Y-%m-%d')
+	    date_obj_to = datetime.datetime.strptime(period_to, '%Y-%m-%d')
+	    time_tuple_from = date_obj_from.timetuple()
+	    time_tuple_to = date_obj_to.timetuple()
+	    logging.info(time_tuple_from.tm_year)
+	    logging.info(time_tuple_to.tm_year)
+	    return str(time_tuple_from.tm_year), str(time_tuple_from.tm_yday), str(time_tuple_to.tm_year), str(time_tuple_to.tm_yday)
 
     except ValueError:
         return None, None
@@ -223,11 +228,7 @@ def query_glad():
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
 
-    period_from = period.split(',')[0]
-    period_to = period.split(',')[1]
-
-    from_year, from_date = date_to_julian_day(period_from)
-    to_year, to_date = date_to_julian_day(period_to)
+    from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     #send to sql formatter function
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
@@ -261,11 +262,7 @@ def query_terrai():
     geostore = request.args.get('geostore', None)
     period = request.args.get('period', None)
 
-    period_from = period.split(',')[0]
-    period_to = period.split(',')[1]
-
-    from_year, from_date = date_to_julian_day(period_from)
-    to_year, to_date = date_to_julian_day(period_to)
+    from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     #create conditions that issue correct sql
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)
@@ -291,11 +288,7 @@ def glad_dist(iso_code, admin_id, dist_id):
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
 
-    period_from = period.split(',')[0]
-    period_to = period.split(',')[1]
-
-    from_year, from_date = date_to_julian_day(period_from)
-    to_year, to_date = date_to_julian_day(period_to)
+    from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     if None in (from_year, to_year):
         return jsonify({'errors': [{
@@ -339,11 +332,7 @@ def glad_admin(iso_code, admin_id):
             }]
         }), 400
 
-    period_from = period.split(',')[0]
-    period_to = period.split(',')[1]
-
-    from_year, from_date = date_to_julian_day(period_from)
-    to_year, to_date = date_to_julian_day(period_to)
+    from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     #send to sql formatter function
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date, iso_code, admin_id)
@@ -382,11 +371,7 @@ def glad_country(iso_code):
             }]
         }), 400
 
-    period_from = period.split(',')[0]
-    period_to = period.split(',')[1]
-
-    from_year, from_date = date_to_julian_day(period_from)
-    to_year, to_date = date_to_julian_day(period_to)
+    from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     #send to sql formatter function
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date, iso_code)
@@ -421,11 +406,7 @@ def terrai_admin(iso_code, admin_id):
             }]
         }), 400
 
-    period_from = period.split(',')[0]
-    period_to = period.split(',')[1]
-
-    from_year, from_date = date_to_julian_day(period_from)
-    to_year, to_date = date_to_julian_day(period_to)
+    from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     #send dates to sql formatter
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date, iso_code, admin_id)
@@ -456,11 +437,7 @@ def terrai_dist(iso_code, admin_id, dist_id):
             }]
         }), 400
 
-    period_from = period.split(',')[0]
-    period_to = period.split(',')[1]
-
-    from_year, from_date = date_to_julian_day(period_from)
-    to_year, to_date = date_to_julian_day(period_to)
+    from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     #send dates to sql formatter
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date, iso_code, admin_id, dist_id)
@@ -491,11 +468,7 @@ def terrai_country(iso_code):
             }]
         }), 400
 
-    period_from = period.split(',')[0]
-    period_to = period.split(',')[1]
-
-    from_year, from_date = date_to_julian_day(period_from)
-    to_year, to_date = date_to_julian_day(period_to)
+    from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     #send dates to sql formatter
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date, iso_code)
@@ -521,11 +494,7 @@ def glad_use(use_type, use_id):
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
 
-    period_from = period.split(',')[0]
-    period_to = period.split(',')[1]
-
-    from_year, from_date = date_to_julian_day(period_from)
-    to_year, to_date = date_to_julian_day(period_to)
+    from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     #send to sql formatter function
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
@@ -555,11 +524,7 @@ def terrai_use(use_type, use_id):
 
     period = request.args.get('period', None)
 
-    period_from = period.split(',')[0]
-    period_to = period.split(',')[1]
-
-    from_year, from_date = date_to_julian_day(period_from)
-    to_year, to_date = date_to_julian_day(period_to)
+    from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     #send to sql formatter function
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)
@@ -591,11 +556,7 @@ def glad_wdpa(wdpa_id):
             }]
         }), 400
 
-    period_from = period.split(',')[0]
-    period_to = period.split(',')[1]
-
-    from_year, from_date = date_to_julian_day(period_from)
-    to_year, to_date = date_to_julian_day(period_to)
+    from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     #send to sql formatter function
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
@@ -631,11 +592,7 @@ def terrai_wdpa(wdpa_id):
             }]
         }), 400
 
-    period_from = period.split(',')[0]
-    period_to = period.split(',')[1]
-
-    from_year, from_date = date_to_julian_day(period_from)
-    to_year, to_date = date_to_julian_day(period_to)
+    from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
     #send to sql formatter function
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)
