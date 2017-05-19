@@ -621,6 +621,7 @@ def terrai_country(iso_code):
 
 @endpoints.route('/gladanalysis/use/<use_type>/<use_id>', methods=['GET'])
 @validate_use
+@validate_period
 def glad_use(use_type, use_id):
 
     logging.info('QUERY GLAD BY LAND USE DATA')
@@ -632,20 +633,6 @@ def glad_use(use_type, use_id):
         return jsonify({'errors': [{
             'status': '400',
             'title': 'Use type and use ID should be set'
-            }]
-        }), 400
-
-    if not period:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'time period should be set'
-            }]
-        }), 400
-
-    if len(period.split(',')) < 2:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'Period needs 2 arguments'
             }]
         }), 400
 
