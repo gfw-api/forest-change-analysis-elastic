@@ -389,6 +389,7 @@ def glad_country(iso_code):
 
 @endpoints.route('/terraianalysis/admin/<iso_code>/<admin_id>', methods=['GET'])
 @validate_period
+@valdiate_admin
 
 def terrai_admin(iso_code, admin_id):
     logging.info('QUERYING TERRA I AT GADM LEVEL')
@@ -420,6 +421,7 @@ def terrai_admin(iso_code, admin_id):
 
 @endpoints.route('/terraianalysis/admin/<iso_code>/<admin_id>/<dist_id>', methods=['GET'])
 @validate_period
+@validate_admin
 
 def terrai_dist(iso_code, admin_id, dist_id):
     logging.info('QUERYING TERRA I AT GADM LEVEL')
@@ -450,6 +452,7 @@ def terrai_dist(iso_code, admin_id, dist_id):
 
 @endpoints.route('/terraianalysis/admin/<iso_code>', methods=['GET'])
 @validate_period
+@validate_admin
 
 def terrai_country(iso_code):
 
@@ -483,6 +486,7 @@ def terrai_country(iso_code):
 @endpoints.route('/gladanalysis/use/<use_type>/<use_id>', methods=['GET'])
 @validate_use
 @validate_period
+
 def glad_use(use_type, use_id):
 
     logging.info('QUERY GLAD BY LAND USE DATA')
