@@ -17,6 +17,13 @@
             "path": "/api/v1/ms/gladanalysis/admin/:iso_code/:admin_id"
         }]
     }, {
+        "url": "/v1/gladanalysis/admin/:iso_code/:admin_id/:dist_id",
+        "method": "GET",
+        "endpoints": [{
+            "method": "GET",
+            "path": "/api/v1/ms/gladanalysis/admin/:iso_code/:admin_id/:dist_id"
+        }]
+    }, {
         "url": "/v1/gladanalysis",
         "method": "GET",
         "endpoints": [{
@@ -29,6 +36,13 @@
 	       "endpoints": [{
 	           "method": "GET",
 	           "path": "/api/v1/ms/terraianalysis/admin/:iso_code/:admin_id"
+	        }]
+		}, {
+	       "url": "/v1/terraianalysis/admin/:iso_code/:admin_id/:dist_id",
+	       "method": "GET",
+	       "endpoints": [{
+	           "method": "GET",
+	           "path": "/api/v1/ms/terraianalysis/admin/:iso_code/:admin_id/:dist_id"
 	        }]
 		}, {
 	       "url": "/v1/terraianalysis/admin/:iso_code",
@@ -64,6 +78,20 @@
 	       "endpoints": [{
 	           "method": "GET",
 	           "path": "/api/v1/ms/gladanalysis/wdpa/:wdpa_id"
+	        }]
+		}, {
+	       "url": "/v1/gladanalysis/date-range",
+	       "method": "GET",
+	       "endpoints": [{
+	           "method": "GET",
+	           "path": "/api/v1/ms/gladanalysis/date-range"
+	        }]
+		}, {
+	       "url": "/v1/terraianalysis/date-range",
+	       "method": "GET",
+	       "endpoints": [{
+	           "method": "GET",
+	           "path": "/api/v1/ms/terraianalysis/date-range"
 	        }]
 		}, {
 	       "url": "/v1/terraianalysis",
