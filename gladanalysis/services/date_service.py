@@ -6,6 +6,7 @@ import requests
 
 class DateService(object):
 
+    @staticmethod
     def date_to_julian_day(period):
         #Helper function to transform dates
         try:
