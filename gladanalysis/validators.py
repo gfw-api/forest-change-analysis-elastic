@@ -22,8 +22,6 @@ def validate_period(func):
     def wrapper(*args, **kwargs):
         if request.method == 'GET':
             period = request.args.get('period')
-            period_from = period.split(',')[0]
-            period_to = period.split(',')[1]
 
             if not period:
                 return error(status=400, detail="Time period must be set")
@@ -32,6 +30,10 @@ def validate_period(func):
                 return error(status=400, detail="Period needs 2 arguments")
 
             else:
+                
+            period_from = period.split(',')[0]
+            period_to = period.split(',')[1]
+
                 try:
                     datetime.datetime.strptime(period_from, '%Y-%m-%d')
                 except ValueError:
