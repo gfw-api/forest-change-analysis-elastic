@@ -279,6 +279,7 @@ def query_terrai():
 
 @endpoints.route('/gladanalysis/admin/<iso_code>/<admin_id>/<dist_id>', methods=['GET'])
 @validate_period
+@validate_admin
 
 def glad_dist(iso_code, admin_id, dist_id):
 
@@ -289,13 +290,6 @@ def glad_dist(iso_code, admin_id, dist_id):
     conf = request.args.get('gladConfirmOnly', None)
 
     from_year, from_date, to_year, to_date = date_to_julian_day(period)
-
-    if None in (from_year, to_year):
-        return jsonify({'errors': [{
-                'status': '400',
-                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
-                }]
-            }), 400
 
     #send to sql formatter function
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date, iso_code, admin_id, dist_id)
