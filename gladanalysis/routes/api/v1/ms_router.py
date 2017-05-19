@@ -229,13 +229,6 @@ def query_glad():
     from_year, from_date = date_to_julian_day(period_from)
     to_year, to_date = date_to_julian_day(period_to)
 
-    # if None in (from_year, to_year):
-    #     return jsonify({'errors': [{
-    #             'status': '400',
-    #             'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
-    #             }]
-    #         }), 400
-
     #send to sql formatter function
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
 
@@ -274,13 +267,6 @@ def query_terrai():
     from_year, from_date = date_to_julian_day(period_from)
     to_year, to_date = date_to_julian_day(period_to)
 
-    if None in (from_year, to_year):
-        return jsonify({'errors': [{
-                'status': '400',
-                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
-                }]
-            }), 400
-
     #create conditions that issue correct sql
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)
 
@@ -304,13 +290,6 @@ def glad_dist(iso_code, admin_id, dist_id):
     #accept period parameter
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
-
-    if not iso_code or not admin_id or not dist_id:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'ISO code, State ID and District ID should be set'
-            }]
-        }), 400
 
     period_from = period.split(',')[0]
     period_to = period.split(',')[1]
@@ -344,6 +323,7 @@ def glad_dist(iso_code, admin_id, dist_id):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/gladanalysis/admin/<iso_code>/<admin_id>', methods=['GET'])
+@validate_period
 def glad_admin(iso_code, admin_id):
 
     logging.info('Running GADM level glad analysis')
@@ -359,26 +339,11 @@ def glad_admin(iso_code, admin_id):
             }]
         }), 400
 
-    #format date and format error responses
-    if len(period.split(',')) < 2:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'Period needs 2 arguments'
-            }]
-        }), 400
-
     period_from = period.split(',')[0]
     period_to = period.split(',')[1]
 
     from_year, from_date = date_to_julian_day(period_from)
     to_year, to_date = date_to_julian_day(period_to)
-
-    if None in (from_year, to_year):
-        return jsonify({'errors': [{
-                'status': '400',
-                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
-                }]
-            }), 400
 
     #send to sql formatter function
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date, iso_code, admin_id)
@@ -399,6 +364,7 @@ def glad_admin(iso_code, admin_id):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/gladanalysis/admin/<iso_code>', methods=['GET'])
+@validate_period
 @validate_admin
 
 def glad_country(iso_code):
@@ -416,26 +382,11 @@ def glad_country(iso_code):
             }]
         }), 400
 
-    #format date and format error responses
-    if len(period.split(',')) < 2:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'Period needs 2 arguments'
-            }]
-        }), 400
-
     period_from = period.split(',')[0]
     period_to = period.split(',')[1]
 
     from_year, from_date = date_to_julian_day(period_from)
     to_year, to_date = date_to_julian_day(period_to)
-
-    if None in (from_year, to_year):
-        return jsonify({'errors': [{
-                'status': '400',
-                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
-                }]
-            }), 400
 
     #send to sql formatter function
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date, iso_code)
@@ -456,6 +407,8 @@ def glad_country(iso_code):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/terraianalysis/admin/<iso_code>/<admin_id>', methods=['GET'])
+@validate_period
+
 def terrai_admin(iso_code, admin_id):
     logging.info('QUERYING TERRA I AT GADM LEVEL')
 
@@ -468,33 +421,11 @@ def terrai_admin(iso_code, admin_id):
             }]
         }), 400
 
-
-    if not period:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'time period should be set'
-            }]
-        }), 400
-
-    if len(period.split(',')) < 2:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'Period needs 2 arguments'
-            }]
-        }), 400
-
     period_from = period.split(',')[0]
     period_to = period.split(',')[1]
 
     from_year, from_date = date_to_julian_day(period_from)
     to_year, to_date = date_to_julian_day(period_to)
-
-    if None in (from_year, to_year):
-        return jsonify({'errors': [{
-                'status': '400',
-                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
-                }]
-            }), 400
 
     #send dates to sql formatter
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date, iso_code, admin_id)
@@ -511,6 +442,8 @@ def terrai_admin(iso_code, admin_id):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/terraianalysis/admin/<iso_code>/<admin_id>/<dist_id>', methods=['GET'])
+@validate_period
+
 def terrai_dist(iso_code, admin_id, dist_id):
     logging.info('QUERYING TERRA I AT GADM LEVEL')
 
@@ -523,33 +456,11 @@ def terrai_dist(iso_code, admin_id, dist_id):
             }]
         }), 400
 
-
-    if not period:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'time period should be set'
-            }]
-        }), 400
-
-    if len(period.split(',')) < 2:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'Period needs 2 arguments'
-            }]
-        }), 400
-
     period_from = period.split(',')[0]
     period_to = period.split(',')[1]
 
     from_year, from_date = date_to_julian_day(period_from)
     to_year, to_date = date_to_julian_day(period_to)
-
-    if None in (from_year, to_year):
-        return jsonify({'errors': [{
-                'status': '400',
-                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
-                }]
-            }), 400
 
     #send dates to sql formatter
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date, iso_code, admin_id, dist_id)
@@ -565,6 +476,8 @@ def terrai_dist(iso_code, admin_id, dist_id):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/terraianalysis/admin/<iso_code>', methods=['GET'])
+@validate_period
+
 def terrai_country(iso_code):
 
     logging.info('QUERYING TERRA I AT COUNTRY LEVEL')
@@ -578,32 +491,11 @@ def terrai_country(iso_code):
             }]
         }), 400
 
-    if not period:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'time period should be set'
-            }]
-        }), 400
-
-    if len(period.split(',')) < 2:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'Period needs 2 arguments'
-            }]
-        }), 400
-
     period_from = period.split(',')[0]
     period_to = period.split(',')[1]
 
     from_year, from_date = date_to_julian_day(period_from)
     to_year, to_date = date_to_julian_day(period_to)
-
-    if None in (from_year, to_year):
-        return jsonify({'errors': [{
-                'status': '400',
-                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
-                }]
-            }), 400
 
     #send dates to sql formatter
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date, iso_code)
@@ -634,13 +526,6 @@ def glad_use(use_type, use_id):
 
     from_year, from_date = date_to_julian_day(period_from)
     to_year, to_date = date_to_julian_day(period_to)
-
-    if None in (from_year, to_year):
-        return jsonify({'errors': [{
-                'status': '400',
-                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
-                }]
-            }), 400
 
     #send to sql formatter function
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
@@ -676,13 +561,6 @@ def terrai_use(use_type, use_id):
     from_year, from_date = date_to_julian_day(period_from)
     to_year, to_date = date_to_julian_day(period_to)
 
-    if None in (from_year, to_year):
-        return jsonify({'errors': [{
-                'status': '400',
-                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
-                }]
-            }), 400
-
     #send to sql formatter function
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)
 
@@ -697,6 +575,8 @@ def terrai_use(use_type, use_id):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/gladanalysis/wdpa/<wdpa_id>', methods=['GET'])
+@validate_period
+
 def glad_wdpa(wdpa_id):
 
     logging.info('QUERY GLAD BY WDPA DATA')
@@ -711,32 +591,11 @@ def glad_wdpa(wdpa_id):
             }]
         }), 400
 
-    if not period:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'time period should be set'
-            }]
-        }), 400
-
-    if len(period.split(',')) < 2:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'Period needs 2 arguments'
-            }]
-        }), 400
-
     period_from = period.split(',')[0]
     period_to = period.split(',')[1]
 
     from_year, from_date = date_to_julian_day(period_from)
     to_year, to_date = date_to_julian_day(period_to)
-
-    if None in (from_year, to_year):
-        return jsonify({'errors': [{
-                'status': '400',
-                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
-                }]
-            }), 400
 
     #send to sql formatter function
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
@@ -757,6 +616,8 @@ def glad_wdpa(wdpa_id):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/terraianalysis/wdpa/<wdpa_id>', methods=['GET'])
+@validate_period
+
 def terrai_wdpa(wdpa_id):
 
     logging.info('QUERY TERRA I BY WDPA')
@@ -770,32 +631,11 @@ def terrai_wdpa(wdpa_id):
             }]
         }), 400
 
-    if not period:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'time period should be set'
-            }]
-        }), 400
-
-    if len(period.split(',')) < 2:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'Period needs 2 arguments'
-            }]
-        }), 400
-
     period_from = period.split(',')[0]
     period_to = period.split(',')[1]
 
     from_year, from_date = date_to_julian_day(period_from)
     to_year, to_date = date_to_julian_day(period_to)
-
-    if None in (from_year, to_year):
-        return jsonify({'errors': [{
-                'status': '400',
-                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
-                }]
-            }), 400
 
     #send to sql formatter function
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)
