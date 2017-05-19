@@ -144,14 +144,6 @@ def make_terrai_request(sql, geostore=None):
     data = r.json()
     return data
 
-def make_area_request(geostore):
-
-    area_url = 'http://staging-api.globalforestwatch.org/geostore/' + geostore
-    r_area = requests.get(url=area_url)
-    area_resp = r_area.json()
-    area = area_resp['data']['attributes']['areaHa']
-    return area
-
 def make_wdpa_request(wdpa_id):
 
     area_url = 'http://staging-api.globalforestwatch.org/geostore/wdpa/%s' %(wdpa_id)
@@ -217,7 +209,7 @@ def query_glad():
     data = make_glad_request(sql, confidence, geostore)
 
     #make request to geostore to get area in hectares
-    area = make_area_request(geostore)
+    area = GeostoreService.make_area_request(geostore)
 
     #standardize response
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
@@ -246,7 +238,7 @@ def query_terrai():
     data = make_terrai_request(sql, geostore)
 
     #get area from geostore
-    area = make_area_request(geostore)
+    area = GeostoreService.make_area_request(geostore)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
     standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area, geostore)

@@ -31,3 +31,12 @@ class GeostoreService(object):
         geostore = geostore_data['data']['id']
         area_ha = geostore_data['data']['attributes']['areaHa']
         return area_ha
+
+    @staticmethod
+    def make_area_request(geostore):
+
+        area_url = 'http://staging-api.globalforestwatch.org/geostore/' + geostore
+        r_area = requests.get(url=area_url)
+        area_resp = r_area.json()
+        area = area_resp['data']['attributes']['areaHa']
+        return area
