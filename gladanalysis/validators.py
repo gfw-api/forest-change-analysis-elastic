@@ -30,9 +30,9 @@ def validate_period(func):
                 return error(status=400, detail="Period needs 2 arguments")
 
             else:
-                
-            period_from = period.split(',')[0]
-            period_to = period.split(',')[1]
+
+                period_from = period.split(',')[0]
+                period_to = period.split(',')[1]
 
                 try:
                     datetime.datetime.strptime(period_from, '%Y-%m-%d')
