@@ -1,6 +1,8 @@
 """VALIDATORS"""
 
 import datetime
+import re
+
 from functools import wraps
 from flask import request
 
@@ -83,7 +85,7 @@ def validate_admin(func):
             elif len(iso_code) > 3 or len(iso_code) < 3:
                 return error(status=400, detail="Must use a 3-letter ISO Code")
 
-            elif isinstance(dist_id, str) or isinstance(admin_id, str):
+            elif re.search('[a-zA-Z]', dist_id) or re.search('[a-zA-Z]', admin_id):
                 return error(status=400, detail="For state and district queries please use numbers")
 
         return func(*args, **kwargs)
