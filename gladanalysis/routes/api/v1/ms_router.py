@@ -10,27 +10,10 @@ from gladanalysis.services import GeostoreService
 from gladanalysis.services import DateService
 from gladanalysis.services import SqlService
 from gladanalysis.services import AnalysisService
+from gladanalysis.services import ResponseService
 from gladanalysis.responders import ErrorResponder
 from gladanalysis.utils.http import request_to_microservice
 from gladanalysis.validators import validate_geostore, validate_period, validate_admin, validate_use, validate_wdpa
-
-def standardize_response(data, count, datasetID, download_sql, area, geostore=None):
-    #Helper function to standardize API responses
-    standard_format = {}
-    standard_format["type"] = "glad-alerts"
-    standard_format["id"] = "undefined"
-    standard_format["attributes"] = {}
-    standard_format["attributes"]["value"] = data["data"][0][count]
-    standard_format["attributes"]["downloadUrls"] = {}
-    if geostore:
-        standard_format["attributes"]["downloadUrls"]["csv"] = "/download/" + datasetID + download_sql + "&geostore=" + geostore + "&format=csv"
-        standard_format["attributes"]["downloadUrls"]["json"] = "/download/" + datasetID + download_sql + "&geostore=" + geostore + "&format=json"
-    else:
-        standard_format["attributes"]["downloadUrls"]["csv"] = "/download/" + datasetID + download_sql + "&format=csv"
-        standard_format["attributes"]["downloadUrls"]["json"] = "/download/" + datasetID + download_sql + "&format=json"
-    standard_format['attributes']["areaHa"] = area
-
-    return standard_format
 
 @endpoints.route('/gladanalysis', methods=['GET'])
 @validate_geostore
@@ -63,7 +46,7 @@ def query_glad():
 
     #standardize response
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
+    standard_format = ResponseService.standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -91,7 +74,7 @@ def query_terrai():
     area = GeostoreService.make_area_request(geostore)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area, geostore)
+    standard_format = ResponseService.standardize_response(data, "COUNT(day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -123,7 +106,7 @@ def glad_dist(iso_code, admin_id, dist_id):
     data = AnalysisService.make_glad_request(sql, confidence)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
+    standard_format = ResponseService.standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -156,7 +139,7 @@ def glad_admin(iso_code, admin_id):
     data = AnalysisService.make_glad_request(sql, confidence)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
+    standard_format = ResponseService.standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -189,7 +172,7 @@ def glad_country(iso_code):
     data = AnalysisService.make_glad_request(sql, confidence)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
+    standard_format = ResponseService.standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -214,7 +197,7 @@ def terrai_admin(iso_code, admin_id):
     data = AnalysisService.make_terrai_request(sql)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area_ha)
+    standard_format = ResponseService.standardize_response(data, "COUNT(day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -239,7 +222,7 @@ def terrai_dist(iso_code, admin_id, dist_id):
     data = AnalysisService.make_terrai_request(sql)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area_ha)
+    standard_format = ResponseService.standardize_response(data, "COUNT(day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -265,7 +248,7 @@ def terrai_country(iso_code):
     data = AnalysisService.make_terrai_request(sql)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area_ha)
+    standard_format = ResponseService.standardize_response(data, "COUNT(day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -296,7 +279,7 @@ def glad_use(use_type, use_id):
     data = AnalysisService.make_glad_request(sql, confidence, geostore)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
+    standard_format = ResponseService.standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -321,7 +304,7 @@ def terrai_use(use_type, use_id):
     data = AnalysisService.make_terrai_request(sql, geostore)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area, geostore)
+    standard_format = ResponseService.standardize_response(data, "COUNT(day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -352,7 +335,7 @@ def glad_wdpa(wdpa_id):
     data = AnalysisService.make_glad_request(sql, confidence, geostore)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
+    standard_format = ResponseService.standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -377,7 +360,7 @@ def terrai_wdpa(wdpa_id):
     data = AnalysisService.make_terrai_request(sql, geostore)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area, geostore)
+    standard_format = ResponseService.standardize_response(data, "COUNT(day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
