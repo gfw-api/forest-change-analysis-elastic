@@ -311,6 +311,8 @@ def glad_dist(iso_code, admin_id, dist_id):
 
 @endpoints.route('/gladanalysis/admin/<iso_code>/<admin_id>', methods=['GET'])
 @validate_period
+@validate_admin
+
 def glad_admin(iso_code, admin_id):
 
     logging.info('Running GADM level glad analysis')
