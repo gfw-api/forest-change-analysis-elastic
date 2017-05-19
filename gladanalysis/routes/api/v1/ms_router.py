@@ -246,7 +246,8 @@ def query_glad():
     area = make_area_request(geostore)
 
     #standardize response
-    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area, geostore)
+    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
+    standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -273,7 +274,8 @@ def query_terrai():
     #get area from geostore
     area = make_area_request(geostore)
 
-    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area, geostore)
+    datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
+    standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -305,7 +307,8 @@ def glad_dist(iso_code, admin_id, dist_id):
     #query glad database
     data = make_glad_request(sql, confidence)
 
-    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area_ha)
+    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
+    standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -337,7 +340,8 @@ def glad_admin(iso_code, admin_id):
     #query glad database
     data = make_glad_request(sql, confidence)
 
-    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area_ha)
+    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
+    standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -369,7 +373,8 @@ def glad_country(iso_code):
     #make request to glad database
     data = make_glad_request(sql, confidence)
 
-    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area_ha)
+    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
+    standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -394,7 +399,8 @@ def terrai_admin(iso_code, admin_id):
     #Make request to terra i dataset
     data = make_terrai_request(sql)
 
-    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area_ha)
+    datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
+    standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -418,7 +424,8 @@ def terrai_dist(iso_code, admin_id, dist_id):
     #Make request to terra i dataset
     data = make_terrai_request(sql)
 
-    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area_ha)
+    datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
+    standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -444,7 +451,8 @@ def terrai_country(iso_code):
     #make request to terra i dataset
     data = make_terrai_request(sql)
 
-    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area_ha)
+    datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
+    standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -475,7 +483,8 @@ def glad_use(use_type, use_id):
     #make request to glad database
     data = make_glad_request(sql, confidence, geostore)
 
-    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area, geostore)
+    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
+    standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -500,7 +509,8 @@ def terrai_use(use_type, use_id):
     #make request to glad database
     data = make_terrai_request(sql, geostore)
 
-    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area, geostore)
+    datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
+    standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -531,7 +541,8 @@ def glad_wdpa(wdpa_id):
     #make request to glad database
     data = make_glad_request(sql, confidence, geostore)
 
-    standard_format = standardize_response(data, "COUNT(julian_day)", '274b4818-be18-4890-9d10-eae56d2a82e5', download_sql, area, geostore)
+    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
+    standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -556,7 +567,8 @@ def terrai_wdpa(wdpa_id):
     #make request to glad database
     data = make_terrai_request(sql, geostore)
 
-    standard_format = standardize_response(data, "COUNT(day)", '67cf7c03-7365-4a1f-8401-d42c3706b7de', download_sql, area, geostore)
+    datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
+    standard_format = standardize_response(data, "COUNT(day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
