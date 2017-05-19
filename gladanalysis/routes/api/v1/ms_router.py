@@ -620,6 +620,7 @@ def terrai_country(iso_code):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/gladanalysis/use/<use_type>/<use_id>', methods=['GET'])
+@validate_use
 def glad_use(use_type, use_id):
 
     logging.info('QUERY GLAD BY LAND USE DATA')
