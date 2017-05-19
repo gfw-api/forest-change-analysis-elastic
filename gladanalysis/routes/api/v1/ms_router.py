@@ -144,15 +144,6 @@ def make_terrai_request(sql, geostore=None):
     data = r.json()
     return data
 
-def make_wdpa_request(wdpa_id):
-
-    area_url = 'http://staging-api.globalforestwatch.org/geostore/wdpa/%s' %(wdpa_id)
-    r = requests.get(url=area_url)
-    geostore_data = r.json()
-    geostore = geostore_data['data']['id']
-    area = geostore_data['data']['attributes']['areaHa']
-    return (geostore, area)
-
 def get_date(datasetID, sql, value):
 
     url = 'http://staging-api.globalforestwatch.org/query/'
@@ -491,8 +482,7 @@ def glad_wdpa(wdpa_id):
     #send to sql formatter function
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
 
-    geostore = make_wdpa_request(wdpa_id)[0]
-    area = make_wdpa_request(wdpa_id)[1]
+    geostore, area = GeostoreService.make_wdpa_request(wdpa_id)
 
     if conf == 'true' or conf == "True":
         confidence = "and confidence = '3'"
@@ -522,8 +512,7 @@ def terrai_wdpa(wdpa_id):
     #send to sql formatter function
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)
 
-    geostore = make_wdpa_request(wdpa_id)[0]
-    area = make_wdpa_request(wdpa_id)[1]
+    geostore, area = GeostoreService.make_wdpa_request(wdpa_id)
 
     #make request to glad database
     data = make_terrai_request(sql, geostore)
