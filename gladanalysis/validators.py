@@ -10,10 +10,13 @@ def validate_geostore(func):
     """validate geostore argument"""
     @wraps(func)
     def wrapper(*args, **kwargs):
+
         if request.method == 'GET':
             geostore = request.args.get('geostore')
+
             if not geostore:
                 return error(status=400, detail="Geostore must be set")
+
         return func(*args, **kwargs)
     return wrapper
 
@@ -31,7 +34,6 @@ def validate_period(func):
                 return error(status=400, detail="Period needs 2 arguments")
 
             else:
-
                 period_from = period.split(',')[0]
                 period_to = period.split(',')[1]
 
@@ -52,13 +54,17 @@ def validate_use(func):
     """Use Validation"""
     @wraps(func)
     def wrapper(*args, **kwargs):
+
         names = ['mining', 'oilpalm', 'fiber', 'logging']
         name = request.view_args.get('use_type')
         use_id = request.view_args.get('use_id')
+
         if not name or not use_id:
             return error(status=400, detail="Use Type must be set (mining, oilpalm, fiber, or logging), and Use ID")
+
         elif name not in names:
             return error(status=400, detail='Use Type not valid (valid options: mining, oilpalm, fiber, or logging)')
+
         return func(*args, **kwargs)
     return wrapper
 
@@ -68,12 +74,17 @@ def validate_admin(func):
     def wrapper(*args, **kwargs):
         if request.method == 'GET':
             iso_code = request.view_args.get('iso_code')
+            admin_id = request.view_args.get('admin_id')
+            dist_id = request.view_args.get('dist_id')
 
             if not iso_code:
                 return error(status=400, detail="Must specify a ISO code, and optionally a /state_id and /ditrict_id")
 
             elif len(iso_code) > 3 or len(iso_code) < 3:
-                return error(status=400, detail="Must use a 3 letter-ISO Code")
+                return error(status=400, detail="Must use a 3-letter ISO Code")
+
+            elif isinstance(dist_id, str) or isinstance(admin_id, str):
+                return error(status=400, detail="For state and district queries please use numbers")
 
         return func(*args, **kwargs)
     return wrapper
