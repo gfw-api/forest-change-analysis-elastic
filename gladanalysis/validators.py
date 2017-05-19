@@ -22,10 +22,26 @@ def validate_period(func):
     def wrapper(*args, **kwargs):
         if request.method == 'GET':
             period = request.args.get('period')
+            period_from = period.split(',')[0]
+            period_to = period.split(',')[1]
+
             if not period:
                 return error(status=400, detail="Time period must be set")
+
             elif len(period.split(',')) < 2:
                 return error(status=400, detail="Period needs 2 arguments")
+
+            else:
+                try:
+                    datetime.datetime.strptime(period_from, '%Y-%m-%d')
+                except ValueError:
+                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+
+                try:
+                    datetime.datetime.strptime(period_to, '%Y-%m-%d')
+                except ValueError:
+                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+
         return func(*args, **kwargs)
     return wrapper
 
@@ -39,7 +55,7 @@ def validate_use(func):
         if not name or not use_id:
             return error(status=400, detail="Use Type must be set (mining, oilpalm, fiber, or logging), and Use ID")
         elif name not in names:
-            return error(status=400, detail='Use Type not valid')
+            return error(status=400, detail='Use Type not valid (valid options: mining, oilpalm, fiber, or logging)')
         return func(*args, **kwargs)
     return wrapper
 

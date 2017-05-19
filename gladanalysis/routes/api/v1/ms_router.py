@@ -229,12 +229,12 @@ def query_glad():
     from_year, from_date = date_to_julian_day(period_from)
     to_year, to_date = date_to_julian_day(period_to)
 
-    if None in (from_year, to_year):
-        return jsonify({'errors': [{
-                'status': '400',
-                'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
-                }]
-            }), 400
+    # if None in (from_year, to_year):
+    #     return jsonify({'errors': [{
+    #             'status': '400',
+    #             'title': 'Invalid period supplied; must be YYYY-MM-DD,YYYY-MM-DD'
+    #             }]
+    #         }), 400
 
     #send to sql formatter function
     sql, download_sql = format_glad_sql(from_year, from_date, to_year, to_date)
@@ -669,27 +669,6 @@ def terrai_use(use_type, use_id):
     logging.info('QUERY GLAD BY LAND USE DATA')
 
     period = request.args.get('period', None)
-
-    if not use_type or not use_id:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'Use type and use ID should be set'
-            }]
-        }), 400
-
-    if not period:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'time period should be set'
-            }]
-        }), 400
-
-    if len(period.split(',')) < 2:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'Period needs 2 arguments'
-            }]
-        }), 400
 
     period_from = period.split(',')[0]
     period_to = period.split(',')[1]
