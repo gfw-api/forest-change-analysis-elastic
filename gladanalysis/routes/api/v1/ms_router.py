@@ -389,7 +389,7 @@ def glad_country(iso_code):
 
 @endpoints.route('/terraianalysis/admin/<iso_code>/<admin_id>', methods=['GET'])
 @validate_period
-@valdiate_admin
+@validate_admin
 
 def terrai_admin(iso_code, admin_id):
     logging.info('QUERYING TERRA I AT GADM LEVEL')
