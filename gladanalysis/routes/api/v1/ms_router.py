@@ -9,25 +9,10 @@ from . import endpoints
 from gladanalysis.services import GeostoreService
 from gladanalysis.services import DateService
 from gladanalysis.services import SqlService
+from gladanalysis.services import AnalysisService
 from gladanalysis.responders import ErrorResponder
 from gladanalysis.utils.http import request_to_microservice
 from gladanalysis.validators import validate_geostore, validate_period, validate_admin, validate_use, validate_wdpa
-
-def make_glad_request(sql, confidence, geostore=None):
-
-    #format request to glad dataset
-    url = 'http://staging-api.globalforestwatch.org/query/'
-    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    f = '&format=json'
-
-    if geostore:
-        full = url + datasetID + sql + confidence + "&geostore=" + geostore + f
-    else:
-        full = url + datasetID + sql + confidence + f
-
-    r = requests.get(url=full)
-    data = r.json()
-    return data
 
 def make_terrai_request(sql, geostore=None):
 
@@ -87,7 +72,7 @@ def query_glad():
         confidence = ""
 
     #query glad database
-    data = make_glad_request(sql, confidence, geostore)
+    data = AnalysisService.make_glad_request(sql, confidence, geostore)
 
     #make request to geostore to get area in hectares
     area = GeostoreService.make_area_request(geostore)
@@ -151,7 +136,7 @@ def glad_dist(iso_code, admin_id, dist_id):
         confidence = ""
 
     #query glad database
-    data = make_glad_request(sql, confidence)
+    data = AnalysisService.make_glad_request(sql, confidence)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
     standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
@@ -184,7 +169,7 @@ def glad_admin(iso_code, admin_id):
         confidence = ""
 
     #query glad database
-    data = make_glad_request(sql, confidence)
+    data = AnalysisService.make_glad_request(sql, confidence)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
     standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
@@ -217,7 +202,7 @@ def glad_country(iso_code):
         confidence = ""
 
     #make request to glad database
-    data = make_glad_request(sql, confidence)
+    data = AnalysisService.make_glad_request(sql, confidence)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
     standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
@@ -324,7 +309,7 @@ def glad_use(use_type, use_id):
         confidence = ""
 
     #make request to glad database
-    data = make_glad_request(sql, confidence, geostore)
+    data = AnalysisService.make_glad_request(sql, confidence, geostore)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
     standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
@@ -380,7 +365,7 @@ def glad_wdpa(wdpa_id):
         confidence = ""
 
     #make request to glad database
-    data = make_glad_request(sql, confidence, geostore)
+    data = AnalysisService.make_glad_request(sql, confidence, geostore)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
     standard_format = standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
