@@ -506,6 +506,7 @@ def terrai_use(use_type, use_id):
 
 @endpoints.route('/gladanalysis/wdpa/<wdpa_id>', methods=['GET'])
 @validate_period
+@validate_wdpa
 
 def glad_wdpa(wdpa_id):
 
@@ -513,13 +514,6 @@ def glad_wdpa(wdpa_id):
 
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
-
-    if not wdpa_id:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'WDPA ID should be set'
-            }]
-        }), 400
 
     from_year, from_date, to_year, to_date = date_to_julian_day(period)
 
@@ -543,19 +537,13 @@ def glad_wdpa(wdpa_id):
 
 @endpoints.route('/terraianalysis/wdpa/<wdpa_id>', methods=['GET'])
 @validate_period
+@validate_wdpa
 
 def terrai_wdpa(wdpa_id):
 
     logging.info('QUERY TERRA I BY WDPA')
 
     period = request.args.get('period', None)
-
-    if not wdpa_id:
-        return jsonify({'errors': [{
-            'status': '400',
-            'title': 'WDPA should be set'
-            }]
-        }), 400
 
     from_year, from_date, to_year, to_date = date_to_julian_day(period)
 

@@ -104,3 +104,20 @@ def validate_admin(func):
 
         return func(*args, **kwargs)
     return wrapper
+
+def validate_wdpa(func):
+    """validate geostore argument"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+
+        if request.method == 'GET':
+            wdpa_id = request.view_args.get('wdpa_id')
+
+            if not wdpa_id:
+                return error(status=400, detail="WDPA ID should be set")
+
+            elif re.search('[a-zA-Z]', wdpa_id):
+                return error(status=400, detail="WDPA ID should be numeric")
+
+        return func(*args, **kwargs)
+    return wrapper
