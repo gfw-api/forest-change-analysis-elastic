@@ -170,15 +170,6 @@ def make_country_request(iso_code):
     area_ha = geostore_data['data']['attributes']['areaHa']
     return (geostore, area_ha)
 
-def make_use_request(use_type, use_id):
-
-    area_url = 'http://staging-api.globalforestwatch.org/geostore/use/%s/%s' %(use_type, use_id)
-    r = requests.get(url=area_url)
-    geostore_data = r.json()
-    geostore = geostore_data['data']['id']
-    area = geostore_data['data']['attributes']['areaHa']
-    return (geostore, area)
-
 def make_wdpa_request(wdpa_id):
 
     area_url = 'http://staging-api.globalforestwatch.org/geostore/wdpa/%s' %(wdpa_id)
@@ -503,8 +494,7 @@ def terrai_use(use_type, use_id):
     #send to sql formatter function
     sql, download_sql = format_terrai_sql(from_year, from_date, to_year, to_date)
 
-    geostore = make_use_request(use_type, use_id)[0]
-    area = make_use_request(use_type, use_id)[1]
+    geostore, area = GeostoreService.make_use_request(use_type, use_id)
 
     #make request to glad database
     data = make_terrai_request(sql, geostore)
