@@ -85,8 +85,19 @@ def validate_admin(func):
             elif len(iso_code) > 3 or len(iso_code) < 3:
                 return error(status=400, detail="Must use a 3-letter ISO Code")
 
-            elif re.search('[a-zA-Z]', dist_id) or re.search('[a-zA-Z]', admin_id):
-                return error(status=400, detail="For state and district queries please use numbers")
+            elif admin_id:
+                if re.search('[a-zA-Z]', admin_id):
+                    return error(status=400, detail="For state and district queries please use numbers")
+
+                else:
+                    pass
+
+            elif dist_id:
+                if re.search('[a-zA-Z]', admin_id):
+                    return error(status=400, detail="For state and district queries please use numbers")
+
+                else:
+                    pass
 
         return func(*args, **kwargs)
     return wrapper
