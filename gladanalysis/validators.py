@@ -36,7 +36,7 @@ def validate_use(func):
         names = ['mining', 'oilpalm', 'fiber', 'logging']
         name = request.view_args.get('use_type')
         use_id = request.view_args.get('use_id')
-        if not name and not use_id:
+        if not name or not use_id:
             return error(status=400, detail="Use Type must be set (mining, oilpalm, fiber, or logging), and Use ID")
         elif name not in names:
             return error(status=400, detail='Use Type not valid')
