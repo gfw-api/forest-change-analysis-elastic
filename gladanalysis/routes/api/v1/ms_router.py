@@ -384,13 +384,8 @@ def glad_date_range():
     max_date = max_day.strftime('%Y-%m-%d')
     min_date = min_day.strftime('%Y-%m-%d')
 
-    response = {}
-    response['type'] = "glad-alerts"
-    response['id'] = "undefined"
-    response['attributes'] = {}
-    response['attributes']['minDate'] = min_date
-    response['attributes']['maxDate'] = max_date
-
+    response = ResponseService.format_date_range(min_date, max_date)
+    
     return jsonify({'data': response}), 200
 
 @endpoints.route('/terraianalysis/date-range', methods=['GET'])
@@ -413,11 +408,6 @@ def terrai_date_range():
     max_date = max_day.strftime('%Y-%m-%d')
     min_date = '2004-01-01'
 
-    response = {}
-    response['type'] = "terrai-alerts"
-    response['id'] = "undefined"
-    response['attributes'] = {}
-    response['attributes']['minDate'] = min_date
-    response['attributes']['maxDate'] = max_date
+    response = ResponseService.format_date_range(min_date, max_date)
 
     return jsonify({'data': response}), 200

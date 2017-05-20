@@ -2,7 +2,6 @@ from flask import jsonify, request
 import requests
 import os
 
-
 class SqlService(object):
 
     @staticmethod

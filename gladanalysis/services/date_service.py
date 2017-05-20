@@ -3,7 +3,6 @@ import datetime
 import logging
 import requests
 
-
 class DateService(object):
 
     @staticmethod

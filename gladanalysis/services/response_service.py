@@ -20,3 +20,15 @@ class ResponseService(object):
         standard_format['attributes']["areaHa"] = area
 
         return standard_format
+
+    @staticmethod
+    def format_date_range(min_date, max_date):
+
+        response = {}
+        response['type'] = "terrai-alerts"
+        response['id'] = "undefined"
+        response['attributes'] = {}
+        response['attributes']['minDate'] = min_date
+        response['attributes']['maxDate'] = max_date
+
+        return response

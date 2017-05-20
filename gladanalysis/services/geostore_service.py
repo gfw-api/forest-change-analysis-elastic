@@ -1,7 +1,6 @@
 import json
 import requests
 
-
 class GeostoreService(object):
 
     @staticmethod
