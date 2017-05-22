@@ -27,7 +27,7 @@ class GeostoreService(object):
 
         r = requests.get(url=geostore_url)
         geostore_data = r.json()
-        geostore = geostore_data['data']['id']
+        # geostore = geostore_data['data']['id']
         area_ha = geostore_data['data']['attributes']['areaHa']
         return area_ha
 
