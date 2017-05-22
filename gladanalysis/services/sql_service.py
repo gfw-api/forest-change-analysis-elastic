@@ -17,7 +17,7 @@ class SqlService(object):
         else:
             confidence = ""
 
-        elif (from_year == '2015') and (to_year == '2017'):
+        if (from_year == '2015') and (to_year == '2017'):
             where_template = ("WHERE ((year = '2015' and julian_day >= {d1}) or "
             "(year = '2016') or "
             "(year = '2017' and julian_day <= {d2}))" confidence)
