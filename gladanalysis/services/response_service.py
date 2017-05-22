@@ -9,7 +9,7 @@ class ResponseService(object):
         if name == 'Glad':
             standard_format["type"] = "glad-alerts"
             standard_format["id"] = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-        elif name == 'Terrai'
+        elif name == 'Terrai':
             standard_format["type"] = "terrai-alerts"
             standard_format["id"] = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
         standard_format["attributes"] = {}
