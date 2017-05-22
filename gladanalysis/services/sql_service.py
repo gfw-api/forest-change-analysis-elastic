@@ -3,6 +3,7 @@ import requests
 import os
 
 class SqlService(object):
+    """"Class for formatting query and donwload sql""""
 
     @staticmethod
     def format_glad_sql(conf, from_year, from_date, to_year, to_date, iso=None, state=None, dist=None):

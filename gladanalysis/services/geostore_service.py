@@ -2,6 +2,7 @@ import json
 import requests
 
 class GeostoreService(object):
+    """"Class for sending request to geostore (to fetch area in hectares and geostore id)""""
 
     @staticmethod
     def make_use_request(use_type, use_id):

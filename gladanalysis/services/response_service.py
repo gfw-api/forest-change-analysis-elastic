@@ -1,6 +1,7 @@
 import os
 
 class ResponseService(object):
+    """"Class for standardizing api responses""""
 
     @staticmethod
     def standardize_response(name, data, count, datasetID, download_sql, area, geostore=None):
