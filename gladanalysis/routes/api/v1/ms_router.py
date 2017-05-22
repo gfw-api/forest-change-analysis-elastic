@@ -15,6 +15,7 @@ from gladanalysis.responders import ErrorResponder
 from gladanalysis.utils.http import request_to_microservice
 from gladanalysis.validators import validate_geostore, validate_period, validate_admin, validate_use, validate_wdpa
 
+
 """GLAD ENDPOINTS"""
 
 @endpoints.route('/gladanalysis', methods=['GET'])
@@ -32,7 +33,9 @@ def query_glad():
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
 
     #send to sql formatter function
+
     sql, download_sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date)
+
 
     #query glad database
     data = AnalysisService.make_glad_request(sql, geostore)
@@ -165,7 +168,7 @@ def glad_wdpa(wdpa_id):
 
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
-
+    
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
 
     #send to sql formatter function
