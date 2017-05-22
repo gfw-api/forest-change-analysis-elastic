@@ -48,7 +48,7 @@ def query_glad():
 
     #standardize response
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    standard_format = ResponseService.standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
+    standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -81,7 +81,7 @@ def glad_country(iso_code):
     data = AnalysisService.make_glad_request(sql, confidence)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    standard_format = ResponseService.standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
+    standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -114,7 +114,7 @@ def glad_admin(iso_code, admin_id):
     data = AnalysisService.make_glad_request(sql, confidence)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    standard_format = ResponseService.standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
+    standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -146,7 +146,7 @@ def glad_dist(iso_code, admin_id, dist_id):
     data = AnalysisService.make_glad_request(sql, confidence)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    standard_format = ResponseService.standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
+    standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -177,7 +177,7 @@ def glad_use(use_type, use_id):
     data = AnalysisService.make_glad_request(sql, confidence, geostore)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    standard_format = ResponseService.standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
+    standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -208,7 +208,7 @@ def glad_wdpa(wdpa_id):
     data = AnalysisService.make_glad_request(sql, confidence, geostore)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    standard_format = ResponseService.standardize_response(data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
+    standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -232,7 +232,7 @@ def glad_date_range():
     max_date = max_day.strftime('%Y-%m-%d')
     min_date = min_day.strftime('%Y-%m-%d')
 
-    response = ResponseService.format_date_range(min_date, max_date)
+    response = ResponseService.format_date_range("Glad", min_date, max_date)
 
     return jsonify({'data': response}), 200
 
@@ -260,7 +260,7 @@ def query_terrai():
     area = GeostoreService.make_area_request(geostore)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    standard_format = ResponseService.standardize_response(data, "COUNT(day)", datasetID, download_sql, area, geostore)
+    standard_format = ResponseService.standardize_response('Terrai', data, "COUNT(day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -286,7 +286,7 @@ def terrai_country(iso_code):
     data = AnalysisService.make_terrai_request(sql)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    standard_format = ResponseService.standardize_response(data, "COUNT(day)", datasetID, download_sql, area_ha)
+    standard_format = ResponseService.standardize_response('Terrai', data, "COUNT(day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -311,7 +311,7 @@ def terrai_admin(iso_code, admin_id):
     data = AnalysisService.make_terrai_request(sql)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    standard_format = ResponseService.standardize_response(data, "COUNT(day)", datasetID, download_sql, area_ha)
+    standard_format = ResponseService.standardize_response('Terrai', data, "COUNT(day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -336,7 +336,7 @@ def terrai_dist(iso_code, admin_id, dist_id):
     data = AnalysisService.make_terrai_request(sql)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    standard_format = ResponseService.standardize_response(data, "COUNT(day)", datasetID, download_sql, area_ha)
+    standard_format = ResponseService.standardize_response('Terrai', data, "COUNT(day)", datasetID, download_sql, area_ha)
 
     return jsonify({'data': standard_format}), 200
 
@@ -361,7 +361,7 @@ def terrai_use(use_type, use_id):
     data = AnalysisService.make_terrai_request(sql, geostore)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    standard_format = ResponseService.standardize_response(data, "COUNT(day)", datasetID, download_sql, area, geostore)
+    standard_format = ResponseService.standardize_response('Terrai', data, "COUNT(day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -386,7 +386,7 @@ def terrai_wdpa(wdpa_id):
     data = AnalysisService.make_terrai_request(sql, geostore)
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    standard_format = ResponseService.standardize_response(data, "COUNT(day)", datasetID, download_sql, area, geostore)
+    standard_format = ResponseService.standardize_response('Terrai', data, "COUNT(day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -410,6 +410,6 @@ def terrai_date_range():
     max_date = max_day.strftime('%Y-%m-%d')
     min_date = '2004-01-01'
 
-    response = ResponseService.format_date_range(min_date, max_date)
+    response = ResponseService.format_date_range("Terrai", min_date, max_date)
 
     return jsonify({'data': response}), 200
