@@ -32,16 +32,10 @@ def query_glad():
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
 
     #send to sql formatter function
-    sql, download_sql = SqlService.format_glad_sql(from_year, from_date, to_year, to_date)
-
-    #create condition to look for confidence filter
-    if conf == 'true' or conf == 'True':
-        confidence = "and confidence = '3'"
-    else:
-        confidence = ""
+    sql, download_sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date)
 
     #query glad database
-    data = AnalysisService.make_glad_request(sql, confidence, geostore)
+    data = AnalysisService.make_glad_request(sql, geostore)
 
     #make request to geostore to get area in hectares
     area = GeostoreService.make_area_request(geostore)
@@ -67,18 +61,13 @@ def glad_country(iso_code):
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
 
     #send to sql formatter function
-    sql, download_sql = SqlService.format_glad_sql(from_year, from_date, to_year, to_date, iso_code)
+    sql, download_sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso_code)
 
     #get geostore id from admin areas and total area of geostore request
     area_ha = GeostoreService.make_gadm_request(iso_code)
 
-    if conf == 'true' or conf == "True":
-        confidence = "and confidence = '3'"
-    else:
-        confidence = ""
-
     #make request to glad database
-    data = AnalysisService.make_glad_request(sql, confidence)
+    data = AnalysisService.make_glad_request(sql)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
     standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
@@ -100,18 +89,13 @@ def glad_admin(iso_code, admin_id):
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
 
     #send to sql formatter function
-    sql, download_sql = SqlService.format_glad_sql(from_year, from_date, to_year, to_date, iso_code, admin_id)
+    sql, download_sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso_code, admin_id)
 
     #get geostore id from admin areas and total area of geostore request
     area_ha = GeostoreService.make_gadm_request(iso_code, admin_id)
 
-    if conf == 'true' or conf == "True":
-        confidence = "and confidence = '3'"
-    else:
-        confidence = ""
-
     #query glad database
-    data = AnalysisService.make_glad_request(sql, confidence)
+    data = AnalysisService.make_glad_request(sql)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
     standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
@@ -133,17 +117,12 @@ def glad_dist(iso_code, admin_id, dist_id):
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
 
     #send to sql formatter function
-    sql, download_sql = SqlService.format_glad_sql(from_year, from_date, to_year, to_date, iso_code, admin_id, dist_id)
+    sql, download_sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso_code, admin_id, dist_id)
 
     area_ha = GeostoreService.make_gadm_request(iso_code, admin_id)
 
-    if conf == 'true' or conf == "True":
-        confidence = "and confidence = '3'"
-    else:
-        confidence = ""
-
     #query glad database
-    data = AnalysisService.make_glad_request(sql, confidence)
+    data = AnalysisService.make_glad_request(sql)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
     standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area_ha)
@@ -164,17 +143,12 @@ def glad_use(use_type, use_id):
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
 
     #send to sql formatter function
-    sql, download_sql = SqlService.format_glad_sql(from_year, from_date, to_year, to_date)
+    sql, download_sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date)
 
     geostore, area = GeostoreService.make_use_request(use_type, use_id)
 
-    if conf == 'true' or conf == "True":
-        confidence = "and confidence = '3'"
-    else:
-        confidence = ""
-
     #make request to glad database
-    data = AnalysisService.make_glad_request(sql, confidence, geostore)
+    data = AnalysisService.make_glad_request(sql, geostore)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
     standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
@@ -195,17 +169,12 @@ def glad_wdpa(wdpa_id):
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
 
     #send to sql formatter function
-    sql, download_sql = SqlService.format_glad_sql(from_year, from_date, to_year, to_date)
+    sql, download_sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date)
 
     geostore, area = GeostoreService.make_wdpa_request(wdpa_id)
 
-    if conf == 'true' or conf == "True":
-        confidence = "and confidence = '3'"
-    else:
-        confidence = ""
-
     #make request to glad database
-    data = AnalysisService.make_glad_request(sql, confidence, geostore)
+    data = AnalysisService.make_glad_request(sql, geostore)
 
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
     standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)

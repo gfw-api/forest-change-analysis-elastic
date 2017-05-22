@@ -5,30 +5,28 @@ import os
 class SqlService(object):
 
     @staticmethod
-    def format_glad_sql(from_year, from_date, to_year, to_date, iso=None, state=None, dist=None):
+    def format_glad_sql(conf, from_year, from_date, to_year, to_date, iso=None, state=None, dist=None):
 
         select_sql = 'SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day '
         count_sql = 'SELECT count(julian_day) '
         from_sql = 'FROM {} '.format(os.getenv('GLAD_INDEX_ID'))
         order_sql = 'ORDER BY year, julian_day'
 
-        if (int(from_year) < 2015 or int(to_year) > 2017):
-            return jsonify({'errors': [{
-                'status': '400',
-                'title': 'GLAD period must be between 2015 and 2017'
-                }]
-            }), 400
+        if conf == 'true' or conf == 'True':
+            confidence = "and confidence = '3'"
+        else:
+            confidence = ""
 
         elif (from_year == '2015') and (to_year == '2017'):
             where_template = ("WHERE ((year = '2015' and julian_day >= {d1}) or "
             "(year = '2016') or "
-            "(year = '2017' and julian_day <= {d2}))")
+            "(year = '2017' and julian_day <= {d2}))" confidence)
 
         elif from_year == to_year:
-            where_template = 'WHERE ((year = {Y1} and julian_day >= {d1} and julian_day <= {d2}))'
+            where_template = 'WHERE ((year = {Y1} and julian_day >= {d1} and julian_day <= {d2}))' confidence
 
         else:
-            where_template = 'WHERE ((year = {y1} and julian_day >= {d1}) or (year = {y2} and julian_day <= {d2}))'
+            where_template = 'WHERE ((year = {y1} and julian_day >= {d1}) or (year = {y2} and julian_day <= {d2}))' confidence
 
         geog_id_list = ['country_iso', 'state_id', 'dist_id']
         geog_val_list = [iso, state, dist]
@@ -55,15 +53,7 @@ class SqlService(object):
         from_sql = 'FROM {} '.format(os.getenv('TERRAI_INDEX_ID'))
         order_sql = 'ORDER BY year, day'
 
-
-        if (int(from_year) < 2004 or int(to_year) > 2017):
-            return jsonify({'errors': [{
-                'status': '400',
-                'title': 'Terra I period must be between 2004 and 2017'
-                }]
-            }), 400
-
-        elif (int(from_year) == int(to_year)):
+        if (int(from_year) == int(to_year)):
             where_template = 'WHERE ((year = {y1} and day >= {d1} and day <= {d2}))'
 
         elif (int(from_year) + 1) == int(to_year):

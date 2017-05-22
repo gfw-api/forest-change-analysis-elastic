@@ -5,7 +5,7 @@ import os
 class AnalysisService(object):
 
     @staticmethod
-    def make_glad_request(sql, confidence, geostore=None):
+    def make_glad_request(sql, geostore=None):
 
         #format request to glad dataset
         url = 'http://staging-api.globalforestwatch.org/query/'
@@ -13,9 +13,9 @@ class AnalysisService(object):
         f = '&format=json'
 
         if geostore:
-            full = url + datasetID + sql + confidence + "&geostore=" + geostore + f
+            full = url + datasetID + sql + "&geostore=" + geostore + f
         else:
-            full = url + datasetID + sql + confidence + f
+            full = url + datasetID + sql + f
 
         r = requests.get(url=full)
         data = r.json()
