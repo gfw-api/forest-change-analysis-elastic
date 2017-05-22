@@ -15,12 +15,11 @@ class ResponseService(object):
         standard_format["attributes"] = {}
         standard_format["attributes"]["value"] = data["data"][0][count]
         standard_format["attributes"]["downloadUrls"] = {}
+        standard_format["attributes"]["downloadUrls"]["csv"] = "/download/" + datasetID + download_sql + "&format=csv"
+        standard_format["attributes"]["downloadUrls"]["json"] = "/download/" + datasetID + download_sql + "&format=json"
         if geostore:
-            standard_format["attributes"]["downloadUrls"]["csv"] = "/download/" + datasetID + download_sql + "&geostore=" + geostore + "&format=csv"
-            standard_format["attributes"]["downloadUrls"]["json"] = "/download/" + datasetID + download_sql + "&geostore=" + geostore + "&format=json"
-        else:
-            standard_format["attributes"]["downloadUrls"]["csv"] = "/download/" + datasetID + download_sql + "&format=csv"
-            standard_format["attributes"]["downloadUrls"]["json"] = "/download/" + datasetID + download_sql + "&format=json"
+            standard_format["attributes"]["downloadUrls"]["csv"] += "&geostore=" + geostore
+            standard_format["attributes"]["downloadUrls"]["json"] += "&geostore=" + geostore
         standard_format['attributes']["areaHa"] = area
 
         return standard_format
