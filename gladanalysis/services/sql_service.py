@@ -20,13 +20,13 @@ class SqlService(object):
         if (from_year == '2015') and (to_year == '2017'):
             where_template = ("WHERE ((year = '2015' and julian_day >= {d1}) or "
             "(year = '2016') or "
-            "(year = '2017' and julian_day <= {d2}))") confidence
+            "(year = '2017' and julian_day <= {d2}))") + confidence
 
         elif from_year == to_year:
-            where_template = 'WHERE ((year = {Y1} and julian_day >= {d1} and julian_day <= {d2}))' confidence
+            where_template = 'WHERE ((year = {Y1} and julian_day >= {d1} and julian_day <= {d2}))' + confidence
 
         else:
-            where_template = 'WHERE ((year = {y1} and julian_day >= {d1}) or (year = {y2} and julian_day <= {d2}))' confidence
+            where_template = 'WHERE ((year = {y1} and julian_day >= {d1}) or (year = {y2} and julian_day <= {d2}))' + confidence
 
         geog_id_list = ['country_iso', 'state_id', 'dist_id']
         geog_val_list = [iso, state, dist]
