@@ -3,7 +3,7 @@ import json
 import os
 
 class AnalysisService(object):
-    """"Class for sending queries to databases and capturing response""""
+    """Class for sending queries to databases and capturing response"""
 
     @staticmethod
     def make_glad_request(sql, geostore=None):

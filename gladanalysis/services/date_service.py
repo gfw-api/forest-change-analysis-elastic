@@ -4,7 +4,7 @@ import logging
 import requests
 
 class DateService(object):
-    """"Class for formatting dates""""
+    """Class for formatting dates"""
 
     @staticmethod
     def date_to_julian_day(period):
