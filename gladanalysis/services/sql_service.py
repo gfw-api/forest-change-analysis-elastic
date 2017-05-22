@@ -23,7 +23,7 @@ class SqlService(object):
             "(year = '2017' and julian_day <= {d2}))") + confidence
 
         elif from_year == to_year:
-            where_template = 'WHERE ((year = {Y1} and julian_day >= {d1} and julian_day <= {d2}))' + confidence
+            where_template = 'WHERE ((year = {y1} and julian_day >= {d1} and julian_day <= {d2}))' + confidence
 
         else:
             where_template = 'WHERE ((year = {y1} and julian_day >= {d1}) or (year = {y2} and julian_day <= {d2}))' + confidence
