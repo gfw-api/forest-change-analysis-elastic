@@ -23,9 +23,9 @@ GET
 
 Required:
 
-*geostore=[string]
+*geostore=[string]*
 
-period=[YYYY-MM-DD,YYYY-MM-DD]*
+*period=[YYYY-MM-DD,YYYY-MM-DD]*
 
 Optional:
 
@@ -33,19 +33,19 @@ Optional:
 
 - Successful Response:
 
-  - *Status: 200
+  - *Status: 200*
 
-    Content: {"data":{"attributes":{"areaHa":446564.6496673005,"downloadUrls":{"csv":"/download/274b4818-be18-4890-9d10-eae56d2a82e5?sql=SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day FROM index_e663eb0904de4f39b87135c6c2ed10b5 WHERE ((year = '2015' and julian_day >= 1) or (year = '2016') or (year = '2017' and julian_day <= 1))ORDER BY year, julian_day&format=csv&geostore=939a166f7e824f62eb967f7cfb3462ee","json":"/download/274b4818-be18-4890-9d10-eae56d2a82e5?sql=SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day FROM index_e663eb0904de4f39b87135c6c2ed10b5 WHERE ((year = '2015' and julian_day >= 1) or (year = '2016') or (year = '2017' and julian_day <= 1))ORDER BY year, julian_day&format=json&geostore=939a166f7e824f62eb967f7cfb3462ee"},"value":61317},"id":"274b4818-be18-4890-9d10-eae56d2a82e5","type":"glad-alerts"}}*
+    *Content:* *{"data":{"attributes":{"areaHa":446564.6496673005,"downloadUrls":{"csv":"/download/274b4818-be18-4890-9d10-eae56d2a82e5?sql=SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day FROM index_e663eb0904de4f39b87135c6c2ed10b5 WHERE ((year = '2015' and julian_day >= 1) or (year = '2016') or (year = '2017' and julian_day <= 1))ORDER BY year, julian_day&format=csv&geostore=939a166f7e824f62eb967f7cfb3462ee","json":"/download/274b4818-be18-4890-9d10-eae56d2a82e5?sql=SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day FROM index_e663eb0904de4f39b87135c6c2ed10b5 WHERE ((year = '2015' and julian_day >= 1) or (year = '2016') or (year = '2017' and julian_day <= 1))ORDER BY year, julian_day&format=json&geostore=939a166f7e824f62eb967f7cfb3462ee"},"value":61317},"id":"274b4818-be18-4890-9d10-eae56d2a82e5","type":"glad-alerts"}}*
 
 - Error Responses:
 
-  - *Status: 400
+  - *Status: 400*
 
-    Content: {errors: [{detail: parameter not set correctly}]}
+    *Content: {errors: [{detail: parameter not set correctly}]}*
 
-  - Status: 404
+  - *Status: 404*
 
-    Content: {errors: [{detail: endpoint not found}]}*
+    *Content: {errors: [{detail: endpoint not found}]}*
 
 - Sample Call:
 
@@ -65,17 +65,17 @@ GET
 
 Required:
 
-*period=[YYYY-MM-DD,YYYY-MM-DD]
+*period=[YYYY-MM-DD,YYYY-MM-DD]*
 
 Optional:
 
-gladConfirmOnly=[True]*
+*gladConfirmOnly=[True]*
 
 - Successful Response:
 
-  - *Status: 200
+  - *Status: 200*
 
-    Content: {"data":{"attributes":{"areaHa":4381204.954885732,"downloadUrls":{"csv":"/download/274b4818-be18-4890-9d10-eae56d2a82e5?sql=SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day FROM index_e663eb0904de4f39b87135c6c2ed10b5 WHERE ((year = '2015' and julian_day >= 1) or (year = '2016') or (year = '2017' and julian_day <= 69)) AND (country_iso = 'PER') AND (state_id = 5)ORDER BY year, julian_day&format=csv","json":"/download/274b4818-be18-4890-9d10-eae56d2a82e5?sql=SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day FROM index_e663eb0904de4f39b87135c6c2ed10b5 WHERE ((year = '2015' and julian_day >= 1) or (year = '2016') or (year = '2017' and julian_day <= 69)) AND (country_iso = 'PER') AND (state_id = 5)ORDER BY year, julian_day&format=json"},"value":6341},"id":"274b4818-be18-4890-9d10-eae56d2a82e5","type":"glad-alerts"}}*
+    *Content:* *{"data":{"attributes":{"areaHa":4381204.954885732,"downloadUrls":{"csv":"/download/274b4818-be18-4890-9d10-eae56d2a82e5?sql=SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day FROM index_e663eb0904de4f39b87135c6c2ed10b5 WHERE ((year = '2015' and julian_day >= 1) or (year = '2016') or (year = '2017' and julian_day <= 69)) AND (country_iso = 'PER') AND (state_id = 5)ORDER BY year, julian_day&format=csv","json":"/download/274b4818-be18-4890-9d10-eae56d2a82e5?sql=SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day FROM index_e663eb0904de4f39b87135c6c2ed10b5 WHERE ((year = '2015' and julian_day >= 1) or (year = '2016') or (year = '2017' and julian_day <= 69)) AND (country_iso = 'PER') AND (state_id = 5)ORDER BY year, julian_day&format=json"},"value":6341},"id":"274b4818-be18-4890-9d10-eae56d2a82e5","type":"glad-alerts"}}*
 
 - Error Responses:
 
