@@ -33,14 +33,12 @@ period=[YYYY-MM-DD,YYYY-MM-DD]
 
     Content: {"data":{"attributes":{"areaHa":446564.6496673005,"downloadUrls":{"csv":"/download/274b4818-be18-4890-9d10-eae56d2a82e5?sql=SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day FROM index_e663eb0904de4f39b87135c6c2ed10b5 WHERE ((year = '2015' and julian_day >= 1) or (year = '2016') or (year = '2017' and julian_day <= 1))ORDER BY year, julian_day&format=csv&geostore=939a166f7e824f62eb967f7cfb3462ee","json":"/download/274b4818-be18-4890-9d10-eae56d2a82e5?sql=SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day FROM index_e663eb0904de4f39b87135c6c2ed10b5 WHERE ((year = '2015' and julian_day >= 1) or (year = '2016') or (year = '2017' and julian_day <= 1))ORDER BY year, julian_day&format=json&geostore=939a166f7e824f62eb967f7cfb3462ee"},"value":61317},"id":"274b4818-be18-4890-9d10-eae56d2a82e5","type":"glad-alerts"}}
 
-- Error Response:
+- Error Responses:
 
   - Status: 400
 
     Content: {errors: [{detail: parameter not set correctly}]}
-
-Or
-
+    
   - Status: 404
 
     Content: {errors: [{detail: endpoint not found}]}
