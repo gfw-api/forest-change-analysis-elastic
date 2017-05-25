@@ -95,7 +95,7 @@ Optional:
 
 - URL:
 
-*/gladanalysis/use/:use_id*
+*/gladanalysis/use/:use_type/:use_id*
 
 - Method:
 
