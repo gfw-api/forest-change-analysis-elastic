@@ -90,3 +90,44 @@ Optional:
 - Sample Call:
 
 *curl "localhost:9000/v1/gladanalysis/admin/per/5&period=2015-01-01,2017-01-01"*
+
+## Query GLAD by Land Use data
+
+- URL:
+
+*/gladanalysis/use/:use_id*
+
+- Method:
+
+GET
+
+- URL Params:
+
+Required:
+
+*period=[YYYY-MM-DD,YYYY-MM-DD]*
+
+Optional:
+
+*gladConfirmOnly=[True]*
+
+- Successful Response:
+
+  - *Status: 200*
+
+    *Content:*
+    *{"data":{"attributes":{"areaHa":60.27047655915518,"downloadUrls":{"csv":"/download/274b4818-be18-4890-9d10-eae56d2a82e5?sql=SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day FROM index_e663eb0904de4f39b87135c6c2ed10b5 WHERE ((year = '2015' and julian_day >= 1) or (year = '2016') or (year = '2017' and julian_day <= 69))ORDER BY year, julian_day&format=csv&geostore=9f2f479b0f65588845147d63a9819746","json":"/download/274b4818-be18-4890-9d10-eae56d2a82e5?sql=SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day FROM index_e663eb0904de4f39b87135c6c2ed10b5 WHERE ((year = '2015' and julian_day >= 1) or (year = '2016') or (year = '2017' and julian_day <= 69))ORDER BY year, julian_day&format=json&geostore=9f2f479b0f65588845147d63a9819746"},"value":0},"id":"274b4818-be18-4890-9d10-eae56d2a82e5","type":"glad-alerts"}}*
+
+- Error Responses:
+
+    - *Status: 400
+
+      Content: {errors: [{detail: parameter not set correctly}]}
+
+    - Status: 404
+
+      Content: {errors: [{detail: endpoint not found}]}*
+
+- Sample Call:
+
+*curl "localhost:9000/v1/gladanalysis/logging/900&period=2015-01-01,2017-01-01"*
