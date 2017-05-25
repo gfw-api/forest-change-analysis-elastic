@@ -131,3 +131,13 @@ Optional:
 - Sample Call:
 
 *curl "localhost:9000/v1/gladanalysis/logging/900&period=2015-01-01,2017-01-01"*
+
+## Query Parameters Look-up
+
+| Parameter        | Definition                                                        |
+| -------------    |:-----------------------------------------------------------------:|
+| period           | Time period in format YYYY-MM-DD,YYYY-MM-DD                       |
+| geostore         | A unique hash assigned to a geographic area                       |
+| gladConfirmOnly  | A True or False parameter to filter glad by confirmed alerts only |
+
+## Path Parameters Look-up
