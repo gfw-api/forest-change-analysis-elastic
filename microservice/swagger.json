@@ -99,7 +99,7 @@
               "in": "path",
               "description": "The Country's 3-letter ISO code",
               "required": true,
-              "type": "string",
+              "type": "string"
             },
             {
               "name": "gladConfirmOnly",
@@ -160,14 +160,14 @@
               "in": "path",
               "description": "The Country's 3-letter ISO code",
               "required": true,
-              "type": "string",
+              "type": "string"
             },
             {
               "name": "admin_id",
               "in": "path",
               "description": "An integer referring to GADM level 2",
               "required": true,
-              "type": "integer",
+              "type": "integer"
             },
             {
               "name": "gladConfirmOnly",
@@ -228,21 +228,21 @@
               "in": "path",
               "description": "The Country's 3-letter ISO code",
               "required": true,
-              "type": "string",
+              "type": "string"
             },
             {
               "name": "admin_id",
               "in": "path",
               "description": "An integer referring to GADM level 2",
               "required": true,
-              "type": "integer",
+              "type": "integer"
             },
             {
               "name": "dist_id",
               "in": "path",
               "description": "An integer referring to GADM level 3",
               "required": true,
-              "type": "integer",
+              "type": "integer"
             },
             {
               "name": "gladConfirmOnly",
@@ -303,14 +303,14 @@
               "in": "path",
               "description": "Specifies the land use dataset (logging, oilpalm, mining, fiber)",
               "required": true,
-              "type": "string",
+              "type": "string"
             },
             {
               "name": "use_id",
               "in": "path",
               "description": "Specifies the numeric id for a feature within a land use dataset",
               "required": true,
-              "type": "integer",
+              "type": "integer"
             },
             {
               "name": "gladConfirmOnly",
@@ -371,7 +371,7 @@
               "in": "path",
               "description": "The numeric ID referencing a feature within the WDPA dataset",
               "required": true,
-              "type": "integer",
+              "type": "integer"
             },
             {
               "name": "gladConfirmOnly",
@@ -825,3 +825,5 @@
           }
         }
       }
+    }
+  }
