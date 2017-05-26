@@ -1,8 +1,8 @@
 {
     "swagger": "1.0",
     "info": {
-        "title": "GLAD SQL Analysis",
-        "description": "Microservice for analyzing glad",
+        "title": "GLAD and Terra I Analysis Microservice",
+        "description": "Microservice for analyzing GLAD and Terra I within selected geometries",
         "version": "1.0.0"
     },
     "host": "staging-api.globalforestwatch.org",
@@ -15,6 +15,813 @@
         "application/vnd.api+json"
     ],
     "paths": {
-
-    }
-}
+      "/gladanalysis": {
+        "get": {
+          "description": "Retrieves total number of GLAD alerts for your custom geometry and time period",
+          "operationId": "getGladByGeostore",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "GLAD"
+          ],
+          "parameters": [
+            {
+              "name": "geostore",
+              "in": "query",
+              "description": "A unique hash assigned to a geographic area: 34cecd4c4809dbbec20ce40be3d1c877",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "period",
+              "in": "query",
+              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "gladConfirmOnly",
+              "in": "query",
+              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "required": false,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Alerts obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/GladanalysisAPI"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "400": {
+              "description": "parameter not set correctly",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/gladanalysis/admin/{country_iso}": {
+        "get": {
+          "description": "Retrieves total number of GLAD alerts for a country within a time period of interest",
+          "operationId": "getGladByCountry",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "GLAD"
+          ],
+          "parameters": [
+            {
+              "name": "period",
+              "in": "query",
+              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "country_iso",
+              "in": "path",
+              "description": "The Country's 3-letter ISO code",
+              "required": true,
+              "type": "string",
+            },
+            {
+              "name": "gladConfirmOnly",
+              "in": "query",
+              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "required": false,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Alerts obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/GladanalysisAPI"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "400": {
+              "description": "parameter not set correctly",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/gladanalysis/admin/{country_iso}/{admin_id}": {
+        "get": {
+          "description": "Retrieves total number of GLAD alerts for GADM level 2 in a country within a time period of interest",
+          "operationId": "getGladByAdmin",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "GLAD"
+          ],
+          "parameters": [
+            {
+              "name": "period",
+              "in": "query",
+              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "country_iso",
+              "in": "path",
+              "description": "The Country's 3-letter ISO code",
+              "required": true,
+              "type": "string",
+            },
+            {
+              "name": "admin_id",
+              "in": "path",
+              "description": "An integer referring to GADM level 2",
+              "required": true,
+              "type": "integer",
+            },
+            {
+              "name": "gladConfirmOnly",
+              "in": "query",
+              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "required": false,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Alerts obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/GladanalysisAPI"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "400": {
+              "description": "parameter not set correctly",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/gladanalysis/admin/:country_iso/{admin_id}/{dist_id}": {
+        "get": {
+          "description": "Retrieves total number of GLAD alerts for GADM level 3 in a country within a time period of interest",
+          "operationId": "getGladByDist",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "GLAD"
+          ],
+          "parameters": [
+            {
+              "name": "period",
+              "in": "query",
+              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "country_iso",
+              "in": "path",
+              "description": "The Country's 3-letter ISO code",
+              "required": true,
+              "type": "string",
+            },
+            {
+              "name": "admin_id",
+              "in": "path",
+              "description": "An integer referring to GADM level 2",
+              "required": true,
+              "type": "integer",
+            },
+            {
+              "name": "dist_id",
+              "in": "path",
+              "description": "An integer referring to GADM level 3",
+              "required": true,
+              "type": "integer",
+            },
+            {
+              "name": "gladConfirmOnly",
+              "in": "query",
+              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "required": false,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Alerts obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/GladanalysisAPI"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "400": {
+              "description": "parameter not set correctly",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/gladanalysis/use/{use_type}/{use_id}": {
+        "get": {
+          "description": "Retrieves total number of GLAD alerts for a GFW land use feature within a time period of interest",
+          "operationId": "getGladByUse",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "GLAD"
+          ],
+          "parameters": [
+            {
+              "name": "period",
+              "in": "query",
+              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "use_type",
+              "in": "path",
+              "description": "Specifies the land use dataset (logging, oilpalm, mining, fiber)",
+              "required": true,
+              "type": "string",
+            },
+            {
+              "name": "use_id",
+              "in": "path",
+              "description": "Specifies the numeric id for a feature within a land use dataset",
+              "required": true,
+              "type": "integer",
+            },
+            {
+              "name": "gladConfirmOnly",
+              "in": "query",
+              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "required": false,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Alerts obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/GladanalysisAPI"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "400": {
+              "description": "parameter not set correctly",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/gladanalysis/wdpa/{wdpa_id}": {
+        "get": {
+          "description": "Retrieves total number of GLAD alerts for a protected area within the WDPA database within a time period of interest",
+          "operationId": "getGladByWdpa",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "GLAD"
+          ],
+          "parameters": [
+            {
+              "name": "period",
+              "in": "query",
+              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "wdpa_id",
+              "in": "path",
+              "description": "The numeric ID referencing a feature within the WDPA dataset",
+              "required": true,
+              "type": "integer",
+            },
+            {
+              "name": "gladConfirmOnly",
+              "in": "query",
+              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "required": false,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Alerts obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/GladanalysisAPI"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "400": {
+              "description": "parameter not set correctly",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/gladanalysis/date-range": {
+        "get": {
+          "description": "Retrieves min and max date for the GLAD Alerts database",
+          "operationId": "getGladDate",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "GLAD"
+          ],
+          "responses": {
+            "200": {
+              "description": "Dates obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/GladanalysisAPI"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/terraianalysis": {
+        "get": {
+          "description": "Retrieves total number of Terra I alerts for your custom geometry and time period",
+          "operationId": "getGladByGeostore",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "TERRAI"
+          ],
+          "parameters": [
+            {
+              "name": "geostore",
+              "in": "query",
+              "description": "A unique hash assigned to a geographic area: 34cecd4c4809dbbec20ce40be3d1c877",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "period",
+              "in": "query",
+              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Alerts obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/TerraianalysisAPI"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "400": {
+              "description": "parameter not set correctly",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/terraianalysis/admin/{country_iso}": {
+        "get": {
+          "description": "Retrieves total number of Terra I alerts for a country and time period of interest",
+          "operationId": "getTerraiByGeostore",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "TERRAI"
+          ],
+          "parameters": [
+            {
+              "name": "period",
+              "in": "query",
+              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "country_iso",
+              "in": "path",
+              "description": "The Country's 3-letter ISO code",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Alerts obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/TerraianalysisAPI"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "400": {
+              "description": "parameter not set correctly",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/terraianalysis/admin/{country_iso}/{admin_id}": {
+        "get": {
+          "description": "Retrieves total number of Terra I alerts for GADM Level 2 in a country and within a time period of interest",
+          "operationId": "getTerraiByAdmin",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "TERRAI"
+          ],
+          "parameters": [
+            {
+              "name": "period",
+              "in": "query",
+              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "country_iso",
+              "in": "path",
+              "description": "The Country's 3-letter ISO code",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "admin_id",
+              "in": "path",
+              "description": "An integer referring to GADM level 2",
+              "required": true,
+              "type": "integer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Alerts obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/TerraianalysisAPI"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "400": {
+              "description": "parameter not set correctly",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/terraianalysis/admin/{country_iso}/{admin_id}/{dist_id}": {
+        "get": {
+          "description": "Retrieves total number of Terra I alerts for GADM Level 3 in a country and within a time period of interest",
+          "operationId": "getTerraiByDist",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "TERRAI"
+          ],
+          "parameters": [
+            {
+              "name": "period",
+              "in": "query",
+              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "country_iso",
+              "in": "path",
+              "description": "The Country's 3-letter ISO code",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "admin_id",
+              "in": "path",
+              "description": "An integer referring to GADM level 2",
+              "required": true,
+              "type": "integer"
+            },
+            {
+              "name": "dist_id",
+              "in": "path",
+              "description": "An integer referring to GADM level 3",
+              "required": true,
+              "type": "integer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Alerts obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/TerraianalysisAPI"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "400": {
+              "description": "parameter not set correctly",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/terraianalysis/use/{use_type}/{use_id}": {
+        "get": {
+          "description": "Retrieves total number of Terra I alerts for a feature within a land use dataset and time period of interest",
+          "operationId": "getTerraiByUse",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "TERRAI"
+          ],
+          "parameters": [
+            {
+              "name": "period",
+              "in": "query",
+              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "use_type",
+              "in": "path",
+              "description": "Specifies the land use dataset (logging, oilpalm, mining, fiber)",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "use_id",
+              "in": "path",
+              "description": "Specifies the numeric id for a feature within a land use dataset",
+              "required": true,
+              "type": "integer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Alerts obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/TerraianalysisAPI"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "400": {
+              "description": "parameter not set correctly",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/terraianalysis/wdpa/{wdpa_id}": {
+        "get": {
+          "description": "Retrieves total number of Terra I alerts for a protected area within the WDPA dataabse and time-period",
+          "operationId": "getTerraiByWdpa",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "TERRAI"
+          ],
+          "parameters": [
+            {
+              "name": "period",
+              "in": "query",
+              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "wdpa_id",
+              "in": "path",
+              "description": "The numeric ID referencing a feature within the WDPA dataset",
+              "required": true,
+              "type": "integer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Alerts obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/TerraianalysisAPI"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "400": {
+              "description": "parameter not set correctly",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/terraianalysis/date-range": {
+        "get": {
+          "description": "Retrieves min and max date for the Terra I Alerts database",
+          "operationId": "getTerraiDate",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "TERRAI"
+          ],
+          "responses": {
+            "200": {
+              "description": "Dates obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/GladanalysisAPI"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      }
