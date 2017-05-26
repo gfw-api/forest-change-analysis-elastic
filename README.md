@@ -19,7 +19,7 @@ Query the GLAD and Terra I forest loss datasets with the [Global Forest Watch (G
 
 GET
 
-- URL Params:
+- Query Params:
 
 Required:
 
@@ -61,7 +61,7 @@ Optional:
 
 GET
 
-- URL Params:
+- Query Params:
 
 Required:
 
@@ -101,7 +101,7 @@ Optional:
 
 GET
 
-- URL Params:
+- Query Params:
 
 Required:
 
@@ -130,7 +130,79 @@ Optional:
 
 - Sample Call:
 
-*curl "localhost:9000/v1/gladanalysis/logging/900&period=2015-01-01,2017-01-01"*
+*curl "localhost:9000/v1/gladanalysis/use/logging/900&period=2015-01-01,2017-01-01"*
+
+## Query GLAD by WDPA Features
+
+- URL:
+
+*/gladanalysis/wdpa/:wdpa_id*
+
+- Method:
+
+GET
+
+- Query Params:
+
+Required:
+
+*period=[YYYY-MM-DD,YYYY-MM-DD]*
+
+Optional:
+
+*gladConfirmOnly=[True]*
+
+- Successful Response:
+
+  - *Status: 200*
+
+    *Content:*
+    *{"data":{"attributes":{"areaHa":7639.43533583115,"downloadUrls":{"csv":"/download/274b4818-be18-4890-9d10-eae56d2a82e5?sql=SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day FROM index_e663eb0904de4f39b87135c6c2ed10b5 WHERE ((year = '2015' and julian_day >= 1) or (year = '2016') or (year = '2017' and julian_day <= 69))ORDER BY year, julian_day&format=csv&geostore=ffecda456408bc9900708fc35771fae4","json":"/download/274b4818-be18-4890-9d10-eae56d2a82e5?sql=SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day FROM index_e663eb0904de4f39b87135c6c2ed10b5 WHERE ((year = '2015' and julian_day >= 1) or (year = '2016') or (year = '2017' and julian_day <= 69))ORDER BY year, julian_day&format=json&geostore=ffecda456408bc9900708fc35771fae4"},"value":0},"id":"274b4818-be18-4890-9d10-eae56d2a82e5","type":"glad-alerts"}}*
+
+- Error Responses:
+
+    - *Status: 400
+
+      Content: {errors: [{detail: parameter not set correctly}]}
+
+    - Status: 404
+
+      Content: {errors: [{detail: endpoint not found}]}*
+
+- Sample Call:
+
+*curl "localhost:9000/v1/gladanalysis/wdpa/1000&period=2015-01-01,2017-01-01"*
+
+## Get GLAD Date Range
+
+- URL:
+
+*/gladanalysis/date-range*
+
+- Method:
+
+GET
+
+- Query Params:
+
+*None*
+
+- Successful Response:
+
+  - *Status: 200*
+
+    *Content:*
+    *{"data":{"attributes":{"maxDate":"2017-03-10","minDate":"2015-01-01"},"id":"274b4818-be18-4890-9d10-eae56d2a82e5","type":"glad-alerts"}}*
+
+- Error Responses:
+
+    - *Status: 404*
+
+      *Content: {errors: [{detail: endpoint not found}]}*
+
+- Sample Call:
+
+*curl "localhost:9000/v1/gladanalysis/wdpa/1000&period=2015-01-01,2017-01-01"*
 
 ## Query Parameters Look-up
 
