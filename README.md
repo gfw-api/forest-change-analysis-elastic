@@ -135,7 +135,7 @@ Optional:
 ## Query Parameters Look-up
 
 | Parameter        | Definition                                                        |
-| -------------    |:-----------------------------------------------------------------:|
+| -------------    |:------------------------------------------------------------------|
 | period           | Time period in format YYYY-MM-DD,YYYY-MM-DD                       |
 | geostore         | A unique hash assigned to a geographic area                       |
 | gladConfirmOnly  | A True or False parameter to filter glad by confirmed alerts only |
@@ -143,7 +143,7 @@ Optional:
 ## Path Parameters Look-up
 
 | Parameter        | Definition                                                                                       |
-| -------------    |:------------------------------------------------------------------------------------------------:|
+| -------------    |:-------------------------------------------------------------------------------------------------|
 | iso_code         | The 3-letter ISO unique identifier for countries                                                 |
 | admin_id         | A numeric id which refers to the first administrative-level of the GADM database                 |
 | dist_id          | A numeric id which refers to the second administrative-level of the GADM database                |
