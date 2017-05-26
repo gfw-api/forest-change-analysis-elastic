@@ -11,6 +11,8 @@ Query the GLAD and Terra I forest loss datasets with the [Global Forest Watch (G
 
 ## Query GLAD by Geostore
 
+*Analyzes GLAD by area of interest defined by a geostore hash*
+
 - URL:
 
 */gladanalysis*
@@ -53,6 +55,8 @@ Optional:
 
 ## Query GLAD by Country, State and District
 
+*Analyzes GLAD by country, state and district boundaries based on the GADM database*
+
 - URL:
 
 */gladanalysis/admin/:country_iso/:admin_id/:dist_id*
@@ -92,6 +96,8 @@ Optional:
 *curl "localhost:9000/v1/gladanalysis/admin/per/5&period=2015-01-01,2017-01-01"*
 
 ## Query GLAD by Land Use data
+
+*Analyzes GLAD by intersecting with Land Use data from GFW*
 
 - URL:
 
@@ -134,6 +140,8 @@ Optional:
 
 ## Query GLAD by WDPA Features
 
+*Analyzes GLAD by features within the WDPA dataset*
+
 - URL:
 
 */gladanalysis/wdpa/:wdpa_id*
@@ -174,6 +182,8 @@ Optional:
 *curl "localhost:9000/v1/gladanalysis/wdpa/1000&period=2015-01-01,2017-01-01"*
 
 ## Get GLAD Date Range
+
+*Returns a min and max date for the GLAD dataset* 
 
 - URL:
 
