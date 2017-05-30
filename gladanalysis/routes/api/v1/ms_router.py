@@ -198,25 +198,23 @@ def glad_date_range():
 
     logging.info('Creating Glad Date Range')
 
-    max_sql = '?sql=select MAX(julian_day)from {} where year = 2017'.format(os.getenv('GLAD_INDEX_ID'))
-    min_sql = '?sql=select MIN(julian_day)from {} where year = 2015'.format(os.getenv('GLAD_INDEX_ID'))
-
-    # min_julian = get_date('274b4818-be18-4890-9d10-eae56d2a82e5', min_sql, 'MIN(julian_day)')
+    #set dataset ID
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
+
+    #Get max year from database
+    max_year_sql = '?sql=select MAX(year)from {}'.format(os.getenv('GLAD_INDEX_ID'))
+    max_year = DateService.get_date(datasetID, max_year_sql, 'MAX(year)')
+
+    #Get max julian date from database
+    max_sql = '?sql=select MAX(julian_day)from {} where year = {}'.format(os.getenv('GLAD_INDEX_ID'), max_year)
     max_julian = DateService.get_date(datasetID, max_sql, 'MAX(julian_day)')
 
     #Set min and max julian values (min value shouldn't change, hence hard-code)
-    max_value = max_julian + 1700
-    # min_value = min_julian + 1500
-    min_value = 1501
+    latest_year, latest_month, latest_day = DateService.julian_day_to_date(max_year, max_julian)
 
     #format day
-    max_day = datetime.datetime.strptime(str(max_value), '%y%j').date()
-    min_day = datetime.datetime.strptime(str(min_value), '%y%j').date()
-
-    #format date
-    max_date = max_day.strftime('%Y-%m-%d')
-    min_date = min_day.strftime('%Y-%m-%d')
+    max_date = '%s-%s-%s' %(latest-year, latest-month, latest-day)
+    min_date = '2015-01-01'
 
     #standardize date response
     response = ResponseService.format_date_range("Glad", min_date, max_date)

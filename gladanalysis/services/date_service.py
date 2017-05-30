@@ -2,6 +2,7 @@ import json
 import datetime
 import logging
 import requests
+import calendar
 
 class DateService(object):
     """Class for formatting dates"""
@@ -22,6 +23,15 @@ class DateService(object):
 
         except ValueError:
             return None, None
+
+    @staticmethod
+    def julian_day_to_date(year, jd):
+        month = 1
+        day = 0
+        while jd - calendar.monthrange(year,month)[1] > 0 and month < 12:
+            jd = jd - calendar.monthrange(year,month)[1]
+            month = month + 1
+        return year, month, jd
 
     @staticmethod
     def get_date(datasetID, sql, value):
