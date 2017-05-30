@@ -13,4 +13,4 @@ def error(status=400, detail='Bad Request'):
     }]), status
 
 endpoints = Blueprint('endpoints', __name__)
-import gladanalysis.routes.api.v1.ms_router
+import gladanalysis.routes.api.v2.ms_router

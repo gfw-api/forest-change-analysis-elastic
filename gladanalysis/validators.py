@@ -6,7 +6,7 @@ import re
 from functools import wraps
 from flask import request
 
-from gladanalysis.routes.api.v1 import error
+from gladanalysis.routes.api.v2 import error
 
 def validate_geostore(func):
     """validate geostore argument"""

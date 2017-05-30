@@ -24,14 +24,14 @@ def create_application():
     application.config.from_object(settings)
 
     # Routing
-    application.register_blueprint(endpoints, url_prefix='/api/v2/ms')
+    application.register_blueprint(endpoints, url_prefix='/api/v2/microservice')
 
     # CT
     info = load_config_json('register')
     swagger = load_config_json('swagger')
     CTRegisterMicroserviceFlask.register(
         app = application,
-        name = 'ms',
+        name = 'gladanalysis',
         info = info,
         swagger = swagger,
         mode = CTRegisterMicroserviceFlask.AUTOREGISTER_MODE if os.getenv('ENVIRONMENT') == 'dev' else CTRegisterMicroserviceFlask.NORMAL_MODE,
