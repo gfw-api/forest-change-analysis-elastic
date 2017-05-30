@@ -406,7 +406,7 @@ def terrai_date_range():
     max_julian = DateService.get_date(datasetID, max_sql, 'MAX(day)')
 
     #convert julian to date
-    latest_year, latest_month, latest_day = DatService.julian_day_to_date(max_year, max_julian)
+    latest_year, latest_month, latest_day = DateService.julian_day_to_date(max_year, max_julian)
 
     #format dates
     max_date = '%s-%s-%s' %(latest_year, latest_month, latest_day)
