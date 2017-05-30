@@ -15,10 +15,10 @@ from gladanalysis.responders import ErrorResponder
 from gladanalysis.utils.http import request_to_microservice
 from gladanalysis.validators import validate_geostore, validate_period, validate_admin, validate_use, validate_wdpa
 
-
+#test
 """GLAD ENDPOINTS"""
 
-@endpoints.route('/gladanalysis', methods=['GET'])
+@endpoints.route('/glad-alerts', methods=['GET'])
 @validate_geostore
 @validate_period
 
@@ -48,7 +48,7 @@ def query_glad():
 
     return jsonify({'data': standard_format}), 200
 
-@endpoints.route('/gladanalysis/admin/<iso_code>', methods=['GET'])
+@endpoints.route('/glad-alerts/admin/<iso_code>', methods=['GET'])
 @validate_period
 @validate_admin
 
@@ -77,7 +77,7 @@ def glad_country(iso_code):
 
     return jsonify({'data': standard_format}), 200
 
-@endpoints.route('/gladanalysis/admin/<iso_code>/<admin_id>', methods=['GET'])
+@endpoints.route('/glad-alerts/admin/<iso_code>/<admin_id>', methods=['GET'])
 @validate_period
 @validate_admin
 
@@ -106,7 +106,7 @@ def glad_admin(iso_code, admin_id):
 
     return jsonify({'data': standard_format}), 200
 
-@endpoints.route('/gladanalysis/admin/<iso_code>/<admin_id>/<dist_id>', methods=['GET'])
+@endpoints.route('/glad-alerts/admin/<iso_code>/<admin_id>/<dist_id>', methods=['GET'])
 @validate_period
 @validate_admin
 
@@ -135,7 +135,7 @@ def glad_dist(iso_code, admin_id, dist_id):
 
     return jsonify({'data': standard_format}), 200
 
-@endpoints.route('/gladanalysis/use/<use_type>/<use_id>', methods=['GET'])
+@endpoints.route('/glad-alerts/use/<use_type>/<use_id>', methods=['GET'])
 @validate_use
 @validate_period
 
@@ -164,7 +164,7 @@ def glad_use(use_type, use_id):
 
     return jsonify({'data': standard_format}), 200
 
-@endpoints.route('/gladanalysis/wdpa/<wdpa_id>', methods=['GET'])
+@endpoints.route('/glad-alerts/wdpa/<wdpa_id>', methods=['GET'])
 @validate_period
 @validate_wdpa
 
@@ -193,7 +193,7 @@ def glad_wdpa(wdpa_id):
 
     return jsonify({'data': standard_format}), 200
 
-@endpoints.route('/gladanalysis/date-range', methods=['GET'])
+@endpoints.route('/glad-alerts/date-range', methods=['GET'])
 def glad_date_range():
 
     logging.info('Creating Glad Date Range')
