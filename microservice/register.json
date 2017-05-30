@@ -7,14 +7,14 @@
         "method": "GET",
         "endpoints": [{
             "method": "GET",
-            "path": "/api/v1/ms/gladanalysis/admin/:iso_code"
+            "path": "/api/v2/ms/glad-alerts/admin/:iso_code"
         }]
     }, {
         "url": "/v1/gladanalysis/admin/:iso_code/:admin_id",
         "method": "GET",
         "endpoints": [{
             "method": "GET",
-            "path": "/api/v1/ms/gladanalysis/admin/:iso_code/:admin_id"
+            "path": "/api/v2/ms/glad-alerts/admin/:iso_code/:admin_id"
         }]
     }, {
         "url": "/v1/gladanalysis/admin/:iso_code/:admin_id/:dist_id",
@@ -28,7 +28,7 @@
         "method": "GET",
         "endpoints": [{
             "method": "GET",
-            "path": "/api/v1/ms/gladanalysis"
+            "path": "/api/v2/ms/glad-alerts"
         }]
     },  {
 	       "url": "/v1/terraianalysis/admin/:iso_code/:admin_id",
@@ -63,7 +63,7 @@
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
-	           "path": "/api/v1/ms/gladanalysis/use/:use_type/:use_id"
+	           "path": "/api/v2/ms/glad-alerts/use/:use_type/:use_id"
 	        }]
 		}, {
 	       "url": "/v1/terraianalysis/wdpa/:wdpa_id",
@@ -77,14 +77,14 @@
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
-	           "path": "/api/v1/ms/gladanalysis/wdpa/:wdpa_id"
+	           "path": "/api/v2/ms/glad-alerts/wdpa/:wdpa_id"
 	        }]
 		}, {
 	       "url": "/v1/gladanalysis/date-range",
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
-	           "path": "/api/v1/ms/gladanalysis/date-range"
+	           "path": "/api/v2/ms/glad-alerts/date-range"
 	        }]
 		}, {
 	       "url": "/v1/terraianalysis/date-range",
