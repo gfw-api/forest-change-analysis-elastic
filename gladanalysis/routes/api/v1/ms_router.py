@@ -213,7 +213,7 @@ def glad_date_range():
     latest_year, latest_month, latest_day = DateService.julian_day_to_date(max_year, max_julian)
 
     #format day
-    max_date = '%s-%s-%s' %(latest_year, latest_month, latest_day)
+    max_date = '%s-%02d-%s' %(latest_year, latest_month, latest_day)
     min_date = '2015-01-01'
 
     #standardize date response
@@ -409,7 +409,7 @@ def terrai_date_range():
     latest_year, latest_month, latest_day = DateService.julian_day_to_date(max_year, max_julian)
 
     #format dates
-    max_date = '%s-%s-%s' %(latest_year, latest_month, latest_day)
+    max_date = '%s-%02d-%s' %(latest_year, latest_month, latest_day)
     min_date = '2004-01-01'
 
     #standardize response
