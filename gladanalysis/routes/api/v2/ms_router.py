@@ -15,7 +15,6 @@ from gladanalysis.responders import ErrorResponder
 from gladanalysis.utils.http import request_to_microservice
 from gladanalysis.validators import validate_geostore, validate_period, validate_admin, validate_use, validate_wdpa
 
-#test
 """GLAD ENDPOINTS"""
 
 @endpoints.route('/glad-alerts', methods=['GET'])
@@ -222,7 +221,7 @@ def glad_date_range():
     return jsonify({'data': response}), 200
 
 """TERRA I ENDPOINTS"""
-@endpoints.route('/terraianalysis', methods=['GET'])
+@endpoints.route('/terrai-alerts', methods=['GET'])
 @validate_geostore
 @validate_period
 
@@ -251,7 +250,7 @@ def query_terrai():
 
     return jsonify({'data': standard_format}), 200
 
-@endpoints.route('/terraianalysis/admin/<iso_code>', methods=['GET'])
+@endpoints.route('/terrai-alerts/admin/<iso_code>', methods=['GET'])
 @validate_period
 @validate_admin
 
@@ -279,7 +278,7 @@ def terrai_country(iso_code):
 
     return jsonify({'data': standard_format}), 200
 
-@endpoints.route('/terraianalysis/admin/<iso_code>/<admin_id>', methods=['GET'])
+@endpoints.route('/terrai-alerts/admin/<iso_code>/<admin_id>', methods=['GET'])
 @validate_period
 @validate_admin
 
@@ -306,7 +305,7 @@ def terrai_admin(iso_code, admin_id):
 
     return jsonify({'data': standard_format}), 200
 
-@endpoints.route('/terraianalysis/admin/<iso_code>/<admin_id>/<dist_id>', methods=['GET'])
+@endpoints.route('/terrai-alerts/admin/<iso_code>/<admin_id>/<dist_id>', methods=['GET'])
 @validate_period
 @validate_admin
 
@@ -333,7 +332,7 @@ def terrai_dist(iso_code, admin_id, dist_id):
 
     return jsonify({'data': standard_format}), 200
 
-@endpoints.route('/terraianalysis/use/<use_type>/<use_id>', methods=['GET'])
+@endpoints.route('/terrai-alerts/use/<use_type>/<use_id>', methods=['GET'])
 @validate_use
 @validate_period
 
@@ -361,7 +360,7 @@ def terrai_use(use_type, use_id):
 
     return jsonify({'data': standard_format}), 200
 
-@endpoints.route('/terraianalysis/wdpa/<wdpa_id>', methods=['GET'])
+@endpoints.route('/terrai-alerts/wdpa/<wdpa_id>', methods=['GET'])
 @validate_period
 @validate_wdpa
 
@@ -389,7 +388,7 @@ def terrai_wdpa(wdpa_id):
 
     return jsonify({'data': standard_format}), 200
 
-@endpoints.route('/terraianalysis/date-range', methods=['GET'])
+@endpoints.route('/terrai-alerts/date-range', methods=['GET'])
 def terrai_date_range():
 
     logging.info('Creating Terra I Date Range')
