@@ -10,7 +10,7 @@
         "https",
         "http"
     ],
-    "basePath": "/api/v1",
+    "basePath": "/api/v2",
     "produces": [
         "application/vnd.api+json"
     ],
