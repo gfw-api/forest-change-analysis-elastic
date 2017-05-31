@@ -1,4 +1,4 @@
-import os
+productionimport os
 import json
 import csv
 import StringIO
@@ -71,7 +71,7 @@ def query_glad():
     else:
         confidence = ""
 
-    url = 'http://staging-api.globalforestwatch.org/query/'
+    url = 'http://production-api.globalforestwatch.org/query/'
     datasetID = '274b4818-be18-4890-9d10-eae56d2a82e5'
     f = '&format=json'
 

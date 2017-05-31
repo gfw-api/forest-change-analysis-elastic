@@ -9,7 +9,7 @@ class AnalysisService(object):
     def make_glad_request(sql, geostore=None):
 
         #format request to glad dataset
-        url = 'http://staging-api.globalforestwatch.org/query/'
+        url = 'http://production-api.globalforestwatch.org/query/'
         datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
         f = '&format=json'
 
@@ -26,7 +26,7 @@ class AnalysisService(object):
     def make_terrai_request(sql, geostore=None):
 
         #format request to glad dataset
-        url = 'http://staging-api.globalforestwatch.org/query/'
+        url = 'http://production-api.globalforestwatch.org/query/'
         datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
         f = '&format=json'
 

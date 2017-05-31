@@ -36,7 +36,7 @@ class DateService(object):
     @staticmethod
     def get_date(datasetID, sql, value):
 
-        url = 'http://staging-api.globalforestwatch.org/query/'
+        url = 'http://production-api.globalforestwatch.org/query/'
         f = '&format=json'
 
         full = url + datasetID + sql + f
