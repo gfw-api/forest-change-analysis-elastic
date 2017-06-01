@@ -15,7 +15,7 @@
         "application/vnd.api+json"
     ],
     "paths": {
-      "/gladanalysis": {
+      "/glad-alerts": {
         "get": {
           "description": "Retrieves total number of GLAD alerts for your custom geometry and time period",
           "operationId": "getGladByGeostore",
@@ -29,7 +29,7 @@
             {
               "name": "geostore",
               "in": "query",
-              "description": "A unique hash assigned to a geographic area: 34cecd4c4809dbbec20ce40be3d1c877",
+              "description": "A unique hash assigned to a geographic area:" """34cecd4c4809dbbec20ce40be3d1c877""",
               "required": true,
               "type": "string"
             },
