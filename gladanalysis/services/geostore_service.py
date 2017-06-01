@@ -14,15 +14,17 @@ class GeostoreService(object):
 
         return request_to_microservice(config)
 
+    @staticmethod
     def make_use_request(use_type, use_id):
 
         uri = "/geostore/use/%s/%s" %(use_type, use_id)
 
-        geostore_data = self.execute(uri)
+        geostore_data = GeostoreService.execute(uri)
         geostore = geostore_data['data']['id']
         area = geostore_data['data']['attributes']['areaHa']
         return (geostore, area)
 
+    @staticmethod
     def make_gadm_request(iso_code, admin_id=None, dist_id=None):
 
         if not admin_id and not dist_id:
@@ -34,21 +36,23 @@ class GeostoreService(object):
         elif admin_id and dist_id:
             uri = "/geostore/admin/%s/%s/%s" %(iso_code, admin_id, dist_id)
 
-        geostore_data = self.execute(uri)
+        geostore_data = GeostoreService.execute(uri)
         area_ha = geostore_data['data']['attributes']['areaHa']
         return area_ha
 
+    @staticmethod
     def make_area_request(geostore):
 
         uri = "/geostore/%s" %(geostore)
-        area_resp = self.execute(uri)
+        area_resp = GeostoreService.execute(uri)
         area = area_resp['data']['attributes']['areaHa']
         return area
 
+    @staticmethod
     def make_wdpa_request(wdpa_id):
 
         uri = "/geostore/wdpa/%s" %(wdpa_id)
-        geostore_data = self.execute(uri)
+        geostore_data = GeostoreService.execute(uri)
         geostore = geostore_data['data']['id']
         area = geostore_data['data']['attributes']['areaHa']
         return (geostore, area)
