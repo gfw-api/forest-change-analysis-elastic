@@ -40,7 +40,7 @@ class DateService(object):
 
         config = {
         'uri': uri,
-        'method' = 'GET'
+        'method': 'GET'
         }
 
         values = request_to_microservice(config)
