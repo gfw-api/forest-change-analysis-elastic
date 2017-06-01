@@ -1,6 +1,6 @@
-import requests
 import json
 import os
+from CTRegisterMicroserviceFlask import request_to_microservice
 
 class AnalysisService(object):
     """Class for sending queries to databases and capturing response"""
@@ -8,33 +8,29 @@ class AnalysisService(object):
     @staticmethod
     def make_glad_request(sql, geostore=None):
 
-        #format request to glad dataset
-        url = 'http://production-api.globalforestwatch.org/query/'
-        datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-        f = '&format=json'
+        uri = "/query/" + os.getenv('GLAD_DATASET_ID') + sql + '&format=json'
 
         if geostore:
-            full = url + datasetID + sql + "&geostore=" + geostore + f
-        else:
-            full = url + datasetID + sql + f
+            uri += "&geostore=" + geostore
 
-        r = requests.get(url=full)
-        data = r.json()
-        return data
+        config = {
+        'uri': uri,
+        'method': 'GET'
+        }
+
+        return request_to_microservice(config)
 
     @staticmethod
     def make_terrai_request(sql, geostore=None):
 
-        #format request to glad dataset
-        url = 'http://production-api.globalforestwatch.org/query/'
-        datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-        f = '&format=json'
+        uri = "/query/" + os.getenv('TERRAI_DATASET_ID') + sql + '&format=json'
 
         if geostore:
-            full = url + datasetID + sql + "&geostore=" + geostore + f
-        else:
-            full = url + datasetID + sql + f
+            uri += "&geostore=" + geostore
 
-        r = requests.get(url=full)
-        data = r.json()
-        return data
+        config = {
+        'uri': uri,
+        'method': 'GET'
+        }
+
+        return request_to_microservice(config)

@@ -3,98 +3,98 @@
     "name": "#(service.name)",
     "tags": ["gfw"],
     "urls": [{
-        "url": "/v1/gladanalysis/admin/:iso_code",
+        "url": "/v1/glad-alerts/admin/:iso_code",
         "method": "GET",
         "endpoints": [{
             "method": "GET",
             "path": "/api/v2/ms/glad-alerts/admin/:iso_code"
         }]
     }, {
-        "url": "/v1/gladanalysis/admin/:iso_code/:admin_id",
+        "url": "/v1/glad-alerts/admin/:iso_code/:admin_id",
         "method": "GET",
         "endpoints": [{
             "method": "GET",
             "path": "/api/v2/ms/glad-alerts/admin/:iso_code/:admin_id"
         }]
     }, {
-        "url": "/v1/gladanalysis/admin/:iso_code/:admin_id/:dist_id",
+        "url": "/v1/glad-alerts/admin/:iso_code/:admin_id/:dist_id",
         "method": "GET",
         "endpoints": [{
             "method": "GET",
             "path": "/api/v2/ms/glad-alerts/admin/:iso_code/:admin_id/:dist_id"
         }]
     }, {
-        "url": "/v1/gladanalysis",
+        "url": "/v1/glad-alerts",
         "method": "GET",
         "endpoints": [{
             "method": "GET",
             "path": "/api/v2/ms/glad-alerts"
         }]
     },  {
-	       "url": "/v1/terraianalysis/admin/:iso_code/:admin_id",
+	       "url": "/v1/terrai-alerts/admin/:iso_code/:admin_id",
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
 	           "path": "/api/v2/ms/terrai-alerts/admin/:iso_code/:admin_id"
 	        }]
 		}, {
-	       "url": "/v1/terraianalysis/admin/:iso_code/:admin_id/:dist_id",
+	       "url": "/v1/terrai-alerts/admin/:iso_code/:admin_id/:dist_id",
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
 	           "path": "/api/v2/ms/terrai-alerts/admin/:iso_code/:admin_id/:dist_id"
 	        }]
 		}, {
-	       "url": "/v1/terraianalysis/admin/:iso_code",
+	       "url": "/v1/terrai-alerts/admin/:iso_code",
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
 	           "path": "/api/v2/ms/terrai-alerts/admin/:iso_code"
 	        }]
 		}, {
-	       "url": "/v1/terraianalysis/use/:use_type/:use_id",
+	       "url": "/v1/terrai-alerts/use/:use_type/:use_id",
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
 	           "path": "/api/v2/ms/terrai-alerts/use/:use_type/:use_id"
 	        }]
 		}, {
-	       "url": "/v1/gladanalysis/use/:use_type/:use_id",
+	       "url": "/v1/glad-alerts/use/:use_type/:use_id",
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
 	           "path": "/api/v2/ms/glad-alerts/use/:use_type/:use_id"
 	        }]
 		}, {
-	       "url": "/v1/terraianalysis/wdpa/:wdpa_id",
+	       "url": "/v1/terrai-alerts/wdpa/:wdpa_id",
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
 	           "path": "/api/v2/ms/terrai-alerts/wdpa/:wdpa_id"
 	        }]
 		}, {
-	       "url": "/v1/gladanalysis/wdpa/:wdpa_id",
+	       "url": "/v1/glad-alerts/wdpa/:wdpa_id",
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
 	           "path": "/api/v2/ms/glad-alerts/wdpa/:wdpa_id"
 	        }]
 		}, {
-	       "url": "/v1/gladanalysis/date-range",
+	       "url": "/v1/glad-alerts/date-range",
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
 	           "path": "/api/v2/ms/glad-alerts/date-range"
 	        }]
 		}, {
-	       "url": "/v1/terraianalysis/date-range",
+	       "url": "/v1/terrai-alerts/date-range",
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
 	           "path": "/api/v2/ms/terrai-alerts/date-range"
 	        }]
 		}, {
-	       "url": "/v1/terraianalysis",
+	       "url": "/v1/terrai-alerts",
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
