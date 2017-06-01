@@ -1,5 +1,4 @@
-from flask import jsonify, request
-import requests
+from flask import jsonify
 import os
 
 class SqlService(object):

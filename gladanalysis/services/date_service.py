@@ -1,8 +1,8 @@
 import json
 import datetime
 import logging
-import requests
 import calendar
+from CTRegisterMicroserviceFlask import request_to_microservice
 
 class DateService(object):
     """Class for formatting dates"""
@@ -36,11 +36,13 @@ class DateService(object):
     @staticmethod
     def get_date(datasetID, sql, value):
 
-        url = 'http://staging-api.globalforestwatch.org/query/'
-        f = '&format=json'
+        uri = "/query/%s" %(datasetID) + sql + '&format=json'
 
-        full = url + datasetID + sql + f
-        r = requests.get(url=full)
-        values = r.json()
+        config = {
+        'uri': uri,
+        'method' = 'GET'
+        }
+
+        values = request_to_microservice(config)
         date_value = values['data'][0][value]
         return date_value
