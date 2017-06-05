@@ -5,7 +5,7 @@
         "description": "Micrservice to analyze glad",
         "version": "1.0.0"
     },
-    "host": "staging-api.globalforestwatch.org",
+    "host": "production-api.globalforestwatch.org",
     "schemes": [
         "https",
         "http"

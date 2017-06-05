@@ -18,8 +18,8 @@ class GeostoreService(object):
     def make_use_request(use_type, use_id):
 
         uri = "/geostore/use/%s/%s" %(use_type, use_id)
-
         geostore_data = GeostoreService.execute(uri)
+
         geostore = geostore_data['data']['id']
         area = geostore_data['data']['attributes']['areaHa']
         return (geostore, area)
@@ -42,9 +42,10 @@ class GeostoreService(object):
 
     @staticmethod
     def make_area_request(geostore):
-
+      
         uri = "/geostore/%s" %(geostore)
         area_resp = GeostoreService.execute(uri)
+    
         area = area_resp['data']['attributes']['areaHa']
         return area
 
@@ -53,6 +54,7 @@ class GeostoreService(object):
 
         uri = "/geostore/wdpa/%s" %(wdpa_id)
         geostore_data = GeostoreService.execute(uri)
+
         geostore = geostore_data['data']['id']
         area = geostore_data['data']['attributes']['areaHa']
         return (geostore, area)

@@ -6,16 +6,16 @@ develop:
     - "62000:62000"
   container_name: glad-sql-analysis
   environment:
-    ENVIRONMENT: dev
+    ENVIRONMENT: prod
     API_VERSION: v1
     DEBUG: "True"
     CT_URL: http://172.30.2.76:9000
     CT_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4MjBhZDk0NjlhMDI4Nzk4MmY0Y2QxOCIsInByb3ZpZGVyIjoibG9jYWwiLCJwcm92aWRlcklkIjpudWxsLCJlbWFpbCI6InNlcmdpby5nb3JkaWxsb0B2aXp6dWFsaXR5LmNvbSIsInJvbGUiOiJBRE1JTiIsImNyZWF0ZWRBdCI6IjIwMTYtMTEtMDdUMTY6MzY6MzYuODY4WiIsImV4dHJhVXNlckRhdGEiOnsiYXBwcyI6WyJnZnciLCJwcmVwIiwiYXF1ZWR1Y3QiLCJmb3Jlc3QtYXRsYXMiLCJydyIsImRhdGE0c2RnIl19fQ.3GzuhG8wD4gI5Fo6NTqHC_Dq6ChKPPWXygga2mAuKZw
     LOCAL_URL: http://172.30.2.76:62000
-    TERRAI_INDEX_ID: index_67cf7c0373654a1f8401d42c3706b7de
-    TERRAI_DATASET_ID: 67cf7c03-7365-4a1f-8401-d42c3706b7de
+    TERRAI_INDEX_ID: index_bb80312eb51448ad9252336408603591
+    TERRAI_DATASET_ID: bb80312e-b514-48ad-9252-336408603591
     GLAD_INDEX_ID: index_e663eb0904de4f39b87135c6c2ed10b5
-    GLAD_DATASET_ID: 274b4818-be18-4890-9d10-eae56d2a82e5
+    GLAD_DATASET_ID: e663eb09-04de-4f39-b871-35c6c2ed10b5
   command: develop
   volumes:
     - ./gladanalysis:/opt/glad-sql-analysis/gladanalysis
