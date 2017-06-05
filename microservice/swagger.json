@@ -52,7 +52,7 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/Response200"
               }
             },
             "404": {
@@ -113,7 +113,7 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/Response200"
               }
             },
             "404": {
@@ -181,7 +181,7 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/Response200"
               }
             },
             "404": {
@@ -256,7 +256,7 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/Response200"
               }
             },
             "404": {
@@ -324,7 +324,7 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/Response200"
               }
             },
             "404": {
@@ -385,7 +385,7 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/Response200"
               }
             },
             "404": {
@@ -423,7 +423,7 @@
             "200": {
               "description": "Dates obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/Response200"
               }
             },
             "404": {
@@ -471,7 +471,7 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/TerraianalysisAPI"
+                "$ref": "#/definitions/Response200"
               }
             },
             "404": {
@@ -525,7 +525,7 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/TerraianalysisAPI"
+                "$ref": "#/definitions/Response200"
               }
             },
             "404": {
@@ -586,7 +586,7 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/TerraianalysisAPI"
+                "$ref": "#/definitions/Response200"
               }
             },
             "404": {
@@ -654,7 +654,7 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/TerraianalysisAPI"
+                "$ref": "#/definitions/Response200"
               }
             },
             "404": {
@@ -715,7 +715,7 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/TerraianalysisAPI"
+                "$ref": "#/definitions/Response200"
               }
             },
             "404": {
@@ -769,7 +769,7 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/TerraianalysisAPI"
+                "$ref": "#/definitions/Response200"
               }
             },
             "404": {
@@ -807,7 +807,7 @@
             "200": {
               "description": "Dates obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/Response200"
               }
             },
             "404": {
