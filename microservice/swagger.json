@@ -64,7 +64,7 @@
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error400"
               }
             },
             "default": {
@@ -125,7 +125,7 @@
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error400"
               }
             },
             "default": {
@@ -193,7 +193,7 @@
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error400"
               }
             },
             "default": {
@@ -268,7 +268,7 @@
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error400"
               }
             },
             "default": {
@@ -336,7 +336,7 @@
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error400"
               }
             },
             "default": {
@@ -397,7 +397,7 @@
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error400"
               }
             },
             "default": {
@@ -483,7 +483,7 @@
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error400"
               }
             },
             "default": {
@@ -537,7 +537,7 @@
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error400"
               }
             },
             "default": {
@@ -598,7 +598,7 @@
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error400"
               }
             },
             "default": {
@@ -666,7 +666,7 @@
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error400"
               }
             },
             "default": {
@@ -727,7 +727,7 @@
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error400"
               }
             },
             "default": {
@@ -781,7 +781,7 @@
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error400"
               }
             },
             "default": {
@@ -842,21 +842,6 @@
               "Error404": {
                   "type": "object",
                   "properties": {
-                      "id": {
-                          "type": "integer",
-                          "format": "int32",
-                          "description": "A unique identifier for this particular occurrence of the problem."
-                        },
-                        "links": {
-                            "type": "object",
-                            "description": "A links object",
-                            "properties": {
-                                "about": {
-                                    "type": "string",
-                                    "description": "A link that leads to further details about this particular occurrence of the problem."
-                                }
-                            }
-                        },
                         "status": {
                             "type": "string",
                             "description": "Endpoint not found"
@@ -867,9 +852,40 @@
                         },
                         "title": {
                             "type": "string",
-                            "description": "Endpoint error"
+                            "description": "Not Found"
                           }
                       }
                   }
+              },
+              "Error400": {
+                  "type": "object",
+                  "properties": {
+                        "status": {
+                            "type": "string",
+                            "description": "parameters not set correctly, check for valid period and geostore"
+                        },
+                        "code": {
+                            "type": "string",
+                            "description": "400"
+                        },
+                        "title": {
+                            "type": "string",
+                            "description": "Bad Request"
+                          }
+                      }
+                  },
+              "Response200": {
+                "data": {
+                  "id": "datasetID",
+                  "type": "dataset name",
+                  "attributes": {
+                    "areaHA": "total area in hectares",
+                    "downloadUrls": {
+                      "csv": "download link to access data as csv",
+                      "json": "download link to access data as json",
+                    "value": "total count of alerts for requested area"
+                    }
+                  }
+                }
               }
-          }
+            }
