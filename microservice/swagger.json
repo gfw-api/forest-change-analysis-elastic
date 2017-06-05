@@ -29,14 +29,14 @@
             {
               "name": "geostore",
               "in": "query",
-              "description": "A unique hash assigned to a geographic area:" """34cecd4c4809dbbec20ce40be3d1c877""",
+              "description": "A unique hash assigned to a geographic area" """34cecd4c4809dbbec20ce40be3d1c877""",
               "required": true,
               "type": "string"
             },
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format" """YYYY-MM-DD,YYYY-MM-DD""",
               "required": true,
               "type": "string"
             },
@@ -76,7 +76,7 @@
           }
         }
       },
-      "/gladanalysis/admin/{country_iso}": {
+      "/glad-alerts/admin/{country_iso}": {
         "get": {
           "description": "Retrieves total number of GLAD alerts for a country within a time period of interest",
           "operationId": "getGladByCountry",
@@ -137,7 +137,7 @@
           }
         }
       },
-      "/gladanalysis/admin/{country_iso}/{admin_id}": {
+      "/glad-alerts/admin/{country_iso}/{admin_id}": {
         "get": {
           "description": "Retrieves total number of GLAD alerts for GADM level 2 in a country within a time period of interest",
           "operationId": "getGladByAdmin",
@@ -205,7 +205,7 @@
           }
         }
       },
-      "/gladanalysis/admin/:country_iso/{admin_id}/{dist_id}": {
+      "/glad-alerts/admin/:country_iso/{admin_id}/{dist_id}": {
         "get": {
           "description": "Retrieves total number of GLAD alerts for GADM level 3 in a country within a time period of interest",
           "operationId": "getGladByDist",
@@ -280,7 +280,7 @@
           }
         }
       },
-      "/gladanalysis/use/{use_type}/{use_id}": {
+      "/glad-alerts/use/{use_type}/{use_id}": {
         "get": {
           "description": "Retrieves total number of GLAD alerts for a GFW land use feature within a time period of interest",
           "operationId": "getGladByUse",
@@ -348,7 +348,7 @@
           }
         }
       },
-      "/gladanalysis/wdpa/{wdpa_id}": {
+      "/glad-alerts/wdpa/{wdpa_id}": {
         "get": {
           "description": "Retrieves total number of GLAD alerts for a protected area within the WDPA database within a time period of interest",
           "operationId": "getGladByWdpa",
@@ -409,7 +409,7 @@
           }
         }
       },
-      "/gladanalysis/date-range": {
+      "/glad-alerts/date-range": {
         "get": {
           "description": "Retrieves min and max date for the GLAD Alerts database",
           "operationId": "getGladDate",
@@ -441,7 +441,7 @@
           }
         }
       },
-      "/terraianalysis": {
+      "/terrai-alerts": {
         "get": {
           "description": "Retrieves total number of Terra I alerts for your custom geometry and time period",
           "operationId": "getGladByGeostore",
@@ -495,7 +495,7 @@
           }
         }
       },
-      "/terraianalysis/admin/{country_iso}": {
+      "/terrai-alerts/admin/{country_iso}": {
         "get": {
           "description": "Retrieves total number of Terra I alerts for a country and time period of interest",
           "operationId": "getTerraiByGeostore",
@@ -549,7 +549,7 @@
           }
         }
       },
-      "/terraianalysis/admin/{country_iso}/{admin_id}": {
+      "/terrai-alerts/admin/{country_iso}/{admin_id}": {
         "get": {
           "description": "Retrieves total number of Terra I alerts for GADM Level 2 in a country and within a time period of interest",
           "operationId": "getTerraiByAdmin",
@@ -610,7 +610,7 @@
           }
         }
       },
-      "/terraianalysis/admin/{country_iso}/{admin_id}/{dist_id}": {
+      "/terrai-alerts/admin/{country_iso}/{admin_id}/{dist_id}": {
         "get": {
           "description": "Retrieves total number of Terra I alerts for GADM Level 3 in a country and within a time period of interest",
           "operationId": "getTerraiByDist",
@@ -678,7 +678,7 @@
           }
         }
       },
-      "/terraianalysis/use/{use_type}/{use_id}": {
+      "/terrai-alerts/use/{use_type}/{use_id}": {
         "get": {
           "description": "Retrieves total number of Terra I alerts for a feature within a land use dataset and time period of interest",
           "operationId": "getTerraiByUse",
@@ -739,7 +739,7 @@
           }
         }
       },
-      "/terraianalysis/wdpa/{wdpa_id}": {
+      "/terrai-alerts/wdpa/{wdpa_id}": {
         "get": {
           "description": "Retrieves total number of Terra I alerts for a protected area within the WDPA dataabse and time-period",
           "operationId": "getTerraiByWdpa",
@@ -793,7 +793,7 @@
           }
         }
       },
-      "/terraianalysis/date-range": {
+      "/terrai-alerts/date-range": {
         "get": {
           "description": "Retrieves min and max date for the Terra I Alerts database",
           "operationId": "getTerraiDate",
