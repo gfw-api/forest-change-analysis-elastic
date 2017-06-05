@@ -43,7 +43,7 @@
             {
               "name": "gladConfirmOnly",
               "in": "query",
-              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
               "required": false,
               "type": "string"
             }
@@ -90,21 +90,21 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "country_iso",
               "in": "path",
-              "description": "The Country's 3-letter ISO code",
+              "description": "A Country's 3-letter ISO code\n```BRA```",
               "required": true,
               "type": "string"
             },
             {
               "name": "gladConfirmOnly",
               "in": "query",
-              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
               "required": false,
               "type": "string"
             }
@@ -151,28 +151,28 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "country_iso",
               "in": "path",
-              "description": "The Country's 3-letter ISO code",
+              "description": "A Country's 3-letter ISO code\n```BRA```",
               "required": true,
               "type": "string"
             },
             {
               "name": "admin_id",
               "in": "path",
-              "description": "An integer referring to GADM level 2",
+              "description": "Admin 1 region code based on GADM 2\n```2```",
               "required": true,
               "type": "integer"
             },
             {
               "name": "gladConfirmOnly",
               "in": "query",
-              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
               "required": false,
               "type": "string"
             }
@@ -219,35 +219,35 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "country_iso",
               "in": "path",
-              "description": "The Country's 3-letter ISO code",
+              "description": "A Country's 3-letter ISO code\n```BRA```",
               "required": true,
               "type": "string"
             },
             {
               "name": "admin_id",
               "in": "path",
-              "description": "An integer referring to GADM level 2",
+              "description": "Admin 1 region code based on GADM 2\n```2```",
               "required": true,
               "type": "integer"
             },
             {
               "name": "dist_id",
               "in": "path",
-              "description": "An integer referring to GADM level 3",
+              "description": "Admin 2 region code based on GADM 2\n```2```",
               "required": true,
               "type": "integer"
             },
             {
               "name": "gladConfirmOnly",
               "in": "query",
-              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
               "required": false,
               "type": "string"
             }
@@ -294,28 +294,28 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "use_type",
               "in": "path",
-              "description": "Specifies the land use dataset (logging, oilpalm, mining, fiber)",
+              "description": "Land use dataset, one of\n```(logging, oilpalm, mining, fiber)```",
               "required": true,
               "type": "string"
             },
             {
               "name": "use_id",
               "in": "path",
-              "description": "Specifies the numeric id for a feature within a land use dataset",
+              "description": "Numeric id for a feature within a land use dataset\n````100```",
               "required": true,
               "type": "integer"
             },
             {
               "name": "gladConfirmOnly",
               "in": "query",
-              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
               "required": false,
               "type": "string"
             }
@@ -362,21 +362,21 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "wdpa_id",
               "in": "path",
-              "description": "The numeric ID referencing a feature within the WDPA dataset",
+              "description": "The numeric ID for a feature within the WDPA dataset\n```56670``",
               "required": true,
               "type": "integer"
             },
             {
               "name": "gladConfirmOnly",
               "in": "query",
-              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
               "required": false,
               "type": "string"
             }
@@ -455,14 +455,14 @@
             {
               "name": "geostore",
               "in": "query",
-              "description": "A unique hash assigned to a geographic area: 34cecd4c4809dbbec20ce40be3d1c877",
+              "description": "A unique hash assigned to a geographic area\n```3203370361b3d2d087d282507a1746a1```",
               "required": true,
               "type": "string"
             },
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             }
@@ -509,14 +509,14 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "country_iso",
               "in": "path",
-              "description": "The Country's 3-letter ISO code",
+              "description": "A Country's 3-letter ISO code\n```BRA```",
               "required": true,
               "type": "string"
             }
@@ -563,21 +563,21 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "country_iso",
               "in": "path",
-              "description": "The Country's 3-letter ISO code",
+              "description": "A Country's 3-letter ISO code\n```BRA```",
               "required": true,
               "type": "string"
             },
             {
               "name": "admin_id",
               "in": "path",
-              "description": "An integer referring to GADM level 2",
+              "description": "Admin 1 region code based on GADM 2\n```2```",
               "required": true,
               "type": "integer"
             }
@@ -624,28 +624,28 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "country_iso",
               "in": "path",
-              "description": "The Country's 3-letter ISO code",
+              "description": "A Country's 3-letter ISO code\n```BRA```",
               "required": true,
               "type": "string"
             },
             {
               "name": "admin_id",
               "in": "path",
-              "description": "An integer referring to GADM level 2",
+              "description": "Admin 1 region code based on GADM 2\n```2```",
               "required": true,
               "type": "integer"
             },
             {
               "name": "dist_id",
               "in": "path",
-              "description": "An integer referring to GADM level 3",
+              "description": "Admin 2 region code based on GADM 2\n```2```",
               "required": true,
               "type": "integer"
             }
@@ -692,21 +692,21 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "use_type",
               "in": "path",
-              "description": "Specifies the land use dataset (logging, oilpalm, mining, fiber)",
+              "description": "Land use dataset, one of\n````(logging, oilpalm, mining, fiber)```",
               "required": true,
               "type": "string"
             },
             {
               "name": "use_id",
               "in": "path",
-              "description": "Specifies the numeric id for a feature within a land use dataset",
+              "description": "Numeric id for a feature within a land use dataset\n````100```",
               "required": true,
               "type": "integer"
             }
@@ -753,14 +753,14 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "wdpa_id",
               "in": "path",
-              "description": "The numeric ID referencing a feature within the WDPA dataset",
+              "description": "The numeric ID for a feature within the WDPA dataset\n```56670``",
               "required": true,
               "type": "integer"
             }
