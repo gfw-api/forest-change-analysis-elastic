@@ -22,7 +22,7 @@ def validate_geostore(func):
         return func(*args, **kwargs)
     return wrapper
 
-def validate_period(func):
+def validate_glad_period(func):
     """validate period argument"""
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -48,6 +48,46 @@ def validate_period(func):
                     datetime.datetime.strptime(period_to, '%Y-%m-%d')
                 except ValueError:
                     return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+
+                if int(period_from.split('-')[0]) < 2015:
+                    return error(status=400, detail="start date can't be earlier than 2015-01-01")
+                elif int(period_to.split('-')[0]) > 2017:
+                    return error(status=400, detail="end year can't be later than 2017")
+
+        return func(*args, **kwargs)
+    return wrapper
+
+def validate_terrai_period(func):
+    """validate period argument"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if request.method == 'GET':
+            period = request.args.get('period')
+
+            if not period:
+                return error(status=400, detail="Time period must be set")
+
+            elif len(period.split(',')) < 2:
+                return error(status=400, detail="Period needs 2 arguments")
+
+            else:
+                period_from = period.split(',')[0]
+                period_to = period.split(',')[1]
+
+                try:
+                    datetime.datetime.strptime(period_from, '%Y-%m-%d')
+                except ValueError:
+                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+
+                try:
+                    datetime.datetime.strptime(period_to, '%Y-%m-%d')
+                except ValueError:
+                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+
+                if int(period_from.split('-')[0]) < 2004:
+                    return error(status=400, detail="start date can't be earlier than 2004-01-01")
+                elif int(period_to.split('-')[0]) > 2017:
+                    return error(status=400, detail="end year can't be later than 2017")
 
         return func(*args, **kwargs)
     return wrapper

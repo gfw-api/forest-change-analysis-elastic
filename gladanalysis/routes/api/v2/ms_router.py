@@ -11,13 +11,13 @@ from gladanalysis.services import SqlService
 from gladanalysis.services import AnalysisService
 from gladanalysis.services import ResponseService
 from gladanalysis.responders import ErrorResponder
-from gladanalysis.validators import validate_geostore, validate_period, validate_admin, validate_use, validate_wdpa
+from gladanalysis.validators import validate_geostore, validate_glad_period, validate_terrai_period, validate_admin, validate_use, validate_wdpa
 
 """GLAD ENDPOINTS"""
 
 @endpoints.route('/glad-alerts', methods=['GET'])
 @validate_geostore
-@validate_period
+@validate_glad_period
 
 def query_glad():
     """Query GLAD"""
@@ -46,7 +46,7 @@ def query_glad():
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/glad-alerts/admin/<iso_code>', methods=['GET'])
-@validate_period
+@validate_glad_period
 @validate_admin
 
 def glad_country(iso_code):
@@ -75,7 +75,7 @@ def glad_country(iso_code):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/glad-alerts/admin/<iso_code>/<admin_id>', methods=['GET'])
-@validate_period
+@validate_glad_period
 @validate_admin
 
 def glad_admin(iso_code, admin_id):
@@ -104,7 +104,7 @@ def glad_admin(iso_code, admin_id):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/glad-alerts/admin/<iso_code>/<admin_id>/<dist_id>', methods=['GET'])
-@validate_period
+@validate_glad_period
 @validate_admin
 
 def glad_dist(iso_code, admin_id, dist_id):
@@ -134,7 +134,7 @@ def glad_dist(iso_code, admin_id, dist_id):
 
 @endpoints.route('/glad-alerts/use/<use_type>/<use_id>', methods=['GET'])
 @validate_use
-@validate_period
+@validate_glad_period
 
 def glad_use(use_type, use_id):
 
@@ -162,7 +162,7 @@ def glad_use(use_type, use_id):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/glad-alerts/wdpa/<wdpa_id>', methods=['GET'])
-@validate_period
+@validate_glad_period
 @validate_wdpa
 
 def glad_wdpa(wdpa_id):
@@ -221,7 +221,7 @@ def glad_date_range():
 """TERRA I ENDPOINTS"""
 @endpoints.route('/terrai-alerts', methods=['GET'])
 @validate_geostore
-@validate_period
+@validate_terrai_period
 
 def query_terrai():
 
@@ -249,7 +249,7 @@ def query_terrai():
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/terrai-alerts/admin/<iso_code>', methods=['GET'])
-@validate_period
+@validate_terrai_period
 @validate_admin
 
 def terrai_country(iso_code):
@@ -277,7 +277,7 @@ def terrai_country(iso_code):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/terrai-alerts/admin/<iso_code>/<admin_id>', methods=['GET'])
-@validate_period
+@validate_terrai_period
 @validate_admin
 
 def terrai_admin(iso_code, admin_id):
@@ -304,7 +304,7 @@ def terrai_admin(iso_code, admin_id):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/terrai-alerts/admin/<iso_code>/<admin_id>/<dist_id>', methods=['GET'])
-@validate_period
+@validate_terrai_period
 @validate_admin
 
 def terrai_dist(iso_code, admin_id, dist_id):
@@ -332,7 +332,7 @@ def terrai_dist(iso_code, admin_id, dist_id):
 
 @endpoints.route('/terrai-alerts/use/<use_type>/<use_id>', methods=['GET'])
 @validate_use
-@validate_period
+@validate_terrai_period
 
 def terrai_use(use_type, use_id):
 
@@ -359,7 +359,7 @@ def terrai_use(use_type, use_id):
     return jsonify({'data': standard_format}), 200
 
 @endpoints.route('/terrai-alerts/wdpa/<wdpa_id>', methods=['GET'])
-@validate_period
+@validate_terrai_period
 @validate_wdpa
 
 def terrai_wdpa(wdpa_id):

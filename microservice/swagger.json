@@ -58,7 +58,7 @@
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error404"
               }
             },
             "400": {
@@ -119,7 +119,7 @@
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error404"
               }
             },
             "400": {
@@ -187,7 +187,7 @@
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error404"
               }
             },
             "400": {
@@ -262,7 +262,7 @@
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error404"
               }
             },
             "400": {
@@ -330,7 +330,7 @@
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error404"
               }
             },
             "400": {
@@ -391,7 +391,7 @@
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error404"
               }
             },
             "400": {
@@ -429,7 +429,7 @@
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error404"
               }
             },
             "default": {
@@ -477,7 +477,7 @@
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error404"
               }
             },
             "400": {
@@ -531,7 +531,7 @@
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error404"
               }
             },
             "400": {
@@ -592,7 +592,7 @@
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error404"
               }
             },
             "400": {
@@ -660,7 +660,7 @@
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error404"
               }
             },
             "400": {
@@ -721,7 +721,7 @@
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error404"
               }
             },
             "400": {
@@ -775,7 +775,7 @@
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error404"
               }
             },
             "400": {
@@ -813,7 +813,7 @@
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Error404"
               }
             },
             "default": {
@@ -823,7 +823,53 @@
               }
             }
           }
-        }
       }
     }
-  }
+  },
+  "definitions": {
+      "Errors": {
+          "type": "object",
+          "description": "Errors",
+          "properties": {
+              "errors": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/definitions/Error404"
+                    }
+                  }
+                }
+              },
+              "Error404": {
+                  "type": "object",
+                  "properties": {
+                      "id": {
+                          "type": "integer",
+                          "format": "int32",
+                          "description": "A unique identifier for this particular occurrence of the problem."
+                        },
+                        "links": {
+                            "type": "object",
+                            "description": "A links object",
+                            "properties": {
+                                "about": {
+                                    "type": "string",
+                                    "description": "A link that leads to further details about this particular occurrence of the problem."
+                                }
+                            }
+                        },
+                        "status": {
+                            "type": "string",
+                            "description": "Endpoint not found"
+                        },
+                        "code": {
+                            "type": "string",
+                            "description": "404"
+                        },
+                        "title": {
+                            "type": "string",
+                            "description": "Endpoint error"
+                          }
+                      }
+                  }
+              }
+          }
