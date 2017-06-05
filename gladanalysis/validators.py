@@ -13,11 +13,10 @@ def validate_geostore(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
 
-        if request.method == 'GET':
-            geostore = request.args.get('geostore')
+        geostore = request.args.get('geostore')
 
-            if not geostore:
-                return error(status=400, detail="Geostore must be set")
+        if not geostore:
+            return error(status=400, detail="Geostore must be set")
 
         return func(*args, **kwargs)
     return wrapper
@@ -26,33 +25,32 @@ def validate_glad_period(func):
     """validate period argument"""
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if request.method == 'GET':
-            period = request.args.get('period')
+        period = request.args.get('period')
 
-            if not period:
-                return error(status=400, detail="Time period must be set")
+        if not period:
+            return error(status=400, detail="Time period must be set")
 
-            elif len(period.split(',')) < 2:
-                return error(status=400, detail="Period needs 2 arguments")
+        elif len(period.split(',')) < 2:
+            return error(status=400, detail="Period needs 2 arguments")
 
-            else:
-                period_from = period.split(',')[0]
-                period_to = period.split(',')[1]
+        else:
+            period_from = period.split(',')[0]
+            period_to = period.split(',')[1]
 
-                try:
-                    datetime.datetime.strptime(period_from, '%Y-%m-%d')
-                except ValueError:
-                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+            try:
+                datetime.datetime.strptime(period_from, '%Y-%m-%d')
+            except ValueError:
+                return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
 
-                try:
-                    datetime.datetime.strptime(period_to, '%Y-%m-%d')
-                except ValueError:
-                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+            try:
+                datetime.datetime.strptime(period_to, '%Y-%m-%d')
+            except ValueError:
+                return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
 
-                if int(period_from.split('-')[0]) < 2015:
-                    return error(status=400, detail="start date can't be earlier than 2015-01-01")
-                elif int(period_to.split('-')[0]) > 2017:
-                    return error(status=400, detail="end year can't be later than 2017")
+            if int(period_from.split('-')[0]) < 2015:
+                return error(status=400, detail="start date can't be earlier than 2015-01-01")
+            elif int(period_to.split('-')[0]) > 2017:
+                return error(status=400, detail="end year can't be later than 2017")
 
         return func(*args, **kwargs)
     return wrapper
@@ -61,33 +59,32 @@ def validate_terrai_period(func):
     """validate period argument"""
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if request.method == 'GET':
-            period = request.args.get('period')
+        period = request.args.get('period')
 
-            if not period:
-                return error(status=400, detail="Time period must be set")
+        if not period:
+            return error(status=400, detail="Time period must be set")
 
-            elif len(period.split(',')) < 2:
-                return error(status=400, detail="Period needs 2 arguments")
+        elif len(period.split(',')) < 2:
+            return error(status=400, detail="Period needs 2 arguments")
 
-            else:
-                period_from = period.split(',')[0]
-                period_to = period.split(',')[1]
+        else:
+            period_from = period.split(',')[0]
+            period_to = period.split(',')[1]
 
-                try:
-                    datetime.datetime.strptime(period_from, '%Y-%m-%d')
-                except ValueError:
-                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+            try:
+                datetime.datetime.strptime(period_from, '%Y-%m-%d')
+            except ValueError:
+                return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
 
-                try:
-                    datetime.datetime.strptime(period_to, '%Y-%m-%d')
-                except ValueError:
-                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+            try:
+                datetime.datetime.strptime(period_to, '%Y-%m-%d')
+            except ValueError:
+                return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
 
-                if int(period_from.split('-')[0]) < 2004:
-                    return error(status=400, detail="start date can't be earlier than 2004-01-01")
-                elif int(period_to.split('-')[0]) > 2017:
-                    return error(status=400, detail="end year can't be later than 2017")
+            if int(period_from.split('-')[0]) < 2004:
+                return error(status=400, detail="start date can't be earlier than 2004-01-01")
+            elif int(period_to.split('-')[0]) > 2017:
+                return error(status=400, detail="end year can't be later than 2017")
 
         return func(*args, **kwargs)
     return wrapper
@@ -117,30 +114,30 @@ def validate_admin(func):
     """validate admin arguments"""
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if request.method == 'GET':
-            iso_code = request.view_args.get('iso_code')
-            admin_id = request.view_args.get('admin_id')
-            dist_id = request.view_args.get('dist_id')
 
-            if not iso_code:
-                return error(status=400, detail="Must specify a ISO code, and optionally a /state_id and /ditrict_id")
+        iso_code = request.view_args.get('iso_code')
+        admin_id = request.view_args.get('admin_id')
+        dist_id = request.view_args.get('dist_id')
 
-            elif len(iso_code) > 3 or len(iso_code) < 3:
-                return error(status=400, detail="Must use a 3-letter ISO Code")
+        if not iso_code:
+            return error(status=400, detail="Must specify a ISO code, and optionally a /state_id and /ditrict_id")
 
-            elif admin_id:
-                if re.search('[a-zA-Z]', admin_id):
-                    return error(status=400, detail="For state and district queries please use numbers")
+        elif len(iso_code) > 3 or len(iso_code) < 3:
+            return error(status=400, detail="Must use a 3-letter ISO Code")
 
-                else:
-                    pass
+        elif admin_id:
+            if re.search('[a-zA-Z]', admin_id):
+                return error(status=400, detail="For state and district queries please use numbers")
 
-            elif dist_id:
-                if re.search('[a-zA-Z]', dist_id):
-                    return error(status=400, detail="For state and district queries please use numbers")
+            else:
+                pass
 
-                else:
-                    pass
+        elif dist_id:
+            if re.search('[a-zA-Z]', dist_id):
+                return error(status=400, detail="For state and district queries please use numbers")
+
+            else:
+                pass
 
         return func(*args, **kwargs)
     return wrapper
@@ -150,14 +147,13 @@ def validate_wdpa(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
 
-        if request.method == 'GET':
-            wdpa_id = request.view_args.get('wdpa_id')
+        wdpa_id = request.view_args.get('wdpa_id')
 
-            if not wdpa_id:
-                return error(status=400, detail="WDPA ID should be set")
+        if not wdpa_id:
+            return error(status=400, detail="WDPA ID should be set")
 
-            elif re.search('[a-zA-Z]', wdpa_id):
-                return error(status=400, detail="WDPA ID should be numeric")
+        elif re.search('[a-zA-Z]', wdpa_id):
+            return error(status=400, detail="WDPA ID should be numeric")
 
         return func(*args, **kwargs)
     return wrapper
