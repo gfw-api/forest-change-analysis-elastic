@@ -29,14 +29,14 @@
             {
               "name": "geostore",
               "in": "query",
-              "description": "A unique hash assigned to a geographic area\n```\n3203370361b3d2d087d282507a1746a1\n```",
+              "description": "A unique hash assigned to a geographic area\n```3203370361b3d2d087d282507a1746a1```",
               "required": true,
               "type": "string"
             },
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```\nYYYY-MM-DD,YYYY-MM-DD\n```",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
