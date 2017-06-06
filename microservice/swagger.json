@@ -875,15 +875,34 @@
                       }
                   },
               "Response200": {
-                "data": {
-                  "id": "datasetID",
-                  "type": "dataset name",
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "datasetID"
+                  },
+                  "type": {
+                    "type": "string",
+                    "description": "dataset name"
+                  },
                   "attributes": {
-                    "areaHA": "total area in hectares",
+                    "areaHA": {
+                      "type": "integer",
+                      "description": "total area in hectares"
+                    },
                     "downloadUrls": {
-                      "csv": "download link to access data as csv",
-                      "json": "download link to access data as json",
-                    "value": "total count of alerts for requested area"
+                      "csv": {
+                        "type": "string",
+                        "description": "download link to access data as csv"
+                      },
+                      "json": {
+                        "type": "string",
+                        "description": "download link to access data as json"
+                      },
+                    "value": {
+                      "type": "integer",
+                      "description": "total count of alerts for requested area"
+                      }
                     }
                   }
                 }
