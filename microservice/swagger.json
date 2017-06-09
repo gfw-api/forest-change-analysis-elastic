@@ -15,7 +15,7 @@
         "application/vnd.api+json"
     ],
     "paths": {
-      "/gladanalysis": {
+      "/glad-alerts": {
         "get": {
           "description": "Retrieves total number of GLAD alerts for your custom geometry and time period",
           "operationId": "getGladByGeostore",
@@ -29,21 +29,21 @@
             {
               "name": "geostore",
               "in": "query",
-              "description": "A unique hash assigned to a geographic area: 34cecd4c4809dbbec20ce40be3d1c877",
+              "description": "A unique hash assigned to a geographic area\n```3203370361b3d2d087d282507a1746a1```",
               "required": true,
               "type": "string"
             },
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "gladConfirmOnly",
               "in": "query",
-              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
               "required": false,
               "type": "string"
             }
@@ -52,19 +52,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/Response200"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -76,7 +76,7 @@
           }
         }
       },
-      "/gladanalysis/admin/{country_iso}": {
+      "/glad-alerts/admin/{country_iso}": {
         "get": {
           "description": "Retrieves total number of GLAD alerts for a country within a time period of interest",
           "operationId": "getGladByCountry",
@@ -90,21 +90,21 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "country_iso",
               "in": "path",
-              "description": "The Country's 3-letter ISO code",
+              "description": "A Country's 3-letter ISO code\n```BRA```",
               "required": true,
               "type": "string"
             },
             {
               "name": "gladConfirmOnly",
               "in": "query",
-              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
               "required": false,
               "type": "string"
             }
@@ -113,19 +113,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -137,7 +137,7 @@
           }
         }
       },
-      "/gladanalysis/admin/{country_iso}/{admin_id}": {
+      "/glad-alerts/admin/{country_iso}/{admin_id}": {
         "get": {
           "description": "Retrieves total number of GLAD alerts for GADM level 2 in a country within a time period of interest",
           "operationId": "getGladByAdmin",
@@ -151,28 +151,28 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "country_iso",
               "in": "path",
-              "description": "The Country's 3-letter ISO code",
+              "description": "A Country's 3-letter ISO code\n```BRA```",
               "required": true,
               "type": "string"
             },
             {
               "name": "admin_id",
               "in": "path",
-              "description": "An integer referring to GADM level 2",
+              "description": "Admin 1 region code based on GADM 2\n```2```",
               "required": true,
               "type": "integer"
             },
             {
               "name": "gladConfirmOnly",
               "in": "query",
-              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
               "required": false,
               "type": "string"
             }
@@ -181,19 +181,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -205,7 +205,7 @@
           }
         }
       },
-      "/gladanalysis/admin/:country_iso/{admin_id}/{dist_id}": {
+      "/glad-alerts/admin/:country_iso/{admin_id}/{dist_id}": {
         "get": {
           "description": "Retrieves total number of GLAD alerts for GADM level 3 in a country within a time period of interest",
           "operationId": "getGladByDist",
@@ -219,35 +219,35 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "country_iso",
               "in": "path",
-              "description": "The Country's 3-letter ISO code",
+              "description": "A Country's 3-letter ISO code\n```BRA```",
               "required": true,
               "type": "string"
             },
             {
               "name": "admin_id",
               "in": "path",
-              "description": "An integer referring to GADM level 2",
+              "description": "Admin 1 region code based on GADM 2\n```2```",
               "required": true,
               "type": "integer"
             },
             {
               "name": "dist_id",
               "in": "path",
-              "description": "An integer referring to GADM level 3",
+              "description": "Admin 2 region code based on GADM 2\n```2```",
               "required": true,
               "type": "integer"
             },
             {
               "name": "gladConfirmOnly",
               "in": "query",
-              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
               "required": false,
               "type": "string"
             }
@@ -256,19 +256,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -280,7 +280,7 @@
           }
         }
       },
-      "/gladanalysis/use/{use_type}/{use_id}": {
+      "/glad-alerts/use/{use_type}/{use_id}": {
         "get": {
           "description": "Retrieves total number of GLAD alerts for a GFW land use feature within a time period of interest",
           "operationId": "getGladByUse",
@@ -294,28 +294,28 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "use_type",
               "in": "path",
-              "description": "Specifies the land use dataset (logging, oilpalm, mining, fiber)",
+              "description": "Land use dataset, one of\n```(logging, oilpalm, mining, fiber)```",
               "required": true,
               "type": "string"
             },
             {
               "name": "use_id",
               "in": "path",
-              "description": "Specifies the numeric id for a feature within a land use dataset",
+              "description": "Numeric id for a feature within a land use dataset\n````100```",
               "required": true,
               "type": "integer"
             },
             {
               "name": "gladConfirmOnly",
               "in": "query",
-              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
               "required": false,
               "type": "string"
             }
@@ -324,19 +324,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -348,7 +348,7 @@
           }
         }
       },
-      "/gladanalysis/wdpa/{wdpa_id}": {
+      "/glad-alerts/wdpa/{wdpa_id}": {
         "get": {
           "description": "Retrieves total number of GLAD alerts for a protected area within the WDPA database within a time period of interest",
           "operationId": "getGladByWdpa",
@@ -362,21 +362,21 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "wdpa_id",
               "in": "path",
-              "description": "The numeric ID referencing a feature within the WDPA dataset",
+              "description": "The numeric ID for a feature within the WDPA dataset\n```56670``",
               "required": true,
               "type": "integer"
             },
             {
               "name": "gladConfirmOnly",
               "in": "query",
-              "description": "Confine alert count to confirmed alerts only by setting this parameter equal to True",
+              "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
               "required": false,
               "type": "string"
             }
@@ -385,19 +385,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -409,7 +409,7 @@
           }
         }
       },
-      "/gladanalysis/date-range": {
+      "/glad-alerts/date-range": {
         "get": {
           "description": "Retrieves min and max date for the GLAD Alerts database",
           "operationId": "getGladDate",
@@ -423,13 +423,13 @@
             "200": {
               "description": "Dates obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -441,7 +441,7 @@
           }
         }
       },
-      "/terraianalysis": {
+      "/terrai-alerts": {
         "get": {
           "description": "Retrieves total number of Terra I alerts for your custom geometry and time period",
           "operationId": "getGladByGeostore",
@@ -455,14 +455,14 @@
             {
               "name": "geostore",
               "in": "query",
-              "description": "A unique hash assigned to a geographic area: 34cecd4c4809dbbec20ce40be3d1c877",
+              "description": "A unique hash assigned to a geographic area\n```3203370361b3d2d087d282507a1746a1```",
               "required": true,
               "type": "string"
             },
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             }
@@ -471,19 +471,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/TerraianalysisAPI"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -495,7 +495,7 @@
           }
         }
       },
-      "/terraianalysis/admin/{country_iso}": {
+      "/terrai-alerts/admin/{country_iso}": {
         "get": {
           "description": "Retrieves total number of Terra I alerts for a country and time period of interest",
           "operationId": "getTerraiByGeostore",
@@ -509,14 +509,14 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "country_iso",
               "in": "path",
-              "description": "The Country's 3-letter ISO code",
+              "description": "A Country's 3-letter ISO code\n```BRA```",
               "required": true,
               "type": "string"
             }
@@ -525,19 +525,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/TerraianalysisAPI"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -549,7 +549,7 @@
           }
         }
       },
-      "/terraianalysis/admin/{country_iso}/{admin_id}": {
+      "/terrai-alerts/admin/{country_iso}/{admin_id}": {
         "get": {
           "description": "Retrieves total number of Terra I alerts for GADM Level 2 in a country and within a time period of interest",
           "operationId": "getTerraiByAdmin",
@@ -563,21 +563,21 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "country_iso",
               "in": "path",
-              "description": "The Country's 3-letter ISO code",
+              "description": "A Country's 3-letter ISO code\n```BRA```",
               "required": true,
               "type": "string"
             },
             {
               "name": "admin_id",
               "in": "path",
-              "description": "An integer referring to GADM level 2",
+              "description": "Admin 1 region code based on GADM 2\n```2```",
               "required": true,
               "type": "integer"
             }
@@ -586,19 +586,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/TerraianalysisAPI"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -610,7 +610,7 @@
           }
         }
       },
-      "/terraianalysis/admin/{country_iso}/{admin_id}/{dist_id}": {
+      "/terrai-alerts/admin/{country_iso}/{admin_id}/{dist_id}": {
         "get": {
           "description": "Retrieves total number of Terra I alerts for GADM Level 3 in a country and within a time period of interest",
           "operationId": "getTerraiByDist",
@@ -624,28 +624,28 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "country_iso",
               "in": "path",
-              "description": "The Country's 3-letter ISO code",
+              "description": "A Country's 3-letter ISO code\n```BRA```",
               "required": true,
               "type": "string"
             },
             {
               "name": "admin_id",
               "in": "path",
-              "description": "An integer referring to GADM level 2",
+              "description": "Admin 1 region code based on GADM 2\n```2```",
               "required": true,
               "type": "integer"
             },
             {
               "name": "dist_id",
               "in": "path",
-              "description": "An integer referring to GADM level 3",
+              "description": "Admin 2 region code based on GADM 2\n```2```",
               "required": true,
               "type": "integer"
             }
@@ -654,19 +654,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/TerraianalysisAPI"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -678,7 +678,7 @@
           }
         }
       },
-      "/terraianalysis/use/{use_type}/{use_id}": {
+      "/terrai-alerts/use/{use_type}/{use_id}": {
         "get": {
           "description": "Retrieves total number of Terra I alerts for a feature within a land use dataset and time period of interest",
           "operationId": "getTerraiByUse",
@@ -692,21 +692,21 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "use_type",
               "in": "path",
-              "description": "Specifies the land use dataset (logging, oilpalm, mining, fiber)",
+              "description": "Land use dataset, one of\n````(logging, oilpalm, mining, fiber)```",
               "required": true,
               "type": "string"
             },
             {
               "name": "use_id",
               "in": "path",
-              "description": "Specifies the numeric id for a feature within a land use dataset",
+              "description": "Numeric id for a feature within a land use dataset\n```100```",
               "required": true,
               "type": "integer"
             }
@@ -715,19 +715,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/TerraianalysisAPI"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -739,7 +739,7 @@
           }
         }
       },
-      "/terraianalysis/wdpa/{wdpa_id}": {
+      "/terrai-alerts/wdpa/{wdpa_id}": {
         "get": {
           "description": "Retrieves total number of Terra I alerts for a protected area within the WDPA dataabse and time-period",
           "operationId": "getTerraiByWdpa",
@@ -753,14 +753,14 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format YYYY-MM-DD,YYYY-MM-DD",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
               "required": true,
               "type": "string"
             },
             {
               "name": "wdpa_id",
               "in": "path",
-              "description": "The numeric ID referencing a feature within the WDPA dataset",
+              "description": "The numeric ID for a feature within the WDPA dataset\n```56670``",
               "required": true,
               "type": "integer"
             }
@@ -769,19 +769,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/TerraianalysisAPI"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -793,7 +793,7 @@
           }
         }
       },
-      "/terraianalysis/date-range": {
+      "/terrai-alerts/date-range": {
         "get": {
           "description": "Retrieves min and max date for the Terra I Alerts database",
           "operationId": "getTerraiDate",
@@ -807,13 +807,13 @@
             "200": {
               "description": "Dates obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladanalysisAPI"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#definitions/Errors"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -823,7 +823,132 @@
               }
             }
           }
-        }
       }
     }
-  }
+  },
+  "definitions": {
+      "Errors": {
+          "type": "object",
+          "description": "Errors",
+          "properties": {
+              "errors": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/definitions/Error"
+                    }
+                  }
+                }
+              },
+              "Error": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                      "type": "integer",
+                      "format": "int32",
+                      "description": "A unique identifier for this particular occurrence of the problem."
+                    },
+                    "links": {
+                      "type": "object",
+                      "description": "A links object",
+                      "properties": {
+                          "about": {
+                              "type": "string",
+                              "description": "A link that leads to further details about this particular occurrence of the problem."
+                            }
+                        }
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "The HTTP status code applicable to this problem, expressed as a string value"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "An application-specific error code, expressed as a string value"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "A short, human-readable summary of the problem that SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "description": "A human-readable explanation specific to this occurrence of the problem. Like title, this field's value can be localized"
+                    },
+                    "source": {
+                      "type": "object",
+                      "description": "An object containing references to the source of the error, optionally including any of the following members",
+                        "properties": {
+                          "pointer": {
+                            "type": "string",
+                            "description": "A JSON Pointer [RFC6901] to the associated entity in the request document"
+                        },
+                        "parameter": {
+                            "type": "string",
+                            "description": "A string indicating which URI query parameter caused the error."
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "description": "A meta object containing non-standard meta-information about the error."
+                    }
+                }
+              },
+              "GladandTerraIAPI": {
+                  "type": "object",
+                  "properties": {
+                      "data": {
+                          "type": "array",
+                          "items": {
+                              "$ref": "#/definitions/Result"
+                          }
+                      }
+                  }
+              },
+              "Result": {
+                  "type": "object",
+                  "properties": {
+                      "type": {
+                          "type": "string",
+                          "description": "Dataset Name"
+                      },
+                      "id": {
+                          "type": "string",
+                          "description": "Dataset ID"
+                      },
+                      "attributes": {
+                          "properties": {
+                              "schema": {
+                                  "$ref": "#/definitions/Data"
+                              }
+                          }
+                      }
+                  }
+              },
+              "Data": {
+                  "type": "object",
+                  "properties": {
+                      "areaHA": {
+                          "type": "string",
+                          "description": "Total area in hectares"
+                      },
+                      "value": {
+                          "type": "integer",
+                          "description": "total count of alerts for requested area"
+                              },
+                      "downloadUrls": {
+                        "type": "object",
+                        "properties": {
+                          "csv": {
+                            "type": "string",
+                            "description": "download link to access data as csv"
+                          },
+                          "json": {
+                            "type": "string",
+                            "description": "download link to access data as json"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
