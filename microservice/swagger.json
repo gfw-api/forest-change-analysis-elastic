@@ -936,16 +936,19 @@
                           "description": "total count of alerts for requested area"
                               },
                       "downloadUrls": {
-                        "csv": {
-                          "type": "string",
-                          "description": "download link to access data as csv"
-                        },
-                        "json": {
-                          "type": "string",
-                          "description": "download link to access data as json"
+                        "type": "object",
+                        "properties": {
+                          "csv": {
+                            "type": "string",
+                            "description": "download link to access data as csv"
+                          },
+                          "json": {
+                            "type": "string",
+                            "description": "download link to access data as json"
+                          }
                         }
                       }
+                    }
                   }
+                }
               }
-            }
-        }
