@@ -58,13 +58,13 @@
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#/definitions/Error404"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#/definitions/Error400"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -113,19 +113,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/Response200"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#/definitions/Error404"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#/definitions/Error400"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -181,19 +181,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/Response200"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#/definitions/Error404"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#/definitions/Error400"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -256,19 +256,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/Response200"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#/definitions/Error404"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#/definitions/Error400"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -324,19 +324,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/Response200"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#/definitions/Error404"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#/definitions/Error400"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -385,19 +385,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/Response200"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#/definitions/Error404"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#/definitions/Error400"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -423,13 +423,13 @@
             "200": {
               "description": "Dates obtained successfully",
               "schema": {
-                "$ref": "#/definitions/Response200"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#/definitions/Error404"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -471,19 +471,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/Response200"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#/definitions/Error404"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#/definitions/Error400"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -525,19 +525,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/Response200"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#/definitions/Error404"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#/definitions/Error400"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -586,19 +586,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/Response200"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#/definitions/Error404"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#/definitions/Error400"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -654,19 +654,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/Response200"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#/definitions/Error404"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#/definitions/Error400"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -706,7 +706,7 @@
             {
               "name": "use_id",
               "in": "path",
-              "description": "Numeric id for a feature within a land use dataset\n````100```",
+              "description": "Numeric id for a feature within a land use dataset\n```100```",
               "required": true,
               "type": "integer"
             }
@@ -715,19 +715,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/Response200"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#/definitions/Error404"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#/definitions/Error400"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -769,19 +769,19 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/Response200"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#/definitions/Error404"
+                "$ref": "#/definitions/Errors"
               }
             },
             "400": {
               "description": "parameter not set correctly",
               "schema": {
-                "$ref": "#/definitions/Error400"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -807,13 +807,13 @@
             "200": {
               "description": "Dates obtained successfully",
               "schema": {
-                "$ref": "#/definitions/Response200"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
               "description": "endpoint not found",
               "schema": {
-                "$ref": "#/definitions/Error404"
+                "$ref": "#/definitions/Errors"
               }
             },
             "default": {
@@ -834,77 +834,118 @@
               "errors": {
                   "type": "array",
                   "items": {
-                      "$ref": "#/definitions/Error404"
+                      "$ref": "#/definitions/Error"
                     }
                   }
                 }
               },
-              "Error404": {
-                  "type": "object",
-                  "properties": {
-                        "status": {
-                            "type": "string",
-                            "description": "Endpoint not found"
-                        },
-                        "code": {
-                            "type": "string",
-                            "description": "404"
-                        },
-                        "title": {
-                            "type": "string",
-                            "description": "Not Found"
-                          }
-                      }
-                  }
-              },
-              "Error400": {
-                  "type": "object",
-                  "properties": {
-                        "status": {
-                            "type": "string",
-                            "description": "parameters not set correctly, check for valid period and geostore"
-                        },
-                        "code": {
-                            "type": "string",
-                            "description": "400"
-                        },
-                        "title": {
-                            "type": "string",
-                            "description": "Bad Request"
-                          }
-                      }
-                  },
-              "Response200": {
+              "Error": {
                 "type": "object",
                 "properties": {
                   "id": {
-                    "type": "string",
-                    "description": "datasetID"
-                  },
-                  "type": {
-                    "type": "string",
-                    "description": "dataset name"
-                  },
-                  "attributes": {
-                    "areaHA": {
                       "type": "integer",
-                      "description": "total area in hectares"
+                      "format": "int32",
+                      "description": "A unique identifier for this particular occurrence of the problem."
                     },
-                    "downloadUrls": {
-                      "csv": {
-                        "type": "string",
-                        "description": "download link to access data as csv"
-                      },
-                      "json": {
-                        "type": "string",
-                        "description": "download link to access data as json"
-                      },
-                    "value": {
-                      "type": "integer",
-                      "description": "total count of alerts for requested area"
+                    "links": {
+                      "type": "object",
+                      "description": "A links object",
+                      "properties": {
+                          "about": {
+                              "type": "string",
+                              "description": "A link that leads to further details about this particular occurrence of the problem."
+                            }
+                        }
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "The HTTP status code applicable to this problem, expressed as a string value"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "An application-specific error code, expressed as a string value"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "A short, human-readable summary of the problem that SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "description": "A human-readable explanation specific to this occurrence of the problem. Like title, this field's value can be localized"
+                    },
+                    "source": {
+                      "type": "object",
+                      "description": "An object containing references to the source of the error, optionally including any of the following members",
+                        "properties": {
+                          "pointer": {
+                            "type": "string",
+                            "description": "A JSON Pointer [RFC6901] to the associated entity in the request document"
+                        },
+                        "parameter": {
+                            "type": "string",
+                            "description": "A string indicating which URI query parameter caused the error."
+                        }
                       }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "description": "A meta object containing non-standard meta-information about the error."
                     }
-                  }
                 }
+              },
+              "GladandTerraIAPI": {
+                  "type": "object",
+                  "properties": {
+                      "data": {
+                          "type": "array",
+                          "items": {
+                              "$ref": "#/definitions/Result"
+                          }
+                      }
+                  }
+              },
+              "Result": {
+                  "type": "object",
+                  "properties": {
+                      "type": {
+                          "type": "string",
+                          "description": "Dataset Name"
+                      },
+                      "id": {
+                          "type": "string",
+                          "description": "Dataset ID"
+                      },
+                      "attributes": {
+                          "properties": {
+                              "schema": {
+                                  "$ref": "#/definitions/Data"
+                              }
+                          }
+                      }
+                  }
+              },
+              "Data": {
+                  "type": "object",
+                  "properties": {
+                      "areaHA": {
+                          "type": "string",
+                          "description": "Total area in hectares"
+                      },
+                      "value": {
+                          "type": "integer",
+                          "description": "total count of alerts for requested area"
+                              },
+                      "downloadUrls": {
+                        "csv": {
+                          "type": "string",
+                          "description": "download link to access data as csv"
+                        },
+                        "json": {
+                          "type": "string",
+                          "description": "download link to access data as json"
+                        }
+                      }
+                  }
               }
             }
+        }
