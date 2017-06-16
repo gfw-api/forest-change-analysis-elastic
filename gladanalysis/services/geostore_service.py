@@ -1,4 +1,5 @@
 import json
+from flask import request
 from CTRegisterMicroserviceFlask import request_to_microservice
 
 class GeostoreService(object):
@@ -42,10 +43,10 @@ class GeostoreService(object):
 
     @staticmethod
     def make_area_request(geostore):
-      
+
         uri = "/geostore/%s" %(geostore)
         area_resp = GeostoreService.execute(uri)
-    
+
         area = area_resp['data']['attributes']['areaHa']
         return area
 
