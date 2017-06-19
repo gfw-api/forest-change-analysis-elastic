@@ -27,8 +27,15 @@ def query_glad():
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
 
+    #set variables
+    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
+    indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
+
+    if not period:
+        period = None
+
     #format period request to julian dates
-    from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
+    from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID)
 
     #get sql and download sql from sql format service
     sql, download_sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date)
@@ -40,7 +47,6 @@ def query_glad():
     area = GeostoreService.make_area_request(geostore)
 
     #standardize response
-    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
     standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
@@ -197,21 +203,10 @@ def glad_date_range():
 
     #set dataset ID
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
+    indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
 
-    #Get max year from database
-    max_year_sql = '?sql=select MAX(year)from {}'.format(os.getenv('GLAD_INDEX_ID'))
-    max_year = DateService.get_date(datasetID, max_year_sql, 'MAX(year)')
-
-    #Get max julian date from database
-    max_sql = '?sql=select MAX(julian_day)from {} where year = {}'.format(os.getenv('GLAD_INDEX_ID'), max_year)
-    max_julian = DateService.get_date(datasetID, max_sql, 'MAX(julian_day)')
-
-    #Set min and max julian values (min value shouldn't change, hence hard-code)
-    latest_year, latest_month, latest_day = DateService.julian_day_to_date(max_year, max_julian)
-
-    #format day
-    max_date = '%s-%02d-%s' %(latest_year, latest_month, latest_day)
-    min_date = '2015-01-01'
+    #get min and max date from sql queries
+    min_date, max_date = SqlService.format_date_sql(SqlService.get_min_max_date(datasetID, indexID))
 
     #standardize date response
     response = ResponseService.format_date_range("Glad", min_date, max_date)

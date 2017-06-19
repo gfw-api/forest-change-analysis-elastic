@@ -28,7 +28,8 @@ def validate_glad_period(func):
         period = request.args.get('period')
 
         if not period:
-            return error(status=400, detail="Time period must be set")
+            pass
+            # return error(status=400, detail="Time period must be set")
 
         elif len(period.split(',')) < 2:
             return error(status=400, detail="Period needs 2 arguments")

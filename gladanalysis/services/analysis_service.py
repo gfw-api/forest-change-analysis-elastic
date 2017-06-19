@@ -17,7 +17,8 @@ class AnalysisService(object):
         'uri': uri,
         'method': 'GET'
         }
-
+        #if geojson make post
+        
         return request_to_microservice(config)
 
     @staticmethod

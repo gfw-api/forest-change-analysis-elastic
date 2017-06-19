@@ -1,6 +1,8 @@
 from flask import jsonify
 import os
 
+from gladanalysis.services import DateService
+
 class SqlService(object):
     """Class for formatting query and donwload sql"""
 
@@ -78,3 +80,37 @@ class SqlService(object):
         download_sql = '?sql=' + ''.join([select_sql, from_sql, where_sql, order_sql])
 
         return sql, download_sql
+
+    @staticmethod
+    def get_min_max_date(datasetID, indexID):
+
+        #Get max year from database
+        max_year_sql = '?sql=select MAX(year)from {}'.format(indexID)
+        max_year = DateService.get_date(datasetID, max_year_sql, 'MAX(year)')
+
+        #Get max julian date from database
+        max_sql = '?sql=select MAX(julian_day)from {} where year = {}'.format(indexID, max_year)
+        max_julian = DateService.get_date(datasetID, max_sql, 'MAX(julian_day)')
+
+        #Get min year from database
+        min_year_sql = '?sql=select MIN(year)from {}'.format(indexID)
+        min_year = DateService.get_date(datasetID, min_year_sql, 'MIN(year)')
+
+        #Get min date from database
+        min_day_sql = '?sql=select MIN(julian_day)from {} where year = {}'.format(indexID, min_year)
+        min_julian = DateService.get_date(datasetID, min_day_sql, 'MIN(julian_day)')
+
+        return min_year, min_julian, max_year, max_julian
+
+    @staticmethod
+    def format_date_sql(min_year, min_julian, max_year, max_julian):
+
+        #convert julian to date format
+        max_y, max_m, max_d = DateService.julian_day_to_date(max_year, max_julian)
+        min_y, min_m, min_d = DateService.julian_day_to_date(min_year, min_julian)
+
+        #format dates
+        max_date = '%s-%02d-%s' %(max_y, max_m, max_d)
+        min_date = '%s-%02d-%s' %(min_y, min_m, min_d)
+
+        return min_date, max_date

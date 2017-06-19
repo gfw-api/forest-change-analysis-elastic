@@ -188,23 +188,12 @@ def terrai_date_range():
 
     logging.info('Creating Terra I Date Range')
 
-    #SET DATASET ID
+    #set dataset ids
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
+    indexID = '{}'.format(os.getenv('TERRAI_INDEX_ID'))
 
-    #Get max year from database
-    max_year_sql = '?sql=select MAX(year)from {}'.format(os.getenv('TERRAI_INDEX_ID'))
-    max_year = DateService.get_date(datasetID, max_year_sql, 'MAX(year)')
-
-    #GET julian dates
-    max_sql = '?sql=select MAX(day)from {} where year = {}'.format(os.getenv('TERRAI_INDEX_ID'), max_year)
-    max_julian = DateService.get_date(datasetID, max_sql, 'MAX(day)')
-
-    #convert julian to date
-    latest_year, latest_month, latest_day = DateService.julian_day_to_date(max_year, max_julian)
-
-    #format dates
-    max_date = '%s-%02d-%s' %(latest_year, latest_month, latest_day)
-    min_date = '2004-01-01'
+    #get min and max date from sql queries
+    min_date, max_date = SqlService.format_date_sql(SqlService.get_min_max_date(datasetID, indexID))
 
     #standardize response
     response = ResponseService.format_date_range("Terrai", min_date, max_date)
