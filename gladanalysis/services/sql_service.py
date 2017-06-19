@@ -1,7 +1,7 @@
 from flask import jsonify
 import os
 
-from gladanalysis.services import DateService
+from date_service import DateService
 
 class SqlService(object):
     """Class for formatting query and donwload sql"""

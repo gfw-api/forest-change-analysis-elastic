@@ -4,7 +4,7 @@ import logging
 import calendar
 
 from CTRegisterMicroserviceFlask import request_to_microservice
-from gladanalysis.services import SqlService
+from sql_service import SqlService
 
 class DateService(object):
     """Class for formatting dates"""
