@@ -4,7 +4,6 @@ import logging
 import calendar
 
 from CTRegisterMicroserviceFlask import request_to_microservice
-import SqlService
 
 class DateService(object):
     """Class for formatting dates"""
