@@ -3,7 +3,8 @@ import datetime
 import logging
 import calendar
 
-from CTRegisterMicroserviceFlask import request_to_microservice
+from CTRegisterMicroserviceFlask import request_to_microservices
+import SqlService
 
 class DateService(object):
     """Class for formatting dates"""
