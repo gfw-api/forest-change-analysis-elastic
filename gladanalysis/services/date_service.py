@@ -9,10 +9,10 @@ class DateService(object):
     """Class for formatting dates"""
 
     @staticmethod
-    def date_to_julian_day(period=None, datasetID=None, indexID=None):
+    def date_to_julian_day(self, period=None, datasetID=None, indexID=None):
         #Helper function to transform dates
         if period == None:
-            from_year, from_date, to_year, to_date = SqlService.get_min_max_date(datasetID, indexID)
+            from_year, from_date, to_year, to_date = self.SqlService.get_min_max_date(datasetID, indexID)
             return from_year, from_date, to_year, to_date
         else:
             try:
