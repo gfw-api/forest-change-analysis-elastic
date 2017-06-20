@@ -27,12 +27,12 @@ def query_glad():
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
 
+    if not period:
+        period = None
+
     #set variables
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
     indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
-
-    if not period:
-        period = None
 
     #format period request to julian dates
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID)
@@ -61,6 +61,9 @@ def glad_country(iso_code):
 
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
+
+    if not period:
+        period = None
 
     #format period request to julian dates
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
@@ -91,6 +94,9 @@ def glad_admin(iso_code, admin_id):
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
 
+    if not period:
+        period = None
+
     #format period request to julian dates
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
 
@@ -119,6 +125,9 @@ def glad_dist(iso_code, admin_id, dist_id):
 
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
+
+    if not period:
+        period = None
 
     #format period request to julian dates
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
@@ -149,6 +158,9 @@ def glad_use(use_type, use_id):
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
 
+    if not period:
+        period = None
+
     #format period request to julian dates
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
 
@@ -178,6 +190,9 @@ def glad_wdpa(wdpa_id):
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
 
+    if not period:
+        period = None
+
     #format period request to julian dates
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
 
@@ -206,7 +221,7 @@ def glad_date_range():
     indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
 
     #get min and max date from sql queries
-    min_date, max_date = SqlService.format_date_sql(SqlService.get_min_max_date(datasetID, indexID))
+    min_date, max_date = DateService.format_date_sql(DateService.get_min_max_date(datasetID, indexID))
 
     #standardize date response
     response = ResponseService.format_date_range("Glad", min_date, max_date)

@@ -27,6 +27,9 @@ def query_terrai():
     geostore = request.args.get('geostore', None)
     period = request.args.get('period', None)
 
+    if not period:
+        period = None
+
     #format period request to julian dates
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
 
@@ -55,6 +58,9 @@ def terrai_country(iso_code):
 
     period = request.args.get('period', None)
 
+    if not period:
+        period = None
+
     #format period request to julian dates
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
 
@@ -82,6 +88,9 @@ def terrai_admin(iso_code, admin_id):
 
     period = request.args.get('period', None)
 
+    if not period:
+        period = None
+
     #format period request to julian dates
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
 
@@ -108,6 +117,9 @@ def terrai_dist(iso_code, admin_id, dist_id):
     logging.info('Running Terra I Analysis on District')
 
     period = request.args.get('period', None)
+
+    if not period:
+        period = None
 
     #format period request to julian dates
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
@@ -137,6 +149,9 @@ def terrai_use(use_type, use_id):
 
     period = request.args.get('period', None)
 
+    if not period:
+        period = None
+
     #format period request to julian dates
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
 
@@ -164,6 +179,9 @@ def terrai_wdpa(wdpa_id):
     logging.info('Intersect Terra I and WDPA')
 
     period = request.args.get('period', None)
+
+    if not period:
+        period = None
 
     #format period request to julian dates
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
@@ -193,7 +211,7 @@ def terrai_date_range():
     indexID = '{}'.format(os.getenv('TERRAI_INDEX_ID'))
 
     #get min and max date from sql queries
-    min_date, max_date = SqlService.format_date_sql(SqlService.get_min_max_date(datasetID, indexID))
+    min_date, max_date = DateService.format_date_sql(DateService.get_min_max_date(datasetID, indexID))
 
     #standardize response
     response = ResponseService.format_date_range("Terrai", min_date, max_date)
