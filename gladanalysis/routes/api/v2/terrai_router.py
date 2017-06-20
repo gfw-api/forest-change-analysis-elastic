@@ -14,6 +14,7 @@ from gladanalysis.responders import ErrorResponder
 from gladanalysis.validators import validate_geostore, validate_terrai_period, validate_admin, validate_use, validate_wdpa
 
 def analyze(area, geostore=None, iso=None, state=None, dist=None):
+    """analyze method to execute Queries"""
 
     period = request.args.get('period', None)
 
@@ -43,8 +44,7 @@ def analyze(area, geostore=None, iso=None, state=None, dist=None):
 @validate_terrai_period
 
 def query_terrai():
-    """Query Terra I"""
-
+    """analyze terrai by geostore"""
     logging.info('Query Terra I by Geostore')
 
     geostore = request.args.get('geostore', None)
@@ -52,74 +52,76 @@ def query_terrai():
     #get area of request in hectares from geostore
     area = GeostoreService.make_area_request(geostore)
 
-    analyze(area, geostore)
+    return analyze(area, geostore)
 
 @endpoints.route('/terrai-alerts/admin/<iso_code>', methods=['GET'])
 @validate_terrai_period
 @validate_admin
 
 def terrai_country(iso_code):
-
+    """analyze terrai by gadm"""
     logging.info('Running Terra I country analysis')
 
     #get area in hectares of response from geostore
     area = GeostoreService.make_gadm_request(iso_code)
 
-    analyze(area, iso=iso_code)
+    return analyze(area, iso=iso_code)
 
 @endpoints.route('/terrai-alerts/admin/<iso_code>/<admin_id>', methods=['GET'])
 @validate_terrai_period
 @validate_admin
 
 def terrai_admin(iso_code, admin_id):
+    """analyze terrai by gadm"""
     logging.info('Running Terra I state analysis')
 
     #get area in hectares of request from geostore
     area = GeostoreService.make_gadm_request(iso_code, admin_id)
 
-    analyze(area, iso=iso_code, state=admin_id)
+    return analyze(area, iso=iso_code, state=admin_id)
 
 @endpoints.route('/terrai-alerts/admin/<iso_code>/<admin_id>/<dist_id>', methods=['GET'])
 @validate_terrai_period
 @validate_admin
 
 def terrai_dist(iso_code, admin_id, dist_id):
+    """analyze terrai by gadm"""
     logging.info('Running Terra I Analysis on District')
 
     #get area in hectares of request from geostore
     area = GeostoreService.make_gadm_request(iso_code, admin_id, dist_id)
 
-    analyze(area, iso=iso_code, state=admin_id, dist=dist_id)
+    return analyze(area, iso=iso_code, state=admin_id, dist=dist_id)
 
 @endpoints.route('/terrai-alerts/use/<use_type>/<use_id>', methods=['GET'])
 @validate_use
 @validate_terrai_period
 
 def terrai_use(use_type, use_id):
-
+    """analyze terrai by land use"""
     logging.info('Intersect Terra I and Land Use data')
 
     #get geostore ID and area in hectares of request from geostore
     geostore, area = GeostoreService.make_use_request(use_type, use_id)
 
-    analyze(area, geostore)
+    return analyze(area, geostore)
 
 @endpoints.route('/terrai-alerts/wdpa/<wdpa_id>', methods=['GET'])
 @validate_terrai_period
 @validate_wdpa
 
 def terrai_wdpa(wdpa_id):
-
+    """analyze terrai by wdpa geom"""
     logging.info('Intersect Terra I and WDPA')
 
     #get geostore id and area in hectares of request from geostore
     geostore, area = GeostoreService.make_wdpa_request(wdpa_id)
 
-    analyze(area, geostore)
+    return analyze(area, geostore)
 
 @endpoints.route('/terrai-alerts/date-range', methods=['GET'])
 def terrai_date_range():
-
+    """get terrai date range"""
     logging.info('Creating Terra I Date Range')
 
     #set dataset ids

@@ -14,6 +14,7 @@ from gladanalysis.responders import ErrorResponder
 from gladanalysis.validators import validate_geostore, validate_glad_period, validate_admin, validate_use, validate_wdpa
 
 def analyze(area, geostore=None, iso=None, state=None, dist=None):
+    """analyze method to execute queries"""
 
     period = request.args.get('period', None)
     conf = request.args.get('gladConfirmOnly', None)
@@ -47,7 +48,7 @@ def analyze(area, geostore=None, iso=None, state=None, dist=None):
 @validate_glad_period
 
 def query_glad():
-    """Query GLAD"""
+    """analyze glad by geostore"""
     logging.info('Query GLAD by geostore')
 
     geostore = request.args.get('geostore', None)
@@ -56,7 +57,7 @@ def query_glad():
     area = GeostoreService.make_area_request(geostore)
 
     #send request
-    analyze(area, geostore)
+    return analyze(area, geostore)
 
 
 @endpoints.route('/glad-alerts/admin/<iso_code>', methods=['GET'])
@@ -64,28 +65,28 @@ def query_glad():
 @validate_admin
 
 def glad_country(iso_code):
-
+    """analyze glad by gadm geom"""
     logging.info('Running country level glad analysis')
 
     #get area in hectares from geostore
     area = GeostoreService.make_gadm_request(iso_code)
 
     #analyze layer
-    analyze(area, iso=iso_code)
+    return analyze(area, iso=iso_code)
 
 @endpoints.route('/glad-alerts/admin/<iso_code>/<admin_id>', methods=['GET'])
 @validate_glad_period
 @validate_admin
 
 def glad_admin(iso_code, admin_id):
-
+    """analyze glad by gadm geom"""
     logging.info('Running state level glad analysis')
 
     #get area in hectares from geostore
     area = GeostoreService.make_gadm_request(iso_code, admin_id)
 
     #analyze
-    analyze(area, iso=iso_code, state=admin_id)
+    return analyze(area, iso=iso_code, state=admin_id)
 
 
 @endpoints.route('/glad-alerts/admin/<iso_code>/<admin_id>/<dist_id>', methods=['GET'])
@@ -93,46 +94,44 @@ def glad_admin(iso_code, admin_id):
 @validate_admin
 
 def glad_dist(iso_code, admin_id, dist_id):
-
+    """analyze glad by gadm geom"""
     logging.info('Running district level glad analysis')
 
     #get area in hectares from geostore
     area = GeostoreService.make_gadm_request(iso_code, admin_id, dist_id)
 
     #send query to glad elastic databse through analysis service
-    analyze(area, iso=iso_code, state=admin_id, dist=dist_id)
+    return analyze(area, iso=iso_code, state=admin_id, dist=dist_id)
 
 @endpoints.route('/glad-alerts/use/<use_type>/<use_id>', methods=['GET'])
 @validate_use
 @validate_glad_period
 
 def glad_use(use_type, use_id):
-
+    """analyze glad by land use geom"""
     logging.info('Intersecting GLAD with Land Use data')
 
     #get geostore ID and area in hectares from geostore
     geostore, area = GeostoreService.make_use_request(use_type, use_id)
 
-    analyze(area, geostore)
+    return analyze(area, geostore)
 
 @endpoints.route('/glad-alerts/wdpa/<wdpa_id>', methods=['GET'])
 @validate_glad_period
 @validate_wdpa
 
 def glad_wdpa(wdpa_id):
-
+    """analyze glad by wdpa geom"""
     logging.info('QUERY GLAD BY WDPA DATA')
 
     #Get geostore ID and area in hectares from geostore
     geostore, area = GeostoreService.make_wdpa_request(wdpa_id)
 
-    analyze(area, geostore)
-
-    return jsonify({'data': standard_format}), 200
+    return analyze(area, geostore)
 
 @endpoints.route('/glad-alerts/date-range', methods=['GET'])
 def glad_date_range():
-
+    """get glad date range"""
     logging.info('Creating Glad Date Range')
 
     #set dataset ID
