@@ -139,7 +139,8 @@ def glad_date_range():
     indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
 
     #get min and max date from sql queries
-    min_date, max_date = DateService.format_date_sql(DateService.get_min_max_date(datasetID, indexID))
+    min_year, min_julian, max_year, max_julian = DateService.get_min_max_date(datasetID, indexID)
+    min_date, max_date = DateService.format_date_sql(min_year, min_julian, max_year, max_julian)
 
     #standardize date response
     response = ResponseService.format_date_range("Glad", min_date, max_date)

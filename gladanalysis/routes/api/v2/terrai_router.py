@@ -25,7 +25,7 @@ def analyze(area, geostore=None, iso=None, state=None, dist=None):
     indexID = '{}'.format(os.getenv('TERRAI_INDEX_ID'))
 
     #format period request to julian dates
-    from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period)
+    from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID)
 
     #grab query and download sql from sql service
     sql, download_sql = SqlService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist)
@@ -33,7 +33,7 @@ def analyze(area, geostore=None, iso=None, state=None, dist=None):
     #send query to terra i elastic database
     data = AnalysisService.make_terrai_request(sql, geostore)
 
-    standard_format = ResponseService.standardize_response('Terrai', data, "COUNT(day)", datasetID, download_sql, area)
+    standard_format = ResponseService.standardize_response('Terrai', data, "COUNT(day)", datasetID, download_sql, area, geostore)
 
     return jsonify({'data': standard_format}), 200
 
@@ -129,7 +129,8 @@ def terrai_date_range():
     indexID = '{}'.format(os.getenv('TERRAI_INDEX_ID'))
 
     #get min and max date from sql queries
-    min_date, max_date = DateService.format_date_sql(DateService.get_min_max_date(datasetID, indexID))
+    min_year, min_julian, max_year, max_julian = DateService.get_min_max_date(datasetID, indexID)
+    min_date, max_date = DateService.format_date_sql(min_year, min_julian, max_year, max_julian)
 
     #standardize response
     response = ResponseService.format_date_range("Terrai", min_date, max_date)
