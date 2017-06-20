@@ -9,7 +9,7 @@ class DateService(object):
     """Class for formatting dates"""
 
     @staticmethod
-    def date_to_julian_day(self, period=None, datasetID=None, indexID=None):
+    def date_to_julian_day(period=None, datasetID=None, indexID=None):
         #Helper function to transform dates
         if period == None:
             from_year, from_date, to_year, to_date = DateService.get_min_max_date(datasetID, indexID)
@@ -53,7 +53,7 @@ class DateService(object):
         return date_value
 
     @staticmethod
-    def get_min_max_date(self, datasetID, indexID):
+    def get_min_max_date(datasetID, indexID):
 
         #Get max year from database
         max_year_sql = '?sql=select MAX(year)from {}'.format(indexID)
@@ -74,7 +74,7 @@ class DateService(object):
         return min_year, min_julian, max_year, max_julian
 
     @staticmethod
-    def format_date_sql(self, min_year, min_julian, max_year, max_julian):
+    def format_date_sql(min_year, min_julian, max_year, max_julian):
 
         #convert julian to date format
         max_y, max_m, max_d = DateService.julian_day_to_date(max_year, max_julian)
