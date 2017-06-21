@@ -25,7 +25,7 @@ def analyze(area, geostore=None, iso=None, state=None, dist=None):
     indexID = '{}'.format(os.getenv('TERRAI_INDEX_ID'))
 
     #format period request to julian dates
-    from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID)
+    from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "day")
 
     #grab query and download sql from sql service
     sql, download_sql = SqlService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist)
@@ -129,7 +129,7 @@ def terrai_date_range():
     indexID = '{}'.format(os.getenv('TERRAI_INDEX_ID'))
 
     #get min and max date from sql queries
-    min_year, min_julian, max_year, max_julian = DateService.get_min_max_date(datasetID, indexID)
+    min_year, min_julian, max_year, max_julian = DateService.get_min_max_date('day', datasetID, indexID)
     min_date, max_date = DateService.format_date_sql(min_year, min_julian, max_year, max_julian)
 
     #standardize response

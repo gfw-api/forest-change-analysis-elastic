@@ -9,10 +9,10 @@ class DateService(object):
     """Class for formatting dates"""
 
     @staticmethod
-    def date_to_julian_day(period=None, datasetID=None, indexID=None):
+    def date_to_julian_day(period=None, datasetID=None, indexID=None, value=None):
         #Helper function to transform dates
         if period == None:
-            from_year, from_date, to_year, to_date = DateService.get_min_max_date(datasetID, indexID)
+            from_year, from_date, to_year, to_date = DateService.get_min_max_date(value, datasetID, indexID)
             return from_year, from_date, to_year, to_date
         else:
             try:
@@ -53,23 +53,27 @@ class DateService(object):
         return date_value
 
     @staticmethod
-    def get_min_max_date(datasetID, indexID):
+    def get_min_max_date(value, datasetID, indexID):
+
+        #set variables for alert values
+        max_value = 'MAX({})'.format(value)
+        min_value 'MIN({})'.format(value)
 
         #Get max year from database
         max_year_sql = '?sql=select MAX(year)from {}'.format(indexID)
         max_year = DateService.get_date(datasetID, max_year_sql, 'MAX(year)')
 
         #Get max julian date from database
-        max_sql = '?sql=select MAX(julian_day)from {} where year = {}'.format(indexID, max_year)
-        max_julian = DateService.get_date(datasetID, max_sql, 'MAX(julian_day)')
+        max_sql = '?sql=select {}from {} where year = {}'.format(max_day, indexID, max_year)
+        max_julian = DateService.get_date(datasetID, max_sql, max_value)
 
         #Get min year from database
         min_year_sql = '?sql=select MIN(year)from {}'.format(indexID)
         min_year = DateService.get_date(datasetID, min_year_sql, 'MIN(year)')
 
         #Get min date from database
-        min_day_sql = '?sql=select MIN(julian_day)from {} where year = {}'.format(indexID, min_year)
-        min_julian = DateService.get_date(datasetID, min_day_sql, 'MIN(julian_day)')
+        min_day_sql = '?sql=select {}from {} where year = {}'.format(min_value, indexID, min_year)
+        min_julian = DateService.get_date(datasetID, min_day_sql, min_value)
 
         return min_year, min_julian, max_year, max_julian
 
