@@ -57,7 +57,7 @@ class DateService(object):
 
         #set variables for alert values
         max_value = 'MAX({})'.format(value)
-        min_value 'MIN({})'.format(value)
+        min_value = 'MIN({})'.format(value)
 
         #Get max year from database
         max_year_sql = '?sql=select MAX(year)from {}'.format(indexID)
