@@ -64,7 +64,7 @@ class DateService(object):
         max_year = DateService.get_date(datasetID, max_year_sql, 'MAX(year)')
 
         #Get max julian date from database
-        max_sql = '?sql=select {}from {} where year = {}'.format(max_day, indexID, max_year)
+        max_sql = '?sql=select {}from {} where year = {}'.format(max_value, indexID, max_year)
         max_julian = DateService.get_date(datasetID, max_sql, max_value)
 
         #Get min year from database
