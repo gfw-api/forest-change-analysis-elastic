@@ -39,3 +39,20 @@ class ResponseService(object):
         response['attributes']['maxDate'] = max_date
 
         return response
+
+    @staticmethod
+    def format_latest_date(name, max_date):
+        response = []
+        info = {}
+        if name == 'Glad':
+            info['type'] = 'glad-alerts'
+            info['id'] = '{}'.format(os.getenv('GLAD_DATASET_ID'))
+        elif name == 'Terrai':
+            info['type'] = 'terrai-alerts'
+            info['id'] = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
+        info['attributes'] = {}
+        info['attributes']['date'] = max_date
+
+        response.append(info)
+
+        return response

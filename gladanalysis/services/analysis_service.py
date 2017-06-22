@@ -1,5 +1,6 @@
 import json
 import os
+
 from CTRegisterMicroserviceFlask import request_to_microservice
 
 class AnalysisService(object):
@@ -17,6 +18,7 @@ class AnalysisService(object):
         'uri': uri,
         'method': 'GET'
         }
+        #if geojson make post
 
         return request_to_microservice(config)
 
