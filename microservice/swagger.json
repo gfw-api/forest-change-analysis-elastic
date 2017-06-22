@@ -52,7 +52,7 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/Response200"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
@@ -423,7 +423,7 @@
             "200": {
               "description": "Dates obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladandTerraIAPI"
+                "$ref": "#/definitions/DateCalls"
               }
             },
             "404": {
@@ -897,7 +897,7 @@
                   "type": "object",
                   "properties": {
                       "data": {
-                          "type": "array",
+                          "type": "dictionary",
                           "items": {
                               "$ref": "#/definitions/Result"
                           }
@@ -946,7 +946,91 @@
                             "type": "string",
                             "description": "download link to access data as json"
                           }
+                      }
+                  }
+              },
+              "DateCalls": {
+                  "type": "object",
+                  "properties": {
+                      "data": {
+                          "type": "dictionary",
+                          "items": {
+                              "$ref": "#/definitions/DateResult"
+                              }
+                         }
+                    }
+              },
+              "DateResult": {
+                  "type": "object",
+                  "properties": {
+                      "type": {
+                          "type": "string",
+                          "description": "Dataset Name"
+                      },
+                      "id": {
+                          "type": "string",
+                          "description": "Dataset ID"
+                      },
+                      "attributes": {
+                          "properties": {
+                              "schema": {
+                                  "$ref": "#/definitions/DateData"
+                                }
+                            }
                         }
+                    }
+              },
+              "DateData": {
+                  "type": "object",
+                  "properties": {
+                      "maxDate": {
+                          "type": "string",
+                          "description": "Max date in dataset"
+                      },
+                      "minDate": {
+                          "type": "integer",
+                          "description": "Min date in dataset"
+                      }
+                    }
+                 }
+              },
+              "LatestCalls": {
+                  "type": "object",
+                  "properties": {
+                      "data": {
+                          "type": "dictionary",
+                          "items": {
+                              "$ref": "#/definitions/DateResult"
+                              }
+                          }
+                    }
+              },
+              "LatestResult": {
+                  "type": "object",
+                  "properties": {
+                      "type": {
+                          "type": "string",
+                          "description": "Dataset Name"
+                      },
+                      "id": {
+                          "type": "string",
+                          "description": "Dataset ID"
+                      },
+                      "attributes": {
+                          "properties": {
+                              "schema": {
+                                  "$ref": "#/definitions/DateData"
+                                }
+                            }
+                        }
+                  }
+              },
+              "DateData": {
+                  "type": "object",
+                  "properties": {
+                      "date": {
+                          "type": "string",
+                          "description": "Latest (or Max) date in dataset"
                       }
                     }
                   }
