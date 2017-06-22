@@ -36,8 +36,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -90,8 +90,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -151,8 +151,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -219,8 +219,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -294,7 +294,7 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
               "required": true,
               "type": "string"
             },
@@ -362,8 +362,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -462,8 +462,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             }
           ],
@@ -509,8 +509,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -563,8 +563,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -624,8 +624,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -692,8 +692,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -753,8 +753,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
