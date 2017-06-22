@@ -1019,13 +1019,13 @@
                       "attributes": {
                           "properties": {
                               "schema": {
-                                  "$ref": "#/definitions/DateData"
+                                  "$ref": "#/definitions/LatestData"
                                 }
                             }
                         }
                   }
               },
-              "DateData": {
+              "LatestData": {
                   "type": "object",
                   "properties": {
                       "date": {
