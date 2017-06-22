@@ -85,7 +85,7 @@ class DateService(object):
         min_y, min_m, min_d = DateService.julian_day_to_date(min_year, min_julian)
 
         #format dates
-        max_date = '%s-%02d-%s' %(max_y, max_m, max_d)
-        min_date = '%s-%02d-%s' %(min_y, min_m, min_d)
+        max_date = '%s-%02d-%02d' %(max_y, max_m, max_d)
+        min_date = '%s-%02d-%02d' %(min_y, min_m, min_d)
 
         return min_date, max_date
