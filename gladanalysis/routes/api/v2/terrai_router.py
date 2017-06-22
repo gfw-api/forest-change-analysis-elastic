@@ -136,3 +136,21 @@ def terrai_date_range():
     response = ResponseService.format_date_range("Terrai", min_date, max_date)
 
     return jsonify({'data': response}), 200
+
+@endpoints.route('/terrai-alerts/latest', methods=['GET'])
+def terrai_latest():
+    """get TerraI latest date"""
+    logging.info('Getting latest date')
+
+    #set dataset ID
+    datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
+    indexID = '{}'.format(os.getenv('TERRAI_INDEX_ID'))
+
+    #get max date
+    min_year, min_julian, max_year, max_julian = DateService.get_min_max_date('day', datasetID, indexID)
+    max_date = DateService.format_date_sql(min_year, min_julian, max_year, max_julian)[1]
+
+    #standardize latest date response
+    response = ResponseService.format_latest_date("Terrai", max_date)
+
+    return jsonify({'data': response}), 200

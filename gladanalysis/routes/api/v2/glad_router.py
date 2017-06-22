@@ -16,34 +16,34 @@ from gladanalysis.validators import validate_geostore, validate_glad_period, val
 def analyze(area, geostore=None, iso=None, state=None, dist=None):
     """analyze method to execute queries"""
 
-    period = request.args.get('period', None)
-    conf = request.args.get('gladConfirmOnly', None)
+    if request.method == 'GET':
 
-    if not period:
-        period = None
+        period = request.args.get('period', None)
+        conf = request.args.get('gladConfirmOnly', None)
 
-    #set variables
-    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
+        if not period:
+            period = None
 
-    #format period request to julian dates
-    from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "julian_day")
+        #set variables
+        datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
+        indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
 
-    #get sql and download sql from sql format service
-    sql, download_sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
+        #format period request to julian dates
+        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "julian_day")
 
-    #send sql and geostore to analysis service to query elastic database
-    data = AnalysisService.make_glad_request(sql, geostore)
+        #get sql and download sql from sql format service
+        sql, download_sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
 
-    #standardize response
-    standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
+        #send sql and geostore to analysis service to query elastic database
+        data = AnalysisService.make_glad_request(sql, geostore)
 
-    return jsonify({'data': standard_format}), 200
+        #standardize response
+        standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
 
+        return jsonify({'data': standard_format}), 200
 
 """GLAD ENDPOINTS"""
-
-@endpoints.route('/glad-alerts', methods=['GET'])
+@endpoints.route('/glad-alerts', methods=['GET', 'POST'])
 @validate_geostore
 @validate_glad_period
 
@@ -144,5 +144,23 @@ def glad_date_range():
 
     #standardize date response
     response = ResponseService.format_date_range("Glad", min_date, max_date)
+
+    return jsonify({'data': response}), 200
+
+@endpoints.route('/glad-alerts/latest', methods=['GET'])
+def glad_latest():
+    """get glad latest date"""
+    logging.info('Getting latest date')
+
+    #set dataset ID
+    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
+    indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
+
+    #get max date
+    min_year, min_julian, max_year, max_julian = DateService.get_min_max_date('julian_day', datasetID, indexID)
+    max_date = DateService.format_date_sql(min_year, min_julian, max_year, max_julian)[1]
+
+    #standardize latest date response
+    response = ResponseService.format_latest_date("Glad", max_date)
 
     return jsonify({'data': response}), 200

@@ -87,11 +87,25 @@
 	           "path": "/api/v2/ms/glad-alerts/date-range"
 	        }]
 		}, {
+	       "url": "/v1/glad-alerts/latest",
+	       "method": "GET",
+	       "endpoints": [{
+	           "method": "GET",
+	           "path": "/api/v2/ms/glad-alerts/latest"
+	        }]
+		}, {
 	       "url": "/v1/terrai-alerts/date-range",
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
 	           "path": "/api/v2/ms/terrai-alerts/date-range"
+	        }]
+		}, {
+	       "url": "/v1/terrai-alerts/latest",
+	       "method": "GET",
+	       "endpoints": [{
+	           "method": "GET",
+	           "path": "/api/v2/ms/terrai-alerts/latest"
 	        }]
 		}, {
 	       "url": "/v1/terrai-alerts",
