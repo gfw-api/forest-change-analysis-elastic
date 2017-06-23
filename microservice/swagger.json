@@ -441,6 +441,38 @@
           }
         }
       },
+      "/glad-alerts/latest": {
+        "get": {
+          "description": "Retrieves latest (or max) date of GLAD",
+          "operationId": "getGladDate",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "GLAD"
+          ],
+          "responses": {
+            "200": {
+              "description": "Dates obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/LatestCalls"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
       "/terrai-alerts": {
         "get": {
           "description": "Retrieves total number of Terra I alerts for your custom geometry and time period",
@@ -807,7 +839,39 @@
             "200": {
               "description": "Dates obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladandTerraIAPI"
+                "$ref": "#/definitions/DateCalls"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/terrai-alerts/latest": {
+        "get": {
+          "description": "Retrieves latest (or max) date of Terra I",
+          "operationId": "getTerraiDate",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "TERRAI"
+          ],
+          "responses": {
+            "200": {
+              "description": "Date obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/DateCalls"
               }
             },
             "404": {
@@ -897,7 +961,7 @@
                   "type": "object",
                   "properties": {
                       "data": {
-                          "type": "dictionary",
+                          "type": "Hash",
                           "items": {
                               "$ref": "#/definitions/Result"
                           }
@@ -953,7 +1017,7 @@
                   "type": "object",
                   "properties": {
                       "data": {
-                          "type": "dictionary",
+                          "type": "Hash",
                           "items": {
                               "$ref": "#/definitions/DateResult"
                               }
@@ -998,7 +1062,7 @@
                   "type": "object",
                   "properties": {
                       "data": {
-                          "type": "dictionary",
+                          "type": "Hash",
                           "items": {
                               "$ref": "#/definitions/DateResult"
                               }
