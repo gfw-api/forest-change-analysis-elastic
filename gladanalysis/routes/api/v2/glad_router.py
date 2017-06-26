@@ -13,34 +13,39 @@ from gladanalysis.services import ResponseService
 from gladanalysis.responders import ErrorResponder
 from gladanalysis.validators import validate_geostore, validate_glad_period, validate_admin, validate_use, validate_wdpa
 
-def analyze(area, geostore=None, iso=None, state=None, dist=None):
+def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=None):
     """analyze method to execute queries"""
 
+    period = request.args.get('period', None)
+    conf = request.args.get('gladConfirmOnly', None)
+
+    if not period:
+        period = None
+
+    #set variables
+    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
+    indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
+
+    #format period request to julian dates
+    from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "julian_day")
+
+    #get sql and download sql from sql format service
+    sql, download_sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
+
+    #send sql and geostore to analysis service to query elastic database
     if request.method == 'GET':
 
-        period = request.args.get('period', None)
-        conf = request.args.get('gladConfirmOnly', None)
-
-        if not period:
-            period = None
-
-        #set variables
-        datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-        indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
-
-        #format period request to julian dates
-        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "julian_day")
-
-        #get sql and download sql from sql format service
-        sql, download_sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
-
-        #send sql and geostore to analysis service to query elastic database
         data = AnalysisService.make_glad_request(sql, geostore)
-
-        #standardize response
         standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
 
-        return jsonify({'data': standard_format}), 200
+    elif request.method == 'POST':
+
+        data = AnalysisService.make_glad_request_post(sql, geojson)
+        standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area)
+
+    return jsonify({'data': standard_format}), 200
+
+
 
 """GLAD ENDPOINTS"""
 @endpoints.route('/glad-alerts', methods=['GET', 'POST'])
@@ -51,13 +56,21 @@ def query_glad():
     """analyze glad by geostore"""
     logging.info('Query GLAD by geostore')
 
-    geostore = request.args.get('geostore', None)
+    if request.method == 'GET':
 
-    #make request to geostore to get area in hectares
-    area = GeostoreService.make_area_request(geostore)
+        geostore = request.args.get('geostore', None)
 
-    #send request
-    return analyze(area, geostore)
+        #make request to geostore to get area in hectares
+        area = GeostoreService.make_area_request(geostore)
+
+        return analyze(area=area, geostore=geostore)
+
+    elif request.method == 'POST':
+
+        geojson = request.get_json().get('geojson', None) if request.get_json() else None
+        area = request.get_json().get('area_ha', None) if request.get_json() else None
+
+        return analyze(geojson=geojson, area=area)
 
 
 @endpoints.route('/glad-alerts/admin/<iso_code>', methods=['GET'])

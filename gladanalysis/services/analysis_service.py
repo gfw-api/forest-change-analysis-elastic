@@ -23,6 +23,27 @@ class AnalysisService(object):
         return request_to_microservice(config)
 
     @staticmethod
+    def make_glad_request_post(sql, geojson=None):
+
+        uri = "/query/" + os.getenv('GLAD_DATASET_ID')
+
+        body = {'sql': sql,
+                'format': 'json'}
+
+        if geojson:
+            body['geojson'] = geojson
+
+        config = {
+        'uri': uri,
+        'method': 'POST',
+        'body': body
+        }
+        #if geojson make post
+
+        return request_to_microservice(config)
+
+
+    @staticmethod
     def make_terrai_request(sql, geostore=None):
 
         uri = "/query/" + os.getenv('TERRAI_DATASET_ID') + sql + '&format=json'
