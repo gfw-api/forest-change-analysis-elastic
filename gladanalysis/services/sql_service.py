@@ -14,7 +14,9 @@ class SqlService(object):
         order_sql = 'ORDER BY year, julian_day'
 
         """set confidence variable for glad"""
-        if conf == 'true' or conf == 'True':
+        if conf == 'false' or conf == 'False':
+            confidence = ""
+        elif conf or conf == 'true' or conf == 'True':
             confidence = "and confidence = '3'"
         else:
             confidence = ""
