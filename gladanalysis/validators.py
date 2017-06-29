@@ -28,13 +28,17 @@ def validate_glad_period(func):
     """validate period argument"""
     @wraps(func)
     def wrapper(*args, **kwargs):
-        period = request.args.get('period')
 
-        if not period:
-            period = None
-            # return error(status=400, detail="Time period must be set")
+        if request.method == 'GET':
+            period = request.args.get('period')
 
-        elif len(period.split(',')) < 2:
+            if not period:
+                period = None
+
+        elif request.method == 'POST':
+            period = request.get_json().get('period', None) if request.get_json() else None
+
+        if len(period.split(',')) < 2:
             return error(status=400, detail="Period needs 2 arguments")
 
         else:
@@ -63,12 +67,17 @@ def validate_terrai_period(func):
     """validate period argument"""
     @wraps(func)
     def wrapper(*args, **kwargs):
-        period = request.args.get('period')
 
-        if not period:
-            period = None
+        if request.method == 'GET':
+            period = request.args.get('period')
 
-        elif len(period.split(',')) < 2:
+            if not period:
+                period = None
+
+        elif request.method == 'POST':
+            period = request.get_json().get('period', None) if request.get_json() else None
+
+        if len(period.split(',')) < 2:
             return error(status=400, detail="Period needs 2 arguments")
 
         else:

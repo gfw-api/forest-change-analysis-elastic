@@ -16,18 +16,19 @@ from gladanalysis.validators import validate_geostore, validate_terrai_period, v
 def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=None):
     """analyze method to execute Queries"""
 
-    period = request.args.get('period', None)
-
-    if not period:
-        period = None
-
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
     indexID = '{}'.format(os.getenv('TERRAI_INDEX_ID'))
 
-    #format period request to julian dates
-    from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "day")
-
     if request.method == 'GET':
+        #get parameter from query string
+        period = request.args.get('period', None)
+
+        if not period:
+            period = None
+
+        #format period request to julian dates
+        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "day")
+
         #grab query and download sql from sql service
         sql, download_sql = SqlService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist)
 
@@ -36,6 +37,12 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         standard_format = ResponseService.standardize_response('Terrai', data, "COUNT(day)", datasetID, download_sql, area, geostore)
 
     elif request.method == 'POST':
+        #get parameter from payload
+        period = request.get_json().get('period', None) if request.get_json() else None
+
+        #format period request to julian dates
+        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "day")
+
         #get sql and download sql from sql format service
         sql = SqlService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist)
 
@@ -47,14 +54,14 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
 """TERRA I ENDPOINTS"""
 
 @endpoints.route('/terrai-alerts', methods=['GET', 'POST'])
-@validate_geostore
 @validate_terrai_period
+@validate_geostore
 
 def query_terrai():
     """analyze terrai by geostore or geojson"""
 
     if request.method == 'GET':
-        logging.info('[ROUTER]: Query Terra I by Geostore')
+        logging.info('[ROUTER]: get Terra I by Geostore')
 
         geostore = request.args.get('geostore', None)
 

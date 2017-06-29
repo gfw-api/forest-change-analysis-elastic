@@ -16,21 +16,22 @@ from gladanalysis.validators import validate_geostore, validate_glad_period, val
 def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=None):
     """analyze method to execute queries"""
 
-    period = request.args.get('period', None)
-    conf = request.args.get('gladConfirmOnly', None)
-
-    if not period:
-        period = None
-
     #set variables
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
     indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
 
-    #format period request to julian dates
-    from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "julian_day")
-
     #send sql and geostore to analysis service to query elastic database
     if request.method == 'GET':
+        #get parameters from query string
+        period = request.args.get('period', None)
+        conf = request.args.get('gladConfirmOnly', None)
+
+        if not period:
+            period = None
+            
+        #format period request to julian dates
+        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "julian_day")
+
         #get sql and download sql from sql format service
         sql, download_sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
 
@@ -38,6 +39,13 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
 
     elif request.method == 'POST':
+        #get paramters from payload
+        period = request.get_json().get('period', None) if request.get_json() else None
+        conf = request.get_json().get('gladConfirmOnly', None) if request.get_json() else None
+
+        #format period request to julian dates
+        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "julian_day")
+
         #get sql and download sql from sql format service
         sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
 
