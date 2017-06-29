@@ -1,5 +1,6 @@
 import json
 import os
+import logging
 
 from CTRegisterMicroserviceFlask import request_to_microservice
 
@@ -18,27 +19,26 @@ class AnalysisService(object):
         'uri': uri,
         'method': 'GET'
         }
-        #if geojson make post
 
         return request_to_microservice(config)
 
     @staticmethod
-    def make_glad_request_post(sql, geojson=None):
+    def make_glad_request_post(sql, geojson):
 
         uri = "/query/" + os.getenv('GLAD_DATASET_ID')
 
-        body = {'sql': sql,
-                'format': 'json'}
+        if not geojson:
+            return error(status=400, detail="Geojson must be inlcuded in body")
 
-        if geojson:
-            body['geojson'] = geojson
+        body = {'sql': sql,
+                'format': 'json',
+                'geojson': geojson}
 
         config = {
         'uri': uri,
         'method': 'POST',
         'body': body
         }
-        #if geojson make post
 
         return request_to_microservice(config)
 
@@ -54,6 +54,26 @@ class AnalysisService(object):
         config = {
         'uri': uri,
         'method': 'GET'
+        }
+
+        return request_to_microservice(config)
+
+    @staticmethod
+    def make_terrai_request_post(sql, geojson):
+
+        uri = "/query/" + os.getenv('TERRAI_DATASET_ID')
+
+        if not geojson:
+            return error(status=400, detail="Geojson must be inlcuded in body")
+
+        body = {'sql': sql,
+                'format': 'json',
+                'geojson': geojson}
+
+        config = {
+        'uri': uri,
+        'method': 'POST',
+        'body': body
         }
 
         return request_to_microservice(config)

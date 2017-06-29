@@ -13,7 +13,7 @@ from gladanalysis.services import ResponseService
 from gladanalysis.responders import ErrorResponder
 from gladanalysis.validators import validate_geostore, validate_terrai_period, validate_admin, validate_use, validate_wdpa
 
-def analyze(area, geostore=None, iso=None, state=None, dist=None):
+def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=None):
     """analyze method to execute Queries"""
 
     period = request.args.get('period', None)
@@ -27,32 +27,51 @@ def analyze(area, geostore=None, iso=None, state=None, dist=None):
     #format period request to julian dates
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "day")
 
-    #grab query and download sql from sql service
-    sql, download_sql = SqlService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist)
+    if request.method == 'GET':
+        #grab query and download sql from sql service
+        sql, download_sql = SqlService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist)
 
-    #send query to terra i elastic database
-    data = AnalysisService.make_terrai_request(sql, geostore)
+        #send query to terra i elastic database and standardize response
+        data = AnalysisService.make_terrai_request(sql, geostore)
+        standard_format = ResponseService.standardize_response('Terrai', data, "COUNT(day)", datasetID, download_sql, area, geostore)
 
-    standard_format = ResponseService.standardize_response('Terrai', data, "COUNT(day)", datasetID, download_sql, area, geostore)
+    elif request.method == 'POST':
+        #get sql and download sql from sql format service
+        sql = SqlService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist)
+
+        data = AnalysisService.make_terrai_request_post(sql, geojson)
+        standard_format = ResponseService.standardize_response('Terrai', data, "COUNT(day)", datasetID)
 
     return jsonify({'data': standard_format}), 200
 
 """TERRA I ENDPOINTS"""
 
-@endpoints.route('/terrai-alerts', methods=['GET'])
+@endpoints.route('/terrai-alerts', methods=['GET', 'POST'])
 @validate_geostore
 @validate_terrai_period
 
 def query_terrai():
-    """analyze terrai by geostore"""
-    logging.info('Query Terra I by Geostore')
+    """analyze terrai by geostore or geojson"""
 
-    geostore = request.args.get('geostore', None)
+    if request.method == 'GET':
+        logging.info('[ROUTER]: Query Terra I by Geostore')
 
-    #get area of request in hectares from geostore
-    area = GeostoreService.make_area_request(geostore)
+        geostore = request.args.get('geostore', None)
 
-    return analyze(area, geostore)
+        #get area of request in hectares from geostore
+        area = GeostoreService.make_area_request(geostore)
+
+        return analyze(area=area, geostore=geostore)
+
+    elif request.method == 'POST':
+        logging.info('[ROUTER]: post geojson to terrai')
+
+        geojson = request.get_json().get('geojson', None) if request.get_json() else None
+
+        return analyze(geojson=geojson)
+
+    else:
+        return error(status=405, detail="Operation not supported")
 
 @endpoints.route('/terrai-alerts/admin/<iso_code>', methods=['GET'])
 @validate_terrai_period

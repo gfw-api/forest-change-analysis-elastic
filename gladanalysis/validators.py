@@ -13,7 +13,10 @@ def validate_geostore(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
 
-        geostore = request.args.get('geostore')
+        if request.method == 'GET':
+            geostore = request.args.get('geostore')
+        elif request.method == 'POST':
+            geostore = request.get_json().get('geojson', None) if request.get_json() else None
 
         if not geostore:
             return error(status=400, detail="Geostore must be set")

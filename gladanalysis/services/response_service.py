@@ -4,7 +4,7 @@ class ResponseService(object):
     """Class for standardizing api responses"""
 
     @staticmethod
-    def standardize_response(name, data, count, datasetID, download_sql, area, geostore=None):
+    def standardize_response(name, data, count, datasetID, download_sql=None, area=None, geostore=None):
         #Helper function to standardize API responses
         standard_format = {}
         if name == 'Glad':
@@ -15,13 +15,15 @@ class ResponseService(object):
             standard_format["id"] = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
         standard_format["attributes"] = {}
         standard_format["attributes"]["value"] = data["data"][0][count]
-        standard_format["attributes"]["downloadUrls"] = {}
-        standard_format["attributes"]["downloadUrls"]["csv"] = "/download/" + datasetID + download_sql + "&format=csv"
-        standard_format["attributes"]["downloadUrls"]["json"] = "/download/" + datasetID + download_sql + "&format=json"
+        if download_sql:
+            standard_format["attributes"]["downloadUrls"] = {}
+            standard_format["attributes"]["downloadUrls"]["csv"] = "/download/" + datasetID + download_sql + "&format=csv"
+            standard_format["attributes"]["downloadUrls"]["json"] = "/download/" + datasetID + download_sql + "&format=json"
         if geostore:
             standard_format["attributes"]["downloadUrls"]["csv"] += "&geostore=" + geostore
             standard_format["attributes"]["downloadUrls"]["json"] += "&geostore=" + geostore
-        standard_format['attributes']["areaHa"] = area
+        if area:
+            standard_format['attributes']["areaHa"] = area
 
         return standard_format
 
