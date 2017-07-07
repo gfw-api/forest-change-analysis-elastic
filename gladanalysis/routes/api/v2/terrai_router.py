@@ -7,7 +7,7 @@ from flask import jsonify, request
 from . import endpoints
 from gladanalysis.services import GeostoreService
 from gladanalysis.services import DateService
-from gladanalysis.services import SqlService
+from gladanalysis.services import QueryConstructorService
 from gladanalysis.services import AnalysisService
 from gladanalysis.services import ResponseService
 from gladanalysis.responders import ErrorResponder
@@ -30,7 +30,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "day")
 
         #grab query and download sql from sql service
-        sql, download_sql = SqlService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist)
+        sql, download_sql = QueryConstructorService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist)
 
         #send query to terra i elastic database and standardize response
         data = AnalysisService.make_terrai_request(sql, geostore)
@@ -44,7 +44,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "day")
 
         #get sql and download sql from sql format service
-        sql = SqlService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist)
+        sql = QueryConstructorService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist)
 
         data = AnalysisService.make_terrai_request_post(sql, geojson)
         standard_format = ResponseService.standardize_response('Terrai', data, "COUNT(day)", datasetID)

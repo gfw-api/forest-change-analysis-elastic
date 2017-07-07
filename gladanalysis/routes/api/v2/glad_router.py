@@ -7,7 +7,7 @@ from flask import jsonify, request
 from . import endpoints
 from gladanalysis.services import GeostoreService
 from gladanalysis.services import DateService
-from gladanalysis.services import SqlService
+from gladanalysis.services import QueryConstructorService
 from gladanalysis.services import AnalysisService
 from gladanalysis.services import ResponseService
 from gladanalysis.responders import ErrorResponder
@@ -28,12 +28,12 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
 
         if not period:
             period = None
-            
+
         #format period request to julian dates
-        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "julian_day")
+        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period=period, datasetID=datasetID, indexID=indexID, value="julian_day")
 
         #get sql and download sql from sql format service
-        sql, download_sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
+        sql, download_sql = QueryConstructorService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
 
         data = AnalysisService.make_glad_request(sql, geostore)
         standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
@@ -44,10 +44,10 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         conf = request.get_json().get('gladConfirmOnly', None) if request.get_json() else None
 
         #format period request to julian dates
-        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "julian_day")
+        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period=period, datasetID=datasetID, indexID=indexID, value="julian_day")
 
         #get sql and download sql from sql format service
-        sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
+        sql = QueryConstructorService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
 
         data = AnalysisService.make_glad_request_post(sql, geojson)
         standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID)
