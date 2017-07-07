@@ -5,16 +5,16 @@ class QueryConstructorService(object):
     """Class for formatting query and donwload sql"""
 
     @staticmethod
-    def format_dataset_query(confidence, from_year, from_date, to_year, to_date, count_sql, from_sql, select_sql, order_sql, iso=None, state=None, dist=None):
+    def format_dataset_query(day_value, confidence, from_year, from_date, to_year, to_date, count_sql, from_sql, select_sql, order_sql, iso=None, state=None, dist=None):
 
         if (int(from_year) == int(to_year)):
-            where_template = 'WHERE ((year = {y1} and day >= {d1} and day <= {d2}))' + confidence
+            where_template = 'WHERE ((year = {y1} and {day} >= {d1} and {day} <= {d2}))' + confidence
 
         elif (int(from_year) + 1) == int(to_year):
-            where_template = 'WHERE ((year = {y1} and day >= {d1}) or (year = {y2} and day <= {d2}))' + confidence
+            where_template = 'WHERE ((year = {y1} and {day} >= {d1}) or (year = {y2} and {day} <= {d2}))' + confidence
 
         else:
-            where_template = 'WHERE ((year = {y1} and day >= {d1}) or (year >= {y1_plus_1} and year <= {y2_minus_1}) or (year = {y2} and day <= {d2}))' + confidence
+            where_template = 'WHERE ((year = {y1} and {day} >= {d1}) or (year >= {y1_plus_1} and year <= {y2_minus_1}) or (year = {y2} and {day} <= {d2}))' + confidence
 
         geog_id_list = ['country_iso', 'state_id', 'dist_id']
         geog_val_list = [iso, state, dist]
@@ -26,7 +26,7 @@ class QueryConstructorService(object):
                 else:
                     where_template += ' AND ({} = {})'.format(geog_name, geog_value)
 
-        where_sql = where_template.format(y1=int(from_year), d1=int(from_date), y1_plus_1=(int(from_year) + 1), y2=int(to_year), d2=int(to_date), y2_minus_1=(int(to_year) - 1))
+        where_sql = where_template.format(y1=int(from_year), d1=int(from_date), y1_plus_1=(int(from_year) + 1), y2=int(to_year), d2=int(to_date), y2_minus_1=(int(to_year) - 1), day=day_value)
 
         sql = ''.join([count_sql, from_sql, where_sql])
         download_sql = ''.join([select_sql, from_sql, where_sql, order_sql])
@@ -50,7 +50,7 @@ class QueryConstructorService(object):
         else:
             confidence = ""
 
-        sql, download_sql = QueryConstructorService.format_dataset_query(confidence, from_year, from_date, to_year, to_date, count_sql, from_sql, select_sql, order_sql, iso=iso, state=state, dist=dist)
+        sql, download_sql = QueryConstructorService.format_dataset_query("julian_day", confidence, from_year, from_date, to_year, to_date, count_sql, from_sql, select_sql, order_sql, iso=iso, state=state, dist=dist)
 
         if request.method == 'GET':
             sql = '?sql=' + sql
@@ -67,7 +67,7 @@ class QueryConstructorService(object):
         from_sql = 'FROM {} '.format(os.getenv('TERRAI_INDEX_ID'))
         order_sql = 'ORDER BY year, day'
 
-        sql, download_sql = QueryConstructorService.format_dataset_query("", from_year, from_date, to_year, to_date, count_sql, from_sql, select_sql, order_sql, iso=iso, state=state, dist=dist)
+        sql, download_sql = QueryConstructorService.format_dataset_query("day", "", from_year, from_date, to_year, to_date, count_sql, from_sql, select_sql, order_sql, iso=iso, state=state, dist=dist)
 
         if request.method == 'GET':
             sql = '?sql=' + sql
