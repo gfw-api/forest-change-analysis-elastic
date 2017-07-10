@@ -1,5 +1,9 @@
 from flask import jsonify, request
 import os
+import requests
+import collections
+
+from CTRegisterMicroserviceFlask import request_to_microservice
 
 class QueryConstructorService(object):
     """Class for formatting query and donwload sql"""
@@ -75,3 +79,62 @@ class QueryConstructorService(object):
             return sql, download_sql
         elif request.method == 'POST':
             return sql
+
+    @staticmethod
+    def aggregate_glad_values(data, conf, from_year, from_date, to_year, to_date, geostore, sql):
+
+        values = []
+        values_from_year = []
+        values_to_year = []
+        values_mid_year = []
+        agg_values = {}
+
+        if from_year == to_year:
+        #
+            for y in data['data']:
+                if y['julian_day'] in range(from_date, to_date):
+                    values.append(y['julian_day'])
+
+            count = collections.Counter(values)
+            agg_values[from_year] = count
+
+            return agg_values
+
+        elif (int(from_year) + 1) == int(to_year):
+
+            for y in data['data']:
+                if y['year'] == from_year:
+                    if y['julian_day'] in range(from_date, 365):
+                        values_from_year.append(y['julian_day'])
+                elif y['year'] == to_year:
+                    if y['julian_day'] in range(1, to_date):
+                        values_to_year.append(y['julian_day'])
+
+            count_from_year = collections.Counter(values_from_year)
+            count_to_year = collections.Counter(values_to_year)
+
+            agg_values[from_year] = count_from_year
+            agg_values[to_year] = count_to_year
+
+            return agg_values
+
+        else:
+            for y in data['data']:
+                if y['year'] == from_year:
+                    if y['julian_day'] in range(from_date, 365):
+                        values_from_year.append(y['julian_day'])
+                elif y['year'] == to_year:
+                    if y['julian_day'] in range(1, to_date):
+                        values_to_year.append(y['julian_day'])
+                elif y['year'] == (from_year + 1):
+                    values_mid_year.append(y['julian_day'])
+
+            count_from_year = collections.Counter(values_from_year)
+            count_mid_year = collections.Counter(values_mid_year)
+            count_to_year = collections.Counter(values_to_year)
+
+            agg_values[from_year] = count_from_year
+            agg_values[(from_year + 1)] = count_mid_year
+            agg_values[to_year] = count_to_year
+
+            return agg_values

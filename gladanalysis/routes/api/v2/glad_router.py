@@ -25,6 +25,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         #get parameters from query string
         period = request.args.get('period', None)
         conf = request.args.get('gladConfirmOnly', None)
+        agg_values = request.args.get('aggregate_values', None)
 
         if not period:
             period = None
@@ -36,7 +37,12 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         sql, download_sql = QueryConstructorService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
 
         data = AnalysisService.make_glad_request(sql, geostore)
-        standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
+
+        if agg_values:
+            agg_data = QueryConstructorService.aggregate_glad_values(data, conf, from_year, from_date, to_year, to_date, geostore, download_sql)
+            standard_format = ResponseService.standardize_response('Glad', agg_data, "COUNT(julian_day)", datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True)
+        else:
+            standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
 
     elif request.method == 'POST':
         #get paramters from payload

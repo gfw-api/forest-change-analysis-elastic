@@ -4,7 +4,7 @@ class ResponseService(object):
     """Class for standardizing api responses"""
 
     @staticmethod
-    def standardize_response(name, data, count, datasetID, download_sql=None, area=None, geostore=None):
+    def standardize_response(name, data, count, datasetID, download_sql=None, area=None, geostore=None, agg=None):
         #Helper function to standardize API responses
         standard_format = {}
         if name == 'Glad':
@@ -14,7 +14,12 @@ class ResponseService(object):
             standard_format["type"] = "terrai-alerts"
             standard_format["id"] = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
         standard_format["attributes"] = {}
-        standard_format["attributes"]["value"] = data["data"][0][count]
+        if agg:
+            years = len(data.keys())
+            for year in years:
+                standard_format['attributes']["value"][year] = data[year]
+        elif agg == None:
+            standard_format["attributes"]["value"] = data["data"][0][count]
         if download_sql:
             standard_format["attributes"]["downloadUrls"] = {}
             standard_format["attributes"]["downloadUrls"]["csv"] = "/download/" + datasetID + download_sql + "&format=csv"
