@@ -10,6 +10,7 @@ from gladanalysis.services import DateService
 from gladanalysis.services import QueryConstructorService
 from gladanalysis.services import AnalysisService
 from gladanalysis.services import ResponseService
+from gladanalysis.services import SummaryService
 from gladanalysis.responders import ErrorResponder
 from gladanalysis.validators import validate_geostore, validate_glad_period, validate_admin, validate_use, validate_wdpa
 
@@ -26,6 +27,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         period = request.args.get('period', None)
         conf = request.args.get('gladConfirmOnly', None)
         agg_values = request.args.get('aggregate_values', None)
+        agg_by = request.args.get('aggregate_by', None)
 
         if not period:
             period = None
@@ -36,10 +38,14 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         #get sql and download sql from sql format service
         sql, download_sql = QueryConstructorService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
 
-        if agg_values:
+        if agg_values and agg_by:
             data = AnalysisService.make_glad_request(download_sql, geostore)
-            agg_data = QueryConstructorService.aggregate_glad_values(data, from_year, from_date, to_year, to_date, geostore)
-            logging.info(agg_data)
+            if agg_by == 'year' or 'Year':
+                agg_data = SummaryService.aggregate_glad_values_year(data, from_year, to_year, geostore)
+                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True)
+        elif agg_values:
+            data = AnalysisService.make_glad_request(download_sql, geostore)
+            agg_data = SummaryService.aggregate_glad_values_day(data, from_year, from_date, to_year, to_date, geostore)
             standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True)
         else:
             data = AnalysisService.make_glad_request(sql, geostore)

@@ -9,3 +9,4 @@ from gladanalysis.services.date_service import DateService
 from gladanalysis.services.query_constructor_service import QueryConstructorService
 from gladanalysis.services.analysis_service import AnalysisService
 from gladanalysis.services.response_service import ResponseService
+from gladanalysis.services.summary_service import SummaryService

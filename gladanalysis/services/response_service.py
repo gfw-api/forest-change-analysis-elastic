@@ -17,7 +17,6 @@ class ResponseService(object):
         standard_format["attributes"] = {}
         if agg:
             years = data.keys()
-            logging.info(years)
             for year in years:
                 standard_format["attributes"][year] = data[year]
         elif agg == None:
