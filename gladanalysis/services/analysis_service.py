@@ -42,7 +42,6 @@ class AnalysisService(object):
 
         return request_to_microservice(config)
 
-
     @staticmethod
     def make_terrai_request(sql, geostore=None):
 

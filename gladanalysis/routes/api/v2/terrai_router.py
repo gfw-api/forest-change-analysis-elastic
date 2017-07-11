@@ -34,7 +34,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
 
         #send query to terra i elastic database and standardize response
         data = AnalysisService.make_terrai_request(sql, geostore)
-        standard_format = ResponseService.standardize_response('Terrai', data, "COUNT(day)", datasetID, download_sql, area, geostore)
+        standard_format = ResponseService.standardize_response('Terrai', data, datasetID, count="COUNT(day)", download_sql=download_sql, area=area, geostore=geostore)
 
     elif request.method == 'POST':
         #get parameter from payload
@@ -47,7 +47,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         sql = QueryConstructorService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist)
 
         data = AnalysisService.make_terrai_request_post(sql, geojson)
-        standard_format = ResponseService.standardize_response('Terrai', data, "COUNT(day)", datasetID)
+        standard_format = ResponseService.standardize_response('Terrai', data, datasetID, count="COUNT(day)")
 
     return jsonify({'data': standard_format}), 200
 

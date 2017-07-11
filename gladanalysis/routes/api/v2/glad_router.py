@@ -36,13 +36,14 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         #get sql and download sql from sql format service
         sql, download_sql = QueryConstructorService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
 
-        data = AnalysisService.make_glad_request(sql, geostore)
-
         if agg_values:
-            agg_data = QueryConstructorService.aggregate_glad_values(data, conf, from_year, from_date, to_year, to_date, geostore, download_sql)
-            standard_format = ResponseService.standardize_response('Glad', agg_data, "COUNT(julian_day)", datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True)
+            data = AnalysisService.make_glad_request(download_sql, geostore)
+            agg_data = QueryConstructorService.aggregate_glad_values(data, from_year, from_date, to_year, to_date, geostore)
+            logging.info(agg_data)
+            standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True)
         else:
-            standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
+            data = AnalysisService.make_glad_request(sql, geostore)
+            standard_format = ResponseService.standardize_response('Glad', data, datasetID, count="COUNT(julian_day)", download_sql=download_sql, area=area, geostore=geostore)
 
     elif request.method == 'POST':
         #get paramters from payload
@@ -56,7 +57,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         sql = QueryConstructorService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
 
         data = AnalysisService.make_glad_request_post(sql, geojson)
-        standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID)
+        standard_format = ResponseService.standardize_response('Glad', data, datasetID, count="COUNT(julian_day)")
 
     return jsonify({'data': standard_format}), 200
 

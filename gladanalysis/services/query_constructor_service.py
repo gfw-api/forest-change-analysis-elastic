@@ -81,7 +81,7 @@ class QueryConstructorService(object):
             return sql
 
     @staticmethod
-    def aggregate_glad_values(data, conf, from_year, from_date, to_year, to_date, geostore, sql):
+    def aggregate_glad_values(data, from_year, from_date, to_year, to_date, geostore):
 
         values = []
         values_from_year = []
@@ -89,8 +89,13 @@ class QueryConstructorService(object):
         values_mid_year = []
         agg_values = {}
 
+        from_year = (int(from_year))
+        from_date = (int(from_date))
+        to_year = (int(to_year))
+        to_date = (int(to_date))
+
         if from_year == to_year:
-        #
+
             for y in data['data']:
                 if y['julian_day'] in range(from_date, to_date):
                     values.append(y['julian_day'])
@@ -100,7 +105,7 @@ class QueryConstructorService(object):
 
             return agg_values
 
-        elif (int(from_year) + 1) == int(to_year):
+        elif (from_year + 1) == to_year:
 
             for y in data['data']:
                 if y['year'] == from_year:
@@ -137,4 +142,6 @@ class QueryConstructorService(object):
             agg_values[(from_year + 1)] = count_mid_year
             agg_values[to_year] = count_to_year
 
-            return agg_values
+            agg_data = dict((k, dict(v)) for k, v in agg_values.iteritems())
+
+            return agg_data
