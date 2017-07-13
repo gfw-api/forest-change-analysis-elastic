@@ -16,18 +16,26 @@ class SummaryService(object):
         return year, month, jd
 
     @staticmethod
-    def aggregate_glad_values_day(data, from_year, from_date, to_year, to_date):
+    def date_to_integer(from_year=None, from_date=None, to_year=None, to_date=None):
+
+        if from_year:
+            from_year = (int(from_year))
+        if from_date:
+            from_date = (int(from_date))
+        if to_year:
+            to_year = (int(to_year))
+        if to_date:
+            to_date = (int(to_date))
+
+        return from_year, from_date, to_year, to_date
+
+    @staticmethod
+    def get_values(data, from_year, from_date, to_year, to_date):
 
         values = []
         values_from_year = []
         values_to_year = []
         values_mid_year = []
-        agg_values = {}
-
-        from_year = (int(from_year))
-        from_date = (int(from_date))
-        to_year = (int(to_year))
-        to_date = (int(to_date))
 
         if from_year == to_year:
 
@@ -35,10 +43,7 @@ class SummaryService(object):
                 if y['julian_day'] in range(from_date, to_date):
                     values.append(y['julian_day'])
 
-            count = collections.Counter(values)
-            agg_values[from_year] = count
-
-            return agg_values
+            return values
 
         elif (from_year + 1) == to_year:
 
@@ -50,13 +55,7 @@ class SummaryService(object):
                     if y['julian_day'] in range(1, to_date):
                         values_to_year.append(y['julian_day'])
 
-            count_from_year = collections.Counter(values_from_year)
-            count_to_year = collections.Counter(values_to_year)
-
-            agg_values[from_year] = count_from_year
-            agg_values[to_year] = count_to_year
-
-            return agg_values
+            return values_from_year, values_to_year
 
         else:
             for y in data['data']:
@@ -68,6 +67,40 @@ class SummaryService(object):
                         values_to_year.append(y['julian_day'])
                 elif y['year'] == (from_year + 1):
                     values_mid_year.append(y['julian_day'])
+
+            return values_from_year, values_mid_year, values_to_year
+
+    @staticmethod
+    def aggregate_glad_values_day(data, from_year, from_date, to_year, to_date):
+
+        agg_values = {}
+
+        from_year, from_date, to_year, to_date = SummaryService.date_to_integer(from_year=from_year, from_date=from_date, to_year=to_year, to_date=to_date)
+
+        if from_year == to_year:
+
+            values = SummaryService.get_values(data, from_year, from_date, to_year, to_date)
+
+            count = collections.Counter(values)
+            agg_values[from_year] = count
+
+            return agg_values
+
+        elif (from_year + 1) == to_year:
+
+            values_from_year, values_to_year = SummaryService.get_values(data, from_year, from_date, to_year, to_date)
+
+            count_from_year = collections.Counter(values_from_year)
+            count_to_year = collections.Counter(values_to_year)
+
+            agg_values[from_year] = count_from_year
+            agg_values[to_year] = count_to_year
+
+            return agg_values
+
+        else:
+
+            values_from_year, values_mid_year, values_to_year = SummaryService.get_values(data, from_year, from_date, to_year, to_date)
 
             count_from_year = collections.Counter(values_from_year)
             count_mid_year = collections.Counter(values_mid_year)
@@ -84,8 +117,8 @@ class SummaryService(object):
     @staticmethod
     def aggregate_glad_values_year(data, from_year, to_year):
 
-        from_year = (int(from_year))
-        to_year = (int(to_year))
+        from_year = SummaryService.date_to_integer(from_year=from_year)[0]
+        to_year = SummaryService.date_to_integer(to_year=to_year)[2]
 
         agg_values = {}
         values_2015 = []
@@ -161,21 +194,11 @@ class SummaryService(object):
     @staticmethod
     def aggregate_glad_values_week_month(data, from_year, from_date, to_year, to_date):
 
-        from_year = (int(from_year))
-        from_date = (int(from_date))
-        to_year = (int(to_year))
-        to_date = (int(to_date))
-
-        values = []
-        values_from_year = []
-        values_mid_year = []
-        values_to_year = []
+        from_year, from_date, to_year, to_date = SummaryService.date_to_integer(from_year=from_year, from_date=from_date, to_year=to_year, to_date=to_date)
 
         if from_year == to_year:
 
-            for y in data['data']:
-                if y['julian_day'] in range(from_date, to_date):
-                    values.append(y['julian_day'])
+            values = SummaryService.get_values(data, from_year, from_date, to_year, to_date)
 
             agg_data_week = SummaryService.format_agg_data_week_month(values, from_year)[0]
             agg_data_month = SummaryService.format_agg_data_week_month(values, from_year)[1]
@@ -184,13 +207,7 @@ class SummaryService(object):
 
         elif (from_year + 1) == to_year:
 
-            for y in data['data']:
-                if y['year'] == from_year:
-                    if y['julian_day'] in range(from_date, 365):
-                        values_from_year.append(y['julian_day'])
-                elif y['year'] == to_year:
-                    if y['julian_day'] in range(1, to_date):
-                        values_to_year.append(y['julian_day'])
+            values_from_year, values_to_year = SummaryService.get_values(data, from_year, from_date, to_year, to_date)
 
             agg_data_week = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_to_year=values_to_year)[0]
             agg_data_month = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_to_year=values_to_year)[1]
@@ -199,15 +216,7 @@ class SummaryService(object):
 
         else:
 
-            for y in data['data']:
-                if y['year'] == from_year:
-                    if y['julian_day'] in range(from_date, 365):
-                        values_from_year.append(y['julian_day'])
-                elif y['year'] == to_year:
-                    if y['julian_day'] in range(1, to_date):
-                        values_to_year.append(y['julian_day'])
-                elif y['year'] == (from_year + 1):
-                    values_mid_year.append(y['julian_day'])
+            values_from_year, values_mid_year, values_to_year = SummaryService.get_values(data, from_year, from_date, to_year, to_date)
 
             agg_data_week = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_mid_year=values_mid_year, values_to_year=values_to_year)[0]
             agg_data_month = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_mid_year=values_mid_year, values_to_year=values_to_year)[1]
