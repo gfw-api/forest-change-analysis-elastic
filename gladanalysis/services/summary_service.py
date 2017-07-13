@@ -140,16 +140,17 @@ class SummaryService(object):
         return agg_values
 
     @staticmethod
-    def agg_by_week_month(values, from_year):
+    def agg_by_week_month_quarter(values, year):
 
         date_values = []
         wk_values = []
         m_values = []
+        q_values = []
 
         agg_values = {}
 
         for value in values:
-            year, month, day = SummaryService.julian_day_to_date(from_year, value)
+            year, month, day = SummaryService.julian_day_to_date(year, value)
             date_values.append([year, month, day])
             m_values.append(month)
 
@@ -157,39 +158,62 @@ class SummaryService(object):
             wk = datetime.date(time[0],time[1],time[2]).isocalendar()[1]
             wk_values.append(wk)
 
+        for m in m_values:
+            if m in range(1, 4):
+                m = 1
+                q_values.append(m)
+            elif m in range(4, 7):
+                m = 2
+                q_values.append(m)
+            elif m in range(7, 10):
+                m = 3
+                q_values.append(m)
+            elif m in range(10, 13):
+                m = 4
+                q_values.append(m)
+
         wk_count = collections.Counter(wk_values)
         m_count = collections.Counter(m_values)
+        q_count = collections.Counter(q_values)
 
-        return wk_count, m_count
+        return wk_count, m_count, q_count
 
     @staticmethod
     def format_agg_data_week_month(values_from_year, from_year, to_year=None, values_mid_year=None, values_to_year=None):
 
         agg_values_week = {}
         agg_values_month = {}
+        agg_values_quarter = {}
 
-        wk_count_from_year = SummaryService.agg_by_week_month(values_from_year, from_year)[0]
-        m_count_from_year = SummaryService.agg_by_week_month(values_from_year, from_year)[1]
+        wk_count_from_year = SummaryService.agg_by_week_month_quarter(values_from_year, from_year)[0]
+        m_count_from_year = SummaryService.agg_by_week_month_quarter(values_from_year, from_year)[1]
+        q_count_from_year = SummaryService.agg_by_week_month_quarter(values_from_year, from_year)[2]
         if values_mid_year:
-            wk_count_mid_year = SummaryService.agg_by_week_month(values_mid_year, from_year)[0]
-            m_count_mid_year = SummaryService.agg_by_week_month(values_mid_year, from_year)[1]
+            wk_count_mid_year = SummaryService.agg_by_week_month_quarter(values_mid_year, (from_year +1))[0]
+            m_count_mid_year = SummaryService.agg_by_week_month_quarter(values_mid_year, (from_year +1))[1]
+            q_count_mid_year = SummaryService.agg_by_week_month_quarter(values_mid_year, (from_year +1))[2]
         if values_to_year:
-            wk_count_to_year = SummaryService.agg_by_week_month(values_to_year, from_year)[0]
-            m_count_to_year = SummaryService.agg_by_week_month(values_to_year, from_year)[1]
+            wk_count_to_year = SummaryService.agg_by_week_month_quarter(values_to_year, to_year)[0]
+            m_count_to_year = SummaryService.agg_by_week_month_quarter(values_to_year, to_year)[1]
+            q_count_to_year = SummaryService.agg_by_week_month_quarter(values_to_year, to_year)[2]
 
         agg_values_week[from_year] = wk_count_from_year
         agg_values_month[from_year] = m_count_from_year
+        agg_values_quarter[from_year] = q_count_from_year
         if values_mid_year:
             agg_values_week[(from_year + 1)] = wk_count_mid_year
             agg_values_month[(from_year + 1)] = m_count_mid_year
+            agg_values_quarter[(from_year + 1)] = q_count_mid_year
         if values_to_year:
             agg_values_week[to_year] = wk_count_to_year
             agg_values_month[to_year] = m_count_to_year
+            agg_values_quarter[to_year] = q_count_to_year
 
         agg_data_week = dict((k, dict(v)) for k, v in agg_values_week.iteritems())
         agg_data_month = dict((k, dict(v)) for k, v in agg_values_month.iteritems())
+        agg_data_quarter = dict((k, dict(v)) for k, v in agg_values_quarter.iteritems())
 
-        return agg_data_week, agg_data_month
+        return agg_data_week, agg_data_month, agg_data_quarter
 
     @staticmethod
     def aggregate_glad_values_week_month(data, from_year, from_date, to_year, to_date):
@@ -202,8 +226,9 @@ class SummaryService(object):
 
             agg_data_week = SummaryService.format_agg_data_week_month(values, from_year)[0]
             agg_data_month = SummaryService.format_agg_data_week_month(values, from_year)[1]
+            agg_data_quarter = SummaryService.format_agg_data_week_month(values, from_year)[2]
 
-            return agg_data_week, agg_data_month
+            return agg_data_week, agg_data_month, agg_data_quarter
 
         elif (from_year + 1) == to_year:
 
@@ -211,8 +236,9 @@ class SummaryService(object):
 
             agg_data_week = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_to_year=values_to_year)[0]
             agg_data_month = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_to_year=values_to_year)[1]
+            agg_data_quarter = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_to_year=values_to_year)[2]
 
-            return agg_data_week, agg_data_month
+            return agg_data_week, agg_data_month, agg_data_quarter
 
         else:
 
@@ -220,5 +246,6 @@ class SummaryService(object):
 
             agg_data_week = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_mid_year=values_mid_year, values_to_year=values_to_year)[0]
             agg_data_month = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_mid_year=values_mid_year, values_to_year=values_to_year)[1]
+            agg_data_quarter = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_mid_year=values_mid_year, values_to_year=values_to_year)[2]
 
-            return agg_data_week, agg_data_month
+            return agg_data_week, agg_data_month, agg_data_quarter
