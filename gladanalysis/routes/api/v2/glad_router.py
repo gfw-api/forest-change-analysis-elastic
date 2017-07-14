@@ -42,26 +42,26 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
             data = AnalysisService.make_glad_request(download_sql, geostore)
             if agg_by.lower() == 'day':
                 agg_data = SummaryService.aggregate_glad_values_day(data, from_year, from_date, to_year, to_date)
-                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='day', period=period)
+                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='day', period=period, conf=conf)
             elif agg_by.lower() == 'year':
                 agg_data = SummaryService.aggregate_glad_values_year(data, from_year, to_year)
-                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='year', period=period)
+                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='year', period=period, conf=conf)
             elif agg_by.lower() == 'week':
                 agg_data = SummaryService.aggregate_glad_values_week_month(data, from_year, from_date, to_year, to_date)[0]
-                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='week', period=period)
+                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='week', period=period, conf=conf)
             elif agg_by.lower() == 'month':
                 agg_data = SummaryService.aggregate_glad_values_week_month(data, from_year, from_date, to_year, to_date)[1]
-                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='month', period=period)
+                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='month', period=period, conf=conf)
             elif agg_by.lower() == 'quarter':
                 agg_data = SummaryService.aggregate_glad_values_week_month(data, from_year, from_date, to_year, to_date)[2]
-                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='quarter', period=period)
+                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='quarter', period=period, conf=conf)
         elif agg_values:
             data = AnalysisService.make_glad_request(download_sql, geostore)
             agg_data = SummaryService.aggregate_glad_values_day(data, from_year, from_date, to_year, to_date)
-            standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='day', period=period)
+            standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='day', period=period, conf=conf)
         else:
             data = AnalysisService.make_glad_request(sql, geostore)
-            standard_format = ResponseService.standardize_response('Glad', data, datasetID, count="COUNT(julian_day)", download_sql=download_sql, area=area, geostore=geostore, period=period)
+            standard_format = ResponseService.standardize_response('Glad', data, datasetID, count="COUNT(julian_day)", download_sql=download_sql, area=area, geostore=geostore, period=period, conf=conf)
 
     elif request.method == 'POST':
         #get paramters from payload
@@ -75,7 +75,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         sql = QueryConstructorService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
 
         data = AnalysisService.make_glad_request_post(sql, geojson)
-        standard_format = ResponseService.standardize_response('Glad', data, datasetID, count="COUNT(julian_day)")
+        standard_format = ResponseService.standardize_response('Glad', data, datasetID, count="COUNT(julian_day)", period=period, conf=conf)
 
     return jsonify({'data': standard_format}), 200
 

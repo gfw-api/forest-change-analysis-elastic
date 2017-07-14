@@ -1,11 +1,10 @@
 import os
-import logging
 
 class ResponseService(object):
     """Class for standardizing api responses"""
 
     @staticmethod
-    def standardize_response(name, data, datasetID, count=None, download_sql=None, area=None, geostore=None, agg=None, agg_by=None, period=None):
+    def standardize_response(name, data, datasetID, count=None, download_sql=None, area=None, geostore=None, agg=None, agg_by=None, period=None, conf=None):
         #Helper function to standardize API responses
         standard_format = {}
         if name == 'Glad':
@@ -16,6 +15,8 @@ class ResponseService(object):
             standard_format["id"] = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
         if period:
             standard_format['period'] = period
+        if conf:
+            standard_format['gladConfirmOnly'] = conf
         standard_format["attributes"] = {}
         if agg:
             standard_format['aggregate_values'] = True
