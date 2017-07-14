@@ -8,6 +8,7 @@ class SummaryService(object):
 
     @staticmethod
     def julian_day_to_date(year, jd):
+    """convert julian day to YYYY-MM-DD"""
         month = 1
         day = 0
         while jd - calendar.monthrange(year,month)[1] > 0 and month < 12:
@@ -17,7 +18,7 @@ class SummaryService(object):
 
     @staticmethod
     def date_to_integer(from_year=None, from_date=None, to_year=None, to_date=None):
-
+    """covert string dates to integers"""
         if from_year:
             from_year = (int(from_year))
         if from_date:
@@ -31,6 +32,7 @@ class SummaryService(object):
 
     @staticmethod
     def get_values(data, from_year, from_date, to_year, to_date):
+    """decision tree to get all date values for a time period"""
 
         values = []
         values_from_year = []
@@ -72,6 +74,7 @@ class SummaryService(object):
 
     @staticmethod
     def aggregate_glad_values_day(data, from_year, from_date, to_year, to_date):
+    """creates a dictionary of glad days (key) and count for those days (value)/ main function for agg by day"""
 
         agg_values = {}
 
@@ -116,6 +119,7 @@ class SummaryService(object):
 
     @staticmethod
     def aggregate_glad_values_year(data, from_year, to_year):
+    """creates a dictionay of glad years [key] and count for those years [value]/ main function for agg by year"""
 
         from_year = SummaryService.date_to_integer(from_year=from_year)[0]
         to_year = SummaryService.date_to_integer(to_year=to_year)[2]
@@ -141,6 +145,7 @@ class SummaryService(object):
 
     @staticmethod
     def agg_by_week_month_quarter(values, year):
+    """creates a collection from a list of glad week, month and quarter counts"""
 
         date_values = []
         wk_values = []
@@ -180,7 +185,7 @@ class SummaryService(object):
 
     @staticmethod
     def format_agg_data_week_month(values_from_year, from_year, to_year=None, values_mid_year=None, values_to_year=None):
-
+    """creates a dictionary of glad collections by week, month and quarter"""
         agg_values_week = {}
         agg_values_month = {}
         agg_values_quarter = {}
@@ -217,6 +222,7 @@ class SummaryService(object):
 
     @staticmethod
     def aggregate_glad_values_week_month(data, from_year, from_date, to_year, to_date):
+    """main function for aggregating glad values by week, month, quarter"""
 
         from_year, from_date, to_year, to_date = SummaryService.date_to_integer(from_year=from_year, from_date=from_date, to_year=to_year, to_date=to_date)
 
