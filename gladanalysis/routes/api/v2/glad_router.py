@@ -41,23 +41,23 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         if agg_values and agg_by:
             data = AnalysisService.make_glad_request(download_sql, geostore)
             if agg_by.lower() == 'day':
-                agg_data = SummaryService.aggregate_glad_values_day(data, from_year, from_date, to_year, to_date)
+                agg_data = SummaryService.create_time_table('glad', data, 'julian_day')
                 standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='day', period=period, conf=conf)
             elif agg_by.lower() == 'year':
-                agg_data = SummaryService.aggregate_glad_values_year(data, from_year, to_year)
+                agg_data = SummaryService.create_time_table('glad', data, 'year')
                 standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='year', period=period, conf=conf)
             elif agg_by.lower() == 'week':
-                agg_data = SummaryService.aggregate_glad_values_week_month(data, from_year, from_date, to_year, to_date)[0]
+                agg_data = SummaryService.create_time_table('glad', data, 'week')
                 standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='week', period=period, conf=conf)
             elif agg_by.lower() == 'month':
-                agg_data = SummaryService.aggregate_glad_values_week_month(data, from_year, from_date, to_year, to_date)[1]
+                agg_data = SummaryService.create_time_table('glad', data, 'month')
                 standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='month', period=period, conf=conf)
             elif agg_by.lower() == 'quarter':
-                agg_data = SummaryService.aggregate_glad_values_week_month(data, from_year, from_date, to_year, to_date)[2]
+                agg_data = SummaryService.create_time_table('glad', data, 'quarter')
                 standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='quarter', period=period, conf=conf)
         elif agg_values:
             data = AnalysisService.make_glad_request(download_sql, geostore)
-            agg_data = SummaryService.aggregate_glad_values_day(data, from_year, from_date, to_year, to_date)
+            agg_data = SummaryService.create_time_table('glad', data, 'day')
             standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='day', period=period, conf=conf)
         else:
             data = AnalysisService.make_glad_request(sql, geostore)

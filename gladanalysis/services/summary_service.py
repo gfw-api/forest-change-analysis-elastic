@@ -1,257 +1,50 @@
 import collections
 import datetime
 import calendar
-import logging
+import pandas as pd
 
 class SummaryService(object):
     """Class for creating summary stats on glad data"""
 
     @staticmethod
-    def julian_day_to_date(year, jd):
-        """convert julian day to YYYY-MM-DD"""
-        month = 1
-        day = 0
-        while jd - calendar.monthrange(year,month)[1] > 0 and month < 12:
-            jd = jd - calendar.monthrange(year,month)[1]
-            month = month + 1
-        return year, month, jd
+    def create_time_table(dataset, data, agg_type):
 
-    @staticmethod
-    def date_to_integer(from_year=None, from_date=None, to_year=None, to_date=None):
-        """covert string dates to integers"""
-        if from_year:
-            from_year = (int(from_year))
-        if from_date:
-            from_date = (int(from_date))
-        if to_year:
-            to_year = (int(to_year))
-        if to_date:
-            to_date = (int(to_date))
+        df = pd.DataFrame(data['data'])
 
-        return from_year, from_date, to_year, to_date
+        # create datetime column in pandas so we can pull
+        if dataset == 'glad':
+            df['alert_date'] = pd.to_datetime(df.year, format='%Y') + pd.to_timedelta(df.julian_day - 1, unit='d')
+        elif dataset == 'terrai':
+            df['alert_date'] = pd.to_datetime(df.year, format='%Y') + pd.to_timedelta(df.day - 1, unit='d')
 
-    @staticmethod
-    def get_values(data, from_year, from_date, to_year, to_date):
-        """decision tree to get all date values for a time period"""
+        # extract month and quarter values from datetime object
+        df['month'] = df.alert_date.dt.month
+        df['quarter'] = df.alert_date.dt.quarter
 
-        values = []
-        values_from_year = []
-        values_to_year = []
-        values_mid_year = []
+        # pandas week calculations are different; need to use this instead
+        df['week'] = df.alert_date.apply(lambda x: x.isocalendar()[1])
 
-        if from_year == to_year:
+        print df
 
-            for y in data['data']:
-                if y['julian_day'] in range(from_date, to_date):
-                    values.append(y['julian_day'])
-
-            return values
-
-        elif (from_year + 1) == to_year:
-
-            for y in data['data']:
-                if y['year'] == from_year:
-                    if y['julian_day'] in range(from_date, 365):
-                        values_from_year.append(y['julian_day'])
-                elif y['year'] == to_year:
-                    if y['julian_day'] in range(1, to_date):
-                        values_to_year.append(y['julian_day'])
-
-            return values_from_year, values_to_year
-
+        if agg_type == 'year':
+            grouped = df.groupby(['year']).size().reset_index()
         else:
-            for y in data['data']:
-                if y['year'] == from_year:
-                    if y['julian_day'] in range(from_date, 365):
-                        values_from_year.append(y['julian_day'])
-                elif y['year'] == to_year:
-                    if y['julian_day'] in range(1, to_date):
-                        values_to_year.append(y['julian_day'])
-                elif y['year'] == (from_year + 1):
-                    values_mid_year.append(y['julian_day'])
+            grouped = df.groupby(['year', agg_type]).size().reset_index()
+        grouped = grouped.rename(columns={0: 'count'})
 
-            return values_from_year, values_mid_year, values_to_year
+        # no idea how this works, but it does
+        # https://stackoverflow.com/questions/41998624/
+        output = grouped.groupby('year')[[agg_type, 'count']].apply(
+                         lambda x: x.set_index(agg_type).to_dict(orient='index')).to_dict()
 
-    @staticmethod
-    def aggregate_glad_values_day(data, from_year, from_date, to_year, to_date):
-        """creates a dictionary of glad days (key) and count for those days (value)/ main function for agg by day"""
-
-        agg_values = {}
-
-        from_year, from_date, to_year, to_date = SummaryService.date_to_integer(from_year=from_year, from_date=from_date, to_year=to_year, to_date=to_date)
-
-        if from_year == to_year:
-
-            values = SummaryService.get_values(data, from_year, from_date, to_year, to_date)
-
-            count = collections.Counter(values)
-            agg_values[from_year] = count
-
-            return agg_values
-
-        elif (from_year + 1) == to_year:
-
-            values_from_year, values_to_year = SummaryService.get_values(data, from_year, from_date, to_year, to_date)
-
-            count_from_year = collections.Counter(values_from_year)
-            count_to_year = collections.Counter(values_to_year)
-
-            agg_values[from_year] = count_from_year
-            agg_values[to_year] = count_to_year
-
-            return agg_values
-
+        data_format = {}
+        if agg_type == 'year':
+            for year in output.keys():
+                data_format[year] = output[year][year]['count']
         else:
+            for year in output.keys():
+                data_format[year] = {}
+                for agg in output[year]:
+                    data_format[year][agg] = output[year][agg]['count']
 
-            values_from_year, values_mid_year, values_to_year = SummaryService.get_values(data, from_year, from_date, to_year, to_date)
-
-            count_from_year = collections.Counter(values_from_year)
-            count_mid_year = collections.Counter(values_mid_year)
-            count_to_year = collections.Counter(values_to_year)
-
-            agg_values[from_year] = count_from_year
-            agg_values[(from_year + 1)] = count_mid_year
-            agg_values[to_year] = count_to_year
-
-            agg_data = dict((k, dict(v)) for k, v in agg_values.iteritems())
-
-            return agg_data
-
-    @staticmethod
-    def aggregate_glad_values_year(data, from_year, to_year):
-        """creates a dictionay of glad years [key] and count for those years [value]/ main function for agg by year"""
-
-        from_year = SummaryService.date_to_integer(from_year=from_year)[0]
-        to_year = SummaryService.date_to_integer(to_year=to_year)[2]
-
-        agg_values = {}
-        values_2015 = []
-        values_2016 = []
-        values_2017 = []
-
-        for y in data['data']:
-            if y['year'] == 2015:
-                values_2015.append(y['julian_day'])
-            elif y['year'] == 2016:
-                values_2016.append(['julian_day'])
-            elif y['year'] == 2017:
-                values_2017.append(['julian_day'])
-
-        agg_values[2015] = len(values_2015)
-        agg_values[2016] = len(values_2016)
-        agg_values[2017] = len(values_2017)
-
-        return agg_values
-
-    @staticmethod
-    def agg_by_week_month_quarter(values, year):
-        """creates a collection from a list of glad week, month and quarter counts"""
-
-        date_values = []
-        wk_values = []
-        m_values = []
-        q_values = []
-
-        agg_values = {}
-
-        for value in values:
-            year, month, day = SummaryService.julian_day_to_date(year, value)
-            date_values.append([year, month, day])
-            m_values.append(month)
-
-        for time in date_values:
-            wk = datetime.date(time[0],time[1],time[2]).isocalendar()[1]
-            wk_values.append(wk)
-
-        for m in m_values:
-            if m in range(1, 4):
-                m = 1
-                q_values.append(m)
-            elif m in range(4, 7):
-                m = 2
-                q_values.append(m)
-            elif m in range(7, 10):
-                m = 3
-                q_values.append(m)
-            elif m in range(10, 13):
-                m = 4
-                q_values.append(m)
-
-        wk_count = collections.Counter(wk_values)
-        m_count = collections.Counter(m_values)
-        q_count = collections.Counter(q_values)
-
-        return wk_count, m_count, q_count
-
-    @staticmethod
-    def format_agg_data_week_month(values_from_year, from_year, to_year=None, values_mid_year=None, values_to_year=None):
-        """creates a dictionary of glad collections by week, month and quarter"""
-        agg_values_week = {}
-        agg_values_month = {}
-        agg_values_quarter = {}
-
-        wk_count_from_year = SummaryService.agg_by_week_month_quarter(values_from_year, from_year)[0]
-        m_count_from_year = SummaryService.agg_by_week_month_quarter(values_from_year, from_year)[1]
-        q_count_from_year = SummaryService.agg_by_week_month_quarter(values_from_year, from_year)[2]
-        if values_mid_year:
-            wk_count_mid_year = SummaryService.agg_by_week_month_quarter(values_mid_year, (from_year +1))[0]
-            m_count_mid_year = SummaryService.agg_by_week_month_quarter(values_mid_year, (from_year +1))[1]
-            q_count_mid_year = SummaryService.agg_by_week_month_quarter(values_mid_year, (from_year +1))[2]
-        if values_to_year:
-            wk_count_to_year = SummaryService.agg_by_week_month_quarter(values_to_year, to_year)[0]
-            m_count_to_year = SummaryService.agg_by_week_month_quarter(values_to_year, to_year)[1]
-            q_count_to_year = SummaryService.agg_by_week_month_quarter(values_to_year, to_year)[2]
-
-        agg_values_week[from_year] = wk_count_from_year
-        agg_values_month[from_year] = m_count_from_year
-        agg_values_quarter[from_year] = q_count_from_year
-        if values_mid_year:
-            agg_values_week[(from_year + 1)] = wk_count_mid_year
-            agg_values_month[(from_year + 1)] = m_count_mid_year
-            agg_values_quarter[(from_year + 1)] = q_count_mid_year
-        if values_to_year:
-            agg_values_week[to_year] = wk_count_to_year
-            agg_values_month[to_year] = m_count_to_year
-            agg_values_quarter[to_year] = q_count_to_year
-
-        agg_data_week = dict((k, dict(v)) for k, v in agg_values_week.iteritems())
-        agg_data_month = dict((k, dict(v)) for k, v in agg_values_month.iteritems())
-        agg_data_quarter = dict((k, dict(v)) for k, v in agg_values_quarter.iteritems())
-
-        return agg_data_week, agg_data_month, agg_data_quarter
-
-    @staticmethod
-    def aggregate_glad_values_week_month(data, from_year, from_date, to_year, to_date):
-        """main function for aggregating glad values by week, month, quarter"""
-
-        from_year, from_date, to_year, to_date = SummaryService.date_to_integer(from_year=from_year, from_date=from_date, to_year=to_year, to_date=to_date)
-
-        if from_year == to_year:
-
-            values = SummaryService.get_values(data, from_year, from_date, to_year, to_date)
-
-            agg_data_week = SummaryService.format_agg_data_week_month(values, from_year)[0]
-            agg_data_month = SummaryService.format_agg_data_week_month(values, from_year)[1]
-            agg_data_quarter = SummaryService.format_agg_data_week_month(values, from_year)[2]
-
-            return agg_data_week, agg_data_month, agg_data_quarter
-
-        elif (from_year + 1) == to_year:
-
-            values_from_year, values_to_year = SummaryService.get_values(data, from_year, from_date, to_year, to_date)
-
-            agg_data_week = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_to_year=values_to_year)[0]
-            agg_data_month = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_to_year=values_to_year)[1]
-            agg_data_quarter = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_to_year=values_to_year)[2]
-
-            return agg_data_week, agg_data_month, agg_data_quarter
-
-        else:
-
-            values_from_year, values_mid_year, values_to_year = SummaryService.get_values(data, from_year, from_date, to_year, to_date)
-
-            agg_data_week = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_mid_year=values_mid_year, values_to_year=values_to_year)[0]
-            agg_data_month = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_mid_year=values_mid_year, values_to_year=values_to_year)[1]
-            agg_data_quarter = SummaryService.format_agg_data_week_month(values_from_year, from_year, to_year=to_year, values_mid_year=values_mid_year, values_to_year=values_to_year)[2]
-
-            return agg_data_week, agg_data_month, agg_data_quarter
+        return data_format

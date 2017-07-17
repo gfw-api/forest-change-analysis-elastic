@@ -10,6 +10,7 @@ from gladanalysis.services import DateService
 from gladanalysis.services import QueryConstructorService
 from gladanalysis.services import AnalysisService
 from gladanalysis.services import ResponseService
+from gladanalysis.services import SummaryService
 from gladanalysis.responders import ErrorResponder
 from gladanalysis.validators import validate_geostore, validate_terrai_period, validate_admin, validate_use, validate_wdpa
 
@@ -18,6 +19,8 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
     indexID = '{}'.format(os.getenv('TERRAI_INDEX_ID'))
+    agg_values = request.args.get('aggregate_values', None)
+    agg_by = request.args.get('aggregate_by', None)
 
     if request.method == 'GET':
         #get parameter from query string
@@ -32,9 +35,31 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         #grab query and download sql from sql service
         sql, download_sql = QueryConstructorService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist)
 
-        #send query to terra i elastic database and standardize response
-        data = AnalysisService.make_terrai_request(sql, geostore)
-        standard_format = ResponseService.standardize_response('Terrai', data, datasetID, count="COUNT(day)", download_sql=download_sql, area=area, geostore=geostore)
+        if agg_values and agg_by:
+            data = AnalysisService.make_terrai_request(download_sql, geostore)
+            if agg_by.lower() == 'day':
+                agg_data = SummaryService.create_time_table('terrai', data, 'day')
+                standard_format = ResponseService.standardize_response('Terrai', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='day', period=period)
+            elif agg_by.lower() == 'year':
+                agg_data = SummaryService.create_time_table('terrai', data, 'year')
+                standard_format = ResponseService.standardize_response('Terrai', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='year', period=period)
+            elif agg_by.lower() == 'week':
+                agg_data = SummaryService.create_time_table('terrai', data, 'week')
+                standard_format = ResponseService.standardize_response('Terrai', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='week', period=period)
+            elif agg_by.lower() == 'month':
+                agg_data = SummaryService.create_time_table('terrai', data, 'month')
+                standard_format = ResponseService.standardize_response('Terrai', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='month', period=period)
+            elif agg_by.lower() == 'quarter':
+                agg_data = SummaryService.create_time_table('terrai', data, 'quarter')
+                standard_format = ResponseService.standardize_response('Terrai', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='quarter', period=period)
+        elif agg_values:
+            data = AnalysisService.make_terrai_request(download_sql, geostore)
+            agg_data = SummaryService.create_time_table('terrai', data, 'day')
+            standard_format = ResponseService.standardize_response('Terrai', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='day', period=period)
+        else:
+            #send query to terra i elastic database and standardize response
+            data = AnalysisService.make_terrai_request(sql, geostore)
+            standard_format = ResponseService.standardize_response('Terrai', data, datasetID, count="COUNT(day)", download_sql=download_sql, area=area, geostore=geostore)
 
     elif request.method == 'POST':
         #get parameter from payload
