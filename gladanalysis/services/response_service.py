@@ -20,9 +20,17 @@ class ResponseService(object):
         standard_format["attributes"] = {}
         if agg:
             standard_format['aggregate_values'] = True
-            years = data.keys()
-            for year in years:
-                standard_format["attributes"][year] = data[year]
+            if data == None:
+                period_from = period.split(',')[0]
+                period_to = period.split(',')[1]
+                year_from = period_from.split('-')[0]
+                year_to = period_to.split('-')[0]
+                for year in range(int(year_from), (int(year_to) + 1)):
+                    standard_format["attributes"][year] = None
+            else:
+                years = data.keys()
+                for year in years:
+                    standard_format["attributes"][year] = data[year]
         if agg_by:
             standard_format['aggregate_by'] = agg_by
         elif agg == None:
