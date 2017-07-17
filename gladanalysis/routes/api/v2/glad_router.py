@@ -57,7 +57,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
                 standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='quarter', period=period, conf=conf)
         elif agg_values:
             data = AnalysisService.make_glad_request(download_sql, geostore)
-            agg_data = SummaryService.create_time_table('glad', data, 'day')
+            agg_data = SummaryService.create_time_table('glad', data, 'julian_day')
             standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='day', period=period, conf=conf)
         else:
             data = AnalysisService.make_glad_request(sql, geostore)
