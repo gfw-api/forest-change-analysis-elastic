@@ -7,58 +7,106 @@ from flask import jsonify, request
 from . import endpoints
 from gladanalysis.services import GeostoreService
 from gladanalysis.services import DateService
-from gladanalysis.services import SqlService
+from gladanalysis.services import QueryConstructorService
 from gladanalysis.services import AnalysisService
 from gladanalysis.services import ResponseService
+from gladanalysis.services import SummaryService
 from gladanalysis.responders import ErrorResponder
 from gladanalysis.validators import validate_geostore, validate_glad_period, validate_admin, validate_use, validate_wdpa
 
-def analyze(area, geostore=None, iso=None, state=None, dist=None):
+def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=None):
     """analyze method to execute queries"""
 
-    if request.method == 'GET':
+    #set variables
+    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
+    indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
 
+    #send sql and geostore to analysis service to query elastic database
+    if request.method == 'GET':
+        #get parameters from query string
         period = request.args.get('period', None)
         conf = request.args.get('gladConfirmOnly', None)
+        agg_values = request.args.get('aggregate_values', None)
+        agg_by = request.args.get('aggregate_by', None)
 
         if not period:
             period = None
 
-        #set variables
-        datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-        indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
-
         #format period request to julian dates
-        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "julian_day")
+        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period=period, datasetID=datasetID, indexID=indexID, value="julian_day")
 
         #get sql and download sql from sql format service
-        sql, download_sql = SqlService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
+        sql, download_sql = QueryConstructorService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
 
-        #send sql and geostore to analysis service to query elastic database
-        data = AnalysisService.make_glad_request(sql, geostore)
+        if agg_values and agg_by:
+            data = AnalysisService.make_glad_request(download_sql, geostore)
+            if agg_by.lower() == 'day':
+                agg_data = SummaryService.create_time_table('glad', data, 'julian_day')
+                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='day', period=period, conf=conf)
+            elif agg_by.lower() == 'year':
+                agg_data = SummaryService.create_time_table('glad', data, 'year')
+                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='year', period=period, conf=conf)
+            elif agg_by.lower() == 'week':
+                agg_data = SummaryService.create_time_table('glad', data, 'week')
+                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='week', period=period, conf=conf)
+            elif agg_by.lower() == 'month':
+                agg_data = SummaryService.create_time_table('glad', data, 'month')
+                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='month', period=period, conf=conf)
+            elif agg_by.lower() == 'quarter':
+                agg_data = SummaryService.create_time_table('glad', data, 'quarter')
+                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='quarter', period=period, conf=conf)
+        elif agg_values:
+            data = AnalysisService.make_glad_request(download_sql, geostore)
+            agg_data = SummaryService.create_time_table('glad', data, 'julian_day')
+            standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='day', period=period, conf=conf)
+        else:
+            data = AnalysisService.make_glad_request(sql, geostore)
+            standard_format = ResponseService.standardize_response('Glad', data, datasetID, count="COUNT(julian_day)", download_sql=download_sql, area=area, geostore=geostore, period=period, conf=conf)
 
-        #standardize response
-        standard_format = ResponseService.standardize_response('Glad', data, "COUNT(julian_day)", datasetID, download_sql, area, geostore)
+    elif request.method == 'POST':
+        #get paramters from payload
+        period = request.get_json().get('period', None) if request.get_json() else None
+        conf = request.get_json().get('gladConfirmOnly', None) if request.get_json() else None
 
-        return jsonify({'data': standard_format}), 200
+        #format period request to julian dates
+        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period=period, datasetID=datasetID, indexID=indexID, value="julian_day")
+
+        #get sql and download sql from sql format service
+        sql = QueryConstructorService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
+
+        data = AnalysisService.make_glad_request_post(sql, geojson)
+        standard_format = ResponseService.standardize_response('Glad', data, datasetID, count="COUNT(julian_day)", period=period, conf=conf)
+
+    return jsonify({'data': standard_format}), 200
 
 """GLAD ENDPOINTS"""
+
 @endpoints.route('/glad-alerts', methods=['GET', 'POST'])
-@validate_geostore
 @validate_glad_period
+@validate_geostore
 
 def query_glad():
-    """analyze glad by geostore"""
-    logging.info('Query GLAD by geostore')
+    """analyze glad by geostore or geojson"""
 
-    geostore = request.args.get('geostore', None)
+    if request.method == 'GET':
+        logging.info('[ROUTER]: get glad by geosotre')
 
-    #make request to geostore to get area in hectares
-    area = GeostoreService.make_area_request(geostore)
+        geostore = request.args.get('geostore', None)
 
-    #send request
-    return analyze(area, geostore)
+        #make request to geostore to get area in hectares
+        area = GeostoreService.make_area_request(geostore)
 
+        return analyze(area=area, geostore=geostore)
+
+    elif request.method == 'POST':
+        logging.info('[ROUTER]: post geojson to glad')
+
+        geojson = request.get_json().get('geojson', None) if request.get_json() else None
+
+        return analyze(geojson=geojson)
+
+    else:
+        return error(status=405, detail="Operation not supported")
 
 @endpoints.route('/glad-alerts/admin/<iso_code>', methods=['GET'])
 @validate_glad_period
@@ -66,13 +114,13 @@ def query_glad():
 
 def glad_country(iso_code):
     """analyze glad by gadm geom"""
-    logging.info('Running country level glad analysis')
+    logging.info('[ROUTER]: Running country level glad analysis')
 
     #get area in hectares from geostore
     area = GeostoreService.make_gadm_request(iso_code)
 
     #analyze layer
-    return analyze(area, iso=iso_code)
+    return analyze(area=area, iso=iso_code)
 
 @endpoints.route('/glad-alerts/admin/<iso_code>/<admin_id>', methods=['GET'])
 @validate_glad_period
@@ -80,13 +128,13 @@ def glad_country(iso_code):
 
 def glad_admin(iso_code, admin_id):
     """analyze glad by gadm geom"""
-    logging.info('Running state level glad analysis')
+    logging.info('[ROUTER]: Running state level glad analysis')
 
     #get area in hectares from geostore
     area = GeostoreService.make_gadm_request(iso_code, admin_id)
 
     #analyze
-    return analyze(area, iso=iso_code, state=admin_id)
+    return analyze(area=area, iso=iso_code, state=admin_id)
 
 
 @endpoints.route('/glad-alerts/admin/<iso_code>/<admin_id>/<dist_id>', methods=['GET'])
@@ -95,13 +143,13 @@ def glad_admin(iso_code, admin_id):
 
 def glad_dist(iso_code, admin_id, dist_id):
     """analyze glad by gadm geom"""
-    logging.info('Running district level glad analysis')
+    logging.info('[ROUTER]: Running district level glad analysis')
 
     #get area in hectares from geostore
     area = GeostoreService.make_gadm_request(iso_code, admin_id, dist_id)
 
     #send query to glad elastic databse through analysis service
-    return analyze(area, iso=iso_code, state=admin_id, dist=dist_id)
+    return analyze(area=area, iso=iso_code, state=admin_id, dist=dist_id)
 
 @endpoints.route('/glad-alerts/use/<use_type>/<use_id>', methods=['GET'])
 @validate_use
@@ -109,12 +157,12 @@ def glad_dist(iso_code, admin_id, dist_id):
 
 def glad_use(use_type, use_id):
     """analyze glad by land use geom"""
-    logging.info('Intersecting GLAD with Land Use data')
+    logging.info('[ROUTER]: Intersecting GLAD with Land Use data')
 
     #get geostore ID and area in hectares from geostore
     geostore, area = GeostoreService.make_use_request(use_type, use_id)
 
-    return analyze(area, geostore)
+    return analyze(area=area, geostore=geostore)
 
 @endpoints.route('/glad-alerts/wdpa/<wdpa_id>', methods=['GET'])
 @validate_glad_period
@@ -122,17 +170,17 @@ def glad_use(use_type, use_id):
 
 def glad_wdpa(wdpa_id):
     """analyze glad by wdpa geom"""
-    logging.info('QUERY GLAD BY WDPA DATA')
+    logging.info('[ROUTER]: QUERY GLAD BY WDPA DATA')
 
     #Get geostore ID and area in hectares from geostore
     geostore, area = GeostoreService.make_wdpa_request(wdpa_id)
 
-    return analyze(area, geostore)
+    return analyze(area=area, geostore=geostore)
 
 @endpoints.route('/glad-alerts/date-range', methods=['GET'])
 def glad_date_range():
     """get glad date range"""
-    logging.info('Creating Glad Date Range')
+    logging.info('[ROUTER]: Creating Glad Date Range')
 
     #set dataset ID
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
@@ -150,7 +198,7 @@ def glad_date_range():
 @endpoints.route('/glad-alerts/latest', methods=['GET'])
 def glad_latest():
     """get glad latest date"""
-    logging.info('Getting latest date')
+    logging.info('[ROUTER]: Getting latest date')
 
     #set dataset ID
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))

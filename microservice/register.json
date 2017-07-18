@@ -31,6 +31,13 @@
             "path": "/api/v2/ms/glad-alerts"
         }]
     }, {
+        "url": "/v1/glad-alerts",
+        "method": "POST",
+        "endpoints": [{
+            "method": "POST",
+            "path": "/api/v2/ms/glad-alerts"
+        }]
+    }, {
 	       "url": "/v1/terrai-alerts/admin/:iso_code/:admin_id",
 	       "method": "GET",
 	       "endpoints": [{
@@ -106,6 +113,13 @@
 	       "endpoints": [{
 	           "method": "GET",
 	           "path": "/api/v2/ms/terrai-alerts/latest"
+	        }]
+		}, {
+	       "url": "/v1/terrai-alerts",
+	       "method": "POST",
+	       "endpoints": [{
+	           "method": "POST",
+	           "path": "/api/v2/ms/terrai-alerts"
 	        }]
 		}, {
 	       "url": "/v1/terrai-alerts",

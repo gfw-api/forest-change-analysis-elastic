@@ -36,8 +36,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -52,7 +52,7 @@
             "200": {
               "description": "Alerts obtained successfully",
               "schema": {
-                "$ref": "#/definitions/Response200"
+                "$ref": "#/definitions/GladandTerraIAPI"
               }
             },
             "404": {
@@ -90,8 +90,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -151,8 +151,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -219,8 +219,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -294,7 +294,7 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
               "required": true,
               "type": "string"
             },
@@ -362,8 +362,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -423,7 +423,39 @@
             "200": {
               "description": "Dates obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladandTerraIAPI"
+                "$ref": "#/definitions/DateCalls"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/glad-alerts/latest": {
+        "get": {
+          "description": "Retrieves latest (or max) date of GLAD",
+          "operationId": "getGladDate",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "GLAD"
+          ],
+          "responses": {
+            "200": {
+              "description": "Dates obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/LatestCalls"
               }
             },
             "404": {
@@ -462,8 +494,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             }
           ],
@@ -509,8 +541,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -563,8 +595,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -624,8 +656,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -692,8 +724,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -753,8 +785,8 @@
             {
               "name": "period",
               "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD```",
-              "required": true,
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
               "type": "string"
             },
             {
@@ -807,7 +839,39 @@
             "200": {
               "description": "Dates obtained successfully",
               "schema": {
-                "$ref": "#/definitions/GladandTerraIAPI"
+                "$ref": "#/definitions/DateCalls"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
+        }
+      },
+      "/terrai-alerts/latest": {
+        "get": {
+          "description": "Retrieves latest (or max) date of Terra I",
+          "operationId": "getTerraiDate",
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "TERRAI"
+          ],
+          "responses": {
+            "200": {
+              "description": "Date obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/DateCalls"
               }
             },
             "404": {
@@ -897,7 +961,7 @@
                   "type": "object",
                   "properties": {
                       "data": {
-                          "type": "array",
+                          "type": "Hash",
                           "items": {
                               "$ref": "#/definitions/Result"
                           }
@@ -946,7 +1010,91 @@
                             "type": "string",
                             "description": "download link to access data as json"
                           }
+                      }
+                  }
+              },
+              "DateCalls": {
+                  "type": "object",
+                  "properties": {
+                      "data": {
+                          "type": "Hash",
+                          "items": {
+                              "$ref": "#/definitions/DateResult"
+                              }
+                         }
+                    }
+              },
+              "DateResult": {
+                  "type": "object",
+                  "properties": {
+                      "type": {
+                          "type": "string",
+                          "description": "Dataset Name"
+                      },
+                      "id": {
+                          "type": "string",
+                          "description": "Dataset ID"
+                      },
+                      "attributes": {
+                          "properties": {
+                              "schema": {
+                                  "$ref": "#/definitions/DateData"
+                                }
+                            }
                         }
+                    }
+              },
+              "DateData": {
+                  "type": "object",
+                  "properties": {
+                      "maxDate": {
+                          "type": "string",
+                          "description": "Max date in dataset"
+                      },
+                      "minDate": {
+                          "type": "integer",
+                          "description": "Min date in dataset"
+                      }
+                    }
+                 }
+              },
+              "LatestCalls": {
+                  "type": "object",
+                  "properties": {
+                      "data": {
+                          "type": "Hash",
+                          "items": {
+                              "$ref": "#/definitions/DateResult"
+                              }
+                          }
+                    }
+              },
+              "LatestResult": {
+                  "type": "object",
+                  "properties": {
+                      "type": {
+                          "type": "string",
+                          "description": "Dataset Name"
+                      },
+                      "id": {
+                          "type": "string",
+                          "description": "Dataset ID"
+                      },
+                      "attributes": {
+                          "properties": {
+                              "schema": {
+                                  "$ref": "#/definitions/LatestData"
+                                }
+                            }
+                        }
+                  }
+              },
+              "LatestData": {
+                  "type": "object",
+                  "properties": {
+                      "date": {
+                          "type": "string",
+                          "description": "Latest (or Max) date in dataset"
                       }
                     }
                   }

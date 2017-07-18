@@ -4,7 +4,7 @@ class ResponseService(object):
     """Class for standardizing api responses"""
 
     @staticmethod
-    def standardize_response(name, data, count, datasetID, download_sql, area, geostore=None):
+    def standardize_response(name, data, datasetID, count=None, download_sql=None, area=None, geostore=None, agg=None, agg_by=None, period=None, conf=None):
         #Helper function to standardize API responses
         standard_format = {}
         if name == 'Glad':
@@ -13,15 +13,38 @@ class ResponseService(object):
         elif name == 'Terrai':
             standard_format["type"] = "terrai-alerts"
             standard_format["id"] = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
+        if period:
+            standard_format['period'] = period
+        if conf:
+            standard_format['gladConfirmOnly'] = conf
         standard_format["attributes"] = {}
-        standard_format["attributes"]["value"] = data["data"][0][count]
-        standard_format["attributes"]["downloadUrls"] = {}
-        standard_format["attributes"]["downloadUrls"]["csv"] = "/download/" + datasetID + download_sql + "&format=csv"
-        standard_format["attributes"]["downloadUrls"]["json"] = "/download/" + datasetID + download_sql + "&format=json"
+        if agg:
+            standard_format['aggregate_values'] = True
+            if data == None:
+                period_from = period.split(',')[0]
+                period_to = period.split(',')[1]
+                year_from = period_from.split('-')[0]
+                year_to = period_to.split('-')[0]
+                for year in range(int(year_from), (int(year_to) + 1)):
+                    standard_format["attributes"][year] = None
+            else:
+                years = data.keys()
+                for year in years:
+                    standard_format["attributes"][year] = data[year]
+        if agg_by:
+            standard_format['aggregate_by'] = agg_by
+        elif agg == None:
+            standard_format["attributes"]["value"] = data["data"][0][count]
+        if download_sql:
+            standard_format["attributes"]["downloadUrls"] = {}
+            standard_format["attributes"]["downloadUrls"]["csv"] = "/download/" + datasetID + download_sql + "&format=csv"
+            standard_format["attributes"]["downloadUrls"]["json"] = "/download/" + datasetID + download_sql + "&format=json"
         if geostore:
+            standard_format["geostore"] = geostore
             standard_format["attributes"]["downloadUrls"]["csv"] += "&geostore=" + geostore
             standard_format["attributes"]["downloadUrls"]["json"] += "&geostore=" + geostore
-        standard_format['attributes']["areaHa"] = area
+        if area:
+            standard_format['attributes']["areaHa"] = area
 
         return standard_format
 

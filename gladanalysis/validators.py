@@ -13,7 +13,10 @@ def validate_geostore(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
 
-        geostore = request.args.get('geostore')
+        if request.method == 'GET':
+            geostore = request.args.get('geostore')
+        elif request.method == 'POST':
+            geostore = request.get_json().get('geojson', None) if request.get_json() else None
 
         if not geostore:
             return error(status=400, detail="Geostore must be set")
@@ -25,33 +28,41 @@ def validate_glad_period(func):
     """validate period argument"""
     @wraps(func)
     def wrapper(*args, **kwargs):
-        period = request.args.get('period')
 
-        if not period:
-            period = None
-            # return error(status=400, detail="Time period must be set")
+        if request.method == 'GET':
+            period = request.args.get('period')
 
-        elif len(period.split(',')) < 2:
-            return error(status=400, detail="Period needs 2 arguments")
+            if not period:
+                period = None
 
-        else:
-            period_from = period.split(',')[0]
-            period_to = period.split(',')[1]
+        elif request.method == 'POST':
+            period = request.get_json().get('period', None) if request.get_json() else None
 
-            try:
-                datetime.datetime.strptime(period_from, '%Y-%m-%d')
-            except ValueError:
-                return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+            if not period:
+                period = None
 
-            try:
-                datetime.datetime.strptime(period_to, '%Y-%m-%d')
-            except ValueError:
-                return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+        if period:
+            if len(period.split(',')) < 2:
+                return error(status=400, detail="Period needs 2 arguments")
 
-            if int(period_from.split('-')[0]) < 2015:
-                return error(status=400, detail="start date can't be earlier than 2015-01-01")
-            elif int(period_to.split('-')[0]) > 2017:
-                return error(status=400, detail="end year can't be later than 2017")
+            else:
+                period_from = period.split(',')[0]
+                period_to = period.split(',')[1]
+
+                try:
+                    datetime.datetime.strptime(period_from, '%Y-%m-%d')
+                except ValueError:
+                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+
+                try:
+                    datetime.datetime.strptime(period_to, '%Y-%m-%d')
+                except ValueError:
+                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+
+                if int(period_from.split('-')[0]) < 2015:
+                    return error(status=400, detail="start date can't be earlier than 2015-01-01")
+                elif int(period_to.split('-')[0]) > 2017:
+                    return error(status=400, detail="end year can't be later than 2017")
 
         return func(*args, **kwargs)
     return wrapper
@@ -60,32 +71,41 @@ def validate_terrai_period(func):
     """validate period argument"""
     @wraps(func)
     def wrapper(*args, **kwargs):
-        period = request.args.get('period')
 
-        if not period:
-            period = None
+        if request.method == 'GET':
+            period = request.args.get('period')
 
-        elif len(period.split(',')) < 2:
-            return error(status=400, detail="Period needs 2 arguments")
+            if not period:
+                period = None
 
-        else:
-            period_from = period.split(',')[0]
-            period_to = period.split(',')[1]
+        elif request.method == 'POST':
+            period = request.get_json().get('period', None) if request.get_json() else None
 
-            try:
-                datetime.datetime.strptime(period_from, '%Y-%m-%d')
-            except ValueError:
-                return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+            if not period:
+                period = None
 
-            try:
-                datetime.datetime.strptime(period_to, '%Y-%m-%d')
-            except ValueError:
-                return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+        if period:
+            if len(period.split(',')) < 2:
+                return error(status=400, detail="Period needs 2 arguments")
 
-            if int(period_from.split('-')[0]) < 2004:
-                return error(status=400, detail="start date can't be earlier than 2004-01-01")
-            elif int(period_to.split('-')[0]) > 2017:
-                return error(status=400, detail="end year can't be later than 2017")
+            else:
+                period_from = period.split(',')[0]
+                period_to = period.split(',')[1]
+
+                try:
+                    datetime.datetime.strptime(period_from, '%Y-%m-%d')
+                except ValueError:
+                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+
+                try:
+                    datetime.datetime.strptime(period_to, '%Y-%m-%d')
+                except ValueError:
+                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
+
+                if int(period_from.split('-')[0]) < 2004:
+                    return error(status=400, detail="start date can't be earlier than 2004-01-01")
+                elif int(period_to.split('-')[0]) > 2017:
+                    return error(status=400, detail="end year can't be later than 2017")
 
         return func(*args, **kwargs)
     return wrapper
