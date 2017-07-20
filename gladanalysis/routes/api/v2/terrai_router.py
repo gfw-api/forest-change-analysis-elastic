@@ -15,7 +15,17 @@ from gladanalysis.responders import ErrorResponder
 from gladanalysis.validators import validate_geostore, validate_terrai_period, validate_admin, validate_use, validate_wdpa
 
 def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=None):
-    """analyze method to execute Queries"""
+    """Analyze method to execute queries
+    This is designed to format the dates of the request, create the sql and download sql queries from
+    the dates, retrieve the data from the queries and send the data to a formatter service to format
+    the API response.
+    :param area: the area of the request retrieved by the geostore
+    :param geostore: the geostore id of the request
+    :param iso: the country iso if specified
+    :param dist: the district ID based on gadm
+    :param state: the state ID based on gadm
+    :param geojson: the geojson inlcuded in the body (if post request)
+    :return: returns the response of the API request formatted by the format service"""
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
     indexID = '{}'.format(os.getenv('TERRAI_INDEX_ID'))

@@ -6,7 +6,8 @@ import calendar
 from CTRegisterMicroserviceFlask import request_to_microservice
 
 class DateService(object):
-    """Class for formatting dates"""
+    """Class for formatting dates
+    Contains a number of methods for converting the period param to useful formats"""
 
     @staticmethod
     def date_to_julian_day(period=None, datasetID=None, indexID=None, value=None):

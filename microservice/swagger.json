@@ -1039,7 +1039,7 @@
             "200": {
               "description": "Date obtained successfully",
               "schema": {
-                "$ref": "#/definitions/DateCalls"
+                "$ref": "#/definitions/LatestCalls"
               }
             },
             "404": {
@@ -1064,7 +1064,7 @@
           "description": "Errors",
           "properties": {
               "errors": {
-                  "type": "array",
+                  "type": "object",
                   "items": {
                       "$ref": "#/definitions/Error"
                     }
@@ -1129,7 +1129,7 @@
                   "type": "object",
                   "properties": {
                       "data": {
-                          "type": "array",
+                          "type": "object",
                           "items": {
                               "$ref": "#/definitions/Result"
                           }
@@ -1197,7 +1197,7 @@
                   "type": "object",
                   "properties": {
                       "data": {
-                          "type": "array",
+                          "type": "object",
                           "items": {
                               "$ref": "#/definitions/DateResult"
                               }
@@ -1244,7 +1244,7 @@
                       "data": {
                           "type": "array",
                           "items": {
-                              "$ref": "#/definitions/DateResult"
+                              "$ref": "#/definitions/LatestResult"
                               }
                           }
                     }
