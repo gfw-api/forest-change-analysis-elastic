@@ -1064,7 +1064,7 @@
           "description": "Errors",
           "properties": {
               "errors": {
-                  "type": "object",
+                  "type": "array",
                   "items": {
                       "$ref": "#/definitions/Error"
                     }
@@ -1129,7 +1129,7 @@
                   "type": "object",
                   "properties": {
                       "data": {
-                          "type": "object",
+                          "type": "array",
                           "items": {
                               "$ref": "#/definitions/Result"
                           }
@@ -1197,7 +1197,7 @@
                   "type": "object",
                   "properties": {
                       "data": {
-                          "type": "object",
+                          "type": "array",
                           "items": {
                               "$ref": "#/definitions/DateResult"
                               }
