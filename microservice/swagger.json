@@ -46,6 +46,20 @@
               "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
               "required": false,
               "type": "string"
+            },
+            {
+              "name": "aggregate_values",
+              "in": "query",
+              "description": "aggregate values by date, defaults to julian_day aggregation",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "aggregate_by",
+              "in": "query",
+              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+              "required": false,
+              "type": "string"
             }
           ],
           "responses": {
@@ -105,6 +119,20 @@
               "name": "gladConfirmOnly",
               "in": "query",
               "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "aggregate_values",
+              "in": "query",
+              "description": "aggregate values by date, defaults to julian_day aggregation",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "aggregate_by",
+              "in": "query",
+              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
               "required": false,
               "type": "string"
             }
@@ -173,6 +201,20 @@
               "name": "gladConfirmOnly",
               "in": "query",
               "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "aggregate_values",
+              "in": "query",
+              "description": "aggregate values by date, defaults to julian_day aggregation",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "aggregate_by",
+              "in": "query",
+              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
               "required": false,
               "type": "string"
             }
@@ -250,6 +292,20 @@
               "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
               "required": false,
               "type": "string"
+            },
+            {
+              "name": "aggregate_values",
+              "in": "query",
+              "description": "aggregate values by date, defaults to julian_day aggregation",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "aggregate_by",
+              "in": "query",
+              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+              "required": false,
+              "type": "string"
             }
           ],
           "responses": {
@@ -318,6 +374,20 @@
               "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
               "required": false,
               "type": "string"
+            },
+            {
+              "name": "aggregate_values",
+              "in": "query",
+              "description": "aggregate values by date, defaults to julian_day aggregation",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "aggregate_by",
+              "in": "query",
+              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+              "required": false,
+              "type": "string"
             }
           ],
           "responses": {
@@ -377,6 +447,20 @@
               "name": "gladConfirmOnly",
               "in": "query",
               "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "aggregate_values",
+              "in": "query",
+              "description": "aggregate values by date, defaults to julian_day aggregation",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "aggregate_by",
+              "in": "query",
+              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
               "required": false,
               "type": "string"
             }
@@ -497,6 +581,20 @@
               "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
               "required": false,
               "type": "string"
+            },
+            {
+              "name": "aggregate_values",
+              "in": "query",
+              "description": "aggregate values by date, defaults to julian_day aggregation",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "aggregate_by",
+              "in": "query",
+              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+              "required": false,
+              "type": "string"
             }
           ],
           "responses": {
@@ -550,6 +648,20 @@
               "in": "path",
               "description": "A Country's 3-letter ISO code\n```BRA```",
               "required": true,
+              "type": "string"
+            },
+            {
+              "name": "aggregate_values",
+              "in": "query",
+              "description": "aggregate values by date, defaults to julian_day aggregation",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "aggregate_by",
+              "in": "query",
+              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+              "required": false,
               "type": "string"
             }
           ],
@@ -612,6 +724,20 @@
               "description": "Admin 1 region code based on GADM 2\n```2```",
               "required": true,
               "type": "integer"
+            },
+            {
+              "name": "aggregate_values",
+              "in": "query",
+              "description": "aggregate values by date, defaults to julian_day aggregation",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "aggregate_by",
+              "in": "query",
+              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+              "required": false,
+              "type": "string"
             }
           ],
           "responses": {
@@ -680,6 +806,20 @@
               "description": "Admin 2 region code based on GADM 2\n```2```",
               "required": true,
               "type": "integer"
+            },
+            {
+              "name": "aggregate_values",
+              "in": "query",
+              "description": "aggregate values by date, defaults to julian_day aggregation",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "aggregate_by",
+              "in": "query",
+              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+              "required": false,
+              "type": "string"
             }
           ],
           "responses": {
@@ -741,6 +881,20 @@
               "description": "Numeric id for a feature within a land use dataset\n```100```",
               "required": true,
               "type": "integer"
+            },
+            {
+              "name": "aggregate_values",
+              "in": "query",
+              "description": "aggregate values by date, defaults to julian_day aggregation",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "aggregate_by",
+              "in": "query",
+              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+              "required": false,
+              "type": "string"
             }
           ],
           "responses": {
@@ -795,6 +949,20 @@
               "description": "The numeric ID for a feature within the WDPA dataset\n```56670``",
               "required": true,
               "type": "integer"
+            },
+            {
+              "name": "aggregate_values",
+              "in": "query",
+              "description": "aggregate values by date, defaults to julian_day aggregation",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "aggregate_by",
+              "in": "query",
+              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+              "required": false,
+              "type": "string"
             }
           ],
           "responses": {
@@ -961,7 +1129,7 @@
                   "type": "object",
                   "properties": {
                       "data": {
-                          "type": "Hash",
+                          "type": "array",
                           "items": {
                               "$ref": "#/definitions/Result"
                           }
@@ -978,6 +1146,18 @@
                       "id": {
                           "type": "string",
                           "description": "Dataset ID"
+                      },
+                      "aggregate_values": {
+                          "type": "string",
+                          "description": "aggregate values true"
+                      },
+                      "aggregate_by": {
+                          "type": "string",
+                          "description": "aggregation type (day, week, etc...)"
+                      },
+                      "geostore": {
+                          "type": "string",
+                          "description": "geostore ID"
                       },
                       "attributes": {
                           "properties": {
@@ -1017,7 +1197,7 @@
                   "type": "object",
                   "properties": {
                       "data": {
-                          "type": "Hash",
+                          "type": "array",
                           "items": {
                               "$ref": "#/definitions/DateResult"
                               }
@@ -1062,7 +1242,7 @@
                   "type": "object",
                   "properties": {
                       "data": {
-                          "type": "Hash",
+                          "type": "array",
                           "items": {
                               "$ref": "#/definitions/DateResult"
                               }
