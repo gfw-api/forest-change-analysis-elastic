@@ -88,6 +88,56 @@
               }
             }
           }
+        },
+        "post":{
+          "description": "Retrieves total number of GLAD alerts for a GeoJson",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "GLAD"
+          ],
+          "operationId": "GladGeojson",
+          "parameters": [
+            {
+              "name": "GeoJson",
+              "in": "body",
+              "description": "A GeoJson polygon feature",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "period",
+              "in": "query",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "gladConfirmOnly",
+              "in": "query",
+              "description": "Filter for confirmed alerts only\n```&gladConfirmOnly=true```",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "aggregate_values",
+              "in": "query",
+              "description": "aggregate values by date, defaults to julian_day aggregation",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "aggregate_by",
+              "in": "query",
+              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+              "required": false,
+              "type": "string"
+            }
+          ]
         }
       },
       "/glad-alerts/admin/{country_iso}": {
@@ -623,6 +673,49 @@
               }
             }
           }
+        },
+        "post":{
+          "description": "Retrieves total number of GLAD alerts for a GeoJson",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/vnd.api+json"
+          ],
+          "tags": [
+            "Terrai"
+          ],
+          "operationId": "GladGeojson",
+          "parameters": [
+            {
+              "name": "GeoJson",
+              "in": "body",
+              "description": "A GeoJson polygon feature",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "period",
+              "in": "query",
+              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "aggregate_values",
+              "in": "query",
+              "description": "aggregate values by date, defaults to julian_day aggregation",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "aggregate_by",
+              "in": "query",
+              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+              "required": false,
+              "type": "string"
+            }
+          ]
         }
       },
       "/terrai-alerts/admin/{country_iso}": {
