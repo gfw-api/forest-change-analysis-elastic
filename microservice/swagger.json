@@ -137,7 +137,33 @@
               "required": false,
               "type": "string"
             }
-          ]
+          ],
+          "responses": {
+            "200": {
+              "description": "Alerts obtained successfully",
+              "schema": {
+                "$ref": "#/definitions/GladandTerraIAPI"
+              }
+            },
+            "404": {
+              "description": "endpoint not found",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            },
+            "400": {
+              "description": "parameter not set correctly",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Errors"
+              }
+            }
+          }
         }
       },
       "/glad-alerts/admin/{country_iso}": {

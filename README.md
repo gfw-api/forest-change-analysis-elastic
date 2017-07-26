@@ -9,4 +9,5 @@ Query the GLAD and Terra I forest loss datasets with the [Global Forest Watch (G
 
 # Documentation
 
-For complete documentation, please visit our [API documentation page](https://production-api.globalforestwatch.org/documentation/#)
+For complete documentation, please visit our [API documentation page for GLAD](https://production-api.globalforestwatch.org/documentation/#/?tags=GLAD) and our
+[API documentation page for TerraI](https://production-api.globalforestwatch.org/documentation/#/?tags=TERRAI)
