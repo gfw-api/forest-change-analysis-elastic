@@ -4,4 +4,4 @@ base:
     - "62000:62000"
   environment:
     PORT: 62000
-  container_name: glad-sql-analysis
+  container_name: forest-change-analysis-elastic

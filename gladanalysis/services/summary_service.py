@@ -4,7 +4,8 @@ import calendar
 import pandas as pd
 
 class SummaryService(object):
-    """Class for creating summary stats on glad data"""
+    """Class for creating summary stats on glad data
+    Takes data from the router and aggregates alerts by user specified intervals (day, week, month, year)"""
 
     @staticmethod
     def create_time_table(dataset, data, agg_type):

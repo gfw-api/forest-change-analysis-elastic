@@ -5,7 +5,7 @@ settings={
         'level': 'DEBUG'
     },
     'service': {
-        'name': 'glad-sql-analysis',
+        'name': 'forest-change-analysis-elastic',
         'uri': 'http://172.30.2.76:62000',
         'port': 62000
     }

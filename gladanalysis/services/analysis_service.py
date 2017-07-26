@@ -5,7 +5,9 @@ import logging
 from CTRegisterMicroserviceFlask import request_to_microservice
 
 class AnalysisService(object):
-    """Class for sending queries to databases and capturing response"""
+    """Class for sending queries to databases and capturing response
+    Methods take sql and geostore or geojson arguments, which are used to query the
+    elastic search database and return a response in json"""
 
     @staticmethod
     def make_glad_request(sql, geostore=None):
