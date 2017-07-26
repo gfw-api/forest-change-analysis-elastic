@@ -4,7 +4,7 @@ develop:
     service: base
   ports:
     - "62000:62000"
-  container_name: glad-sql-analysis
+  container_name: forest-change-analysis-elastic
   environment:
     ENVIRONMENT: staging
     API_VERSION: v1
@@ -18,5 +18,5 @@ develop:
     GLAD_DATASET_ID: f1dd79c3-e6d4-4d8c-b164-b4bd66f311ee
   command: develop
   volumes:
-    - ./gladanalysis:/opt/glad-sql-analysis/gladanalysis
+    - ./gladanalysis:/opt/forest-change-analysis-elastic/gladanalysis
   restart: always

@@ -1,5 +1,5 @@
 prod:
-  image: vizzuality/glad-sql-analysis:0.0.1${STAGING}
+  image: vizzuality/forest-change-analysis-elastic:0.0.1${STAGING}
   ports:
     - "62000"
   env_file:
@@ -10,4 +10,4 @@ prod:
   log_driver: "syslog"
   log_opt:
       syslog-address: ${SYSLOG_ADDRESS}
-      tag: glad-sql-analysis${STAGING}
+      tag: forest-change-analysis-elastic${STAGING}

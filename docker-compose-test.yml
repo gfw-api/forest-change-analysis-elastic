@@ -2,7 +2,7 @@ develop:
   extends:
     file: base.yml
     service: base
-  container_name: glad-sql-analysis
+  container_name: forest-change-analysis-elastic
   environment:
     DEBUG: "True"
   command: test
