@@ -34,7 +34,7 @@ def create_application():
         name = 'ms',
         info = info,
         swagger = swagger,
-        mode = CTRegisterMicroserviceFlask.AUTOREGISTER_MODE if os.getenv('ENVIRONMENT') == 'staging' else CTRegisterMicroserviceFlask.NORMAL_MODE,
+        mode=CTRegisterMicroserviceFlask.AUTOREGISTER_MODE if os.getenv('CT_REGISTER_MODE') and os.getenv('CT_REGISTER_MODE') == 'auto' else CTRegisterMicroserviceFlask.NORMAL_MODE,
         ct_url = os.getenv('CT_URL'),
         url = os.getenv('LOCAL_URL')
     )

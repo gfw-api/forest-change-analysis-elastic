@@ -5,3 +5,12 @@
 *.log
 .DS_STORE
 *.out
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml

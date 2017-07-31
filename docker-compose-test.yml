@@ -2,7 +2,8 @@ develop:
   extends:
     file: base.yml
     service: base
-  container_name: forest-change-analysis-elastic
+  container_name: forest-change-analysis-elastic-test
   environment:
+    LOCAL_URL: http://192.168.80.200:62000
     DEBUG: "True"
   command: test
