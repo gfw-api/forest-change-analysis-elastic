@@ -16,7 +16,7 @@ def geostore_mock(url, request):
 @urlmatch(path=r'.*/query.*')
 def query_mock(url, request):
     headers = {'content-type': 'application/json'}
-    content = content = {"data": [{"MAX(year)": 123, "MAX(julian_day)": 123, "MIN(year)": 123, "MIN(julian_day)": 123, "COUNT(julian_day)": 123}]}
+    content = {"data": [{"MAX(year)": 123, "MAX(julian_day)": 123, "MIN(year)": 123, "MIN(julian_day)": 123, "COUNT(julian_day)": 123}]}
     return response(200, content, headers, None, 5, request)
 
 class GladTest(unittest.TestCase):
