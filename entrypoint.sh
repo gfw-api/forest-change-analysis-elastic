@@ -7,7 +7,8 @@ case "$1" in
         exec python main.py
         ;;
     test)
-        echo "Test (not yet)"
+        echo "Test"
+        exec python test.py
         ;;
     start)
         echo "Running Start"

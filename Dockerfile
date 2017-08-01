@@ -1,5 +1,5 @@
 FROM python:2.7-alpine
-MAINTAINER Sergio Gordillo sergio.gordillo@vizzuality.com
+MAINTAINER Asa Strong astrong@wri.org
 
 ENV NAME forest-change-analysis-elastic
 ENV USER microservice
@@ -20,6 +20,7 @@ RUN cd /opt/$NAME && pip install -r requirements.txt
 
 COPY entrypoint.sh /opt/$NAME/entrypoint.sh
 COPY main.py /opt/$NAME/main.py
+COPY test.py /opt/$NAME/test.py
 COPY gunicorn.py /opt/$NAME/gunicorn.py
 
 # Copy the application folder inside the container
@@ -27,7 +28,6 @@ WORKDIR /opt/$NAME
 
 COPY ./gladanalysis /opt/$NAME/gladanalysis
 COPY ./microservice /opt/$NAME/microservice
-COPY ./tests /opt/$NAME/tests
 RUN chown $USER:$USER /opt/$NAME
 
 # Tell Docker we are going to use this ports

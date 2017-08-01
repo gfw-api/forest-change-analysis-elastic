@@ -4,8 +4,9 @@ develop:
     service: base
   ports:
     - "62000:62000"
-  container_name: forest-change-analysis-elastic
+  container_name: forest-change-analysis-elastic-develop
   environment:
+    CT_REGISTER_MODE: auto
     ENVIRONMENT: staging
     API_VERSION: v1
     DEBUG: "True"
