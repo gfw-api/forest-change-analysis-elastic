@@ -10,11 +10,11 @@ Query the GLAD and Terra I forest loss datasets with the [Global Forest Watch (G
 - Summarize analysis results by day, week, month, quarter or year
 - Get dataset date range/ latest date
 
-# API Endpoints
+## API Endpoints
 For endpoint documentation, please visit our [API documentation page for GLAD](https://production-api.globalforestwatch.org/documentation/#/?tags=GLAD) and our
 [API documentation page for TerraI](https://production-api.globalforestwatch.org/documentation/#/?tags=TERRAI)
 
-## Getting Started
+# Getting Started
 Perform the following steps:
 * [Install docker](https://docs.docker.com/engine/installation/)
 * [Install control tower](https://github.com/control-tower/control-tower)
@@ -36,7 +36,7 @@ Testing API endpoints
 ./gladanalysis.sh test
 ```
 
-# Config
+## Config
 
 ## register.json
 This is the configuration file for the rest endpoints in the microservice. This json connects to the API Gateway. It contains variables such as:
