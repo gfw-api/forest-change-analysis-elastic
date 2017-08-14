@@ -36,8 +36,8 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         #get parameters from query string
         period = request.args.get('period', None)
         conf = request.args.get('gladConfirmOnly', None)
-        agg_values = request.args.get('aggregate_values', None)
-        agg_by = request.args.get('aggregate_by', None)
+        agg_values = True if request.args.get('aggregate_values') == 'True' else False
+        agg_by = True if request.args.get('aggregate_by') == 'True' else False
 
         if not period:
             period = None

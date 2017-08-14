@@ -29,8 +29,8 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
 
     datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
     indexID = '{}'.format(os.getenv('TERRAI_INDEX_ID'))
-    agg_values = request.args.get('aggregate_values', None)
-    agg_by = request.args.get('aggregate_by', None)
+    agg_values = True if request.args.get('aggregate_values') == 'True' else False
+    agg_by = True if request.args.get('aggregate_by') == 'True' else False
 
     if request.method == 'GET':
         #get parameter from query string
