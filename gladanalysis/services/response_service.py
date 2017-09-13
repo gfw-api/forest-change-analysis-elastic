@@ -38,7 +38,7 @@ class ResponseService(object):
         if agg_by:
             standard_format['aggregate_by'] = agg_by
         else:
-            standard_format["attributes"]["value"] = data["data"][0]['COUNT(julian_day)']
+            standard_format["attributes"]["value"] = data["data"][0].values()[0]
 
         if download_sql:
             standard_format["attributes"]["downloadUrls"] = {}
