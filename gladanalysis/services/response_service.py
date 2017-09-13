@@ -1,4 +1,5 @@
 import os
+import logging
 
 class ResponseService(object):
     """Class for standardizing api responses"""
@@ -31,10 +32,14 @@ class ResponseService(object):
                 years = data.keys()
                 for year in years:
                     standard_format["attributes"][year] = data[year]
+
+        logging.info("this is data:")
+        logging.info(data)
         if agg_by:
             standard_format['aggregate_by'] = agg_by
-        elif agg == None:
-            standard_format["attributes"]["value"] = data["data"][0][count]
+        else:
+            standard_format["attributes"]["value"] = data["data"][0]['COUNT(julian_day)']
+
         if download_sql:
             standard_format["attributes"]["downloadUrls"] = {}
             standard_format["attributes"]["downloadUrls"]["csv"] = "/download/" + datasetID + download_sql + "&format=csv"
