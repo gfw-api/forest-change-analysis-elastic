@@ -24,6 +24,39 @@ def validate_geostore(func):
         return func(*args, **kwargs)
     return wrapper
 
+def validate_agg(func):
+    """validate aggregate_by argument"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+
+        if request.method == 'GET':
+            agg_by = request.args.get('aggregate_by')
+            agg_values = request.args.get('aggregate_values')
+        elif request.method == 'POST':
+            agg_by = request.get_json().get('aggregate_by', None) if request.get_json() else None
+            agg_values = request.get_json().get('aggregate_values', None) if request.get_json() else None
+
+        if agg_values:
+            if agg_values.lower() not in ['true', 'false']:
+                return error(status=400, detail="aggregate_values parameter not "
+                             "must be either true or false")
+
+            agg_values = eval(agg_values.title())
+
+        if agg_values and agg_by:
+            agg_list = ['day', 'week', 'quarter', 'month', 'year', 'julian_day']
+
+            if agg_by.lower() not in agg_list:
+                return error(status=400, detail="aggregate_by parameter not "
+                             "in: {}".format(agg_list))
+
+        if agg_by and not agg_values:
+            return error(status=400, detail="aggregate_values parameter must be "
+                                            "true in order to aggregate data")
+
+        return func(*args, **kwargs)
+    return wrapper
+
 def validate_glad_period(func):
     """validate period argument"""
     @wraps(func)

@@ -26,7 +26,7 @@ class ResponseService(object):
                 year_from = period_from.split('-')[0]
                 year_to = period_to.split('-')[0]
                 for year in range(int(year_from), (int(year_to) + 1)):
-                    standard_format["attributes"][year] = None
+                    standard_format["attributes"][year] = 0
             else:
                 years = data.keys()
                 for year in years:

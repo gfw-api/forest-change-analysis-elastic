@@ -11,8 +11,7 @@ from gladanalysis.services import QueryConstructorService
 from gladanalysis.services import AnalysisService
 from gladanalysis.services import ResponseService
 from gladanalysis.services import SummaryService
-from gladanalysis.responders import ErrorResponder
-from gladanalysis.validators import validate_geostore, validate_glad_period, validate_admin, validate_use, validate_wdpa
+from gladanalysis.validators import validate_geostore, validate_glad_period, validate_agg, validate_admin, validate_use, validate_wdpa
 
 def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=None):
     """Analyze method to execute queries
@@ -31,16 +30,15 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
     datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
     indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
 
+    today = datetime.datetime.today().strftime('%Y-%m-%d')
+
     #send sql and geostore to analysis service to query elastic database
     if request.method == 'GET':
         #get parameters from query string
-        period = request.args.get('period', None)
-        conf = request.args.get('gladConfirmOnly', None)
-        agg_values = True if request.args.get('aggregate_values') == 'True' else False
-        agg_by = True if request.args.get('aggregate_by') == 'True' else False
-
-        if not period:
-            period = None
+        period = request.args.get('period', '2015-01-01,{}'.format(today))
+        conf = request.args.get('gladConfirmOnly', False)
+        agg_values = request.args.get('aggregate_values', False)
+        agg_by = request.args.get('aggregate_by', None)
 
         #format period request to julian dates
         from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period=period, datasetID=datasetID, indexID=indexID, value="julian_day")
@@ -48,30 +46,30 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         #get sql and download sql from sql format service
         sql, download_sql = QueryConstructorService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
 
-        if agg_values and agg_by:
+        kwargs = {'download_sql': download_sql,
+                  'area': area,
+                  'geostore': geostore,
+                  'agg': agg_values,
+                  'period': period,
+                  'conf': conf}
+
+        if agg_values:
+
+            if not agg_by or agg_by == 'day':
+                agg_by = 'julian_day'
+
+            # add agg_by to kwargs
+            kwargs['agg_by'] = agg_by
+
             data = AnalysisService.make_glad_request(download_sql, geostore)
-            if agg_by.lower() == 'day':
-                agg_data = SummaryService.create_time_table('glad', data, 'julian_day')
-                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='day', period=period, conf=conf)
-            elif agg_by.lower() == 'year':
-                agg_data = SummaryService.create_time_table('glad', data, 'year')
-                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='year', period=period, conf=conf)
-            elif agg_by.lower() == 'week':
-                agg_data = SummaryService.create_time_table('glad', data, 'week')
-                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='week', period=period, conf=conf)
-            elif agg_by.lower() == 'month':
-                agg_data = SummaryService.create_time_table('glad', data, 'month')
-                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='month', period=period, conf=conf)
-            elif agg_by.lower() == 'quarter':
-                agg_data = SummaryService.create_time_table('glad', data, 'quarter')
-                standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='quarter', period=period, conf=conf)
-        elif agg_values:
-            data = AnalysisService.make_glad_request(download_sql, geostore)
-            agg_data = SummaryService.create_time_table('glad', data, 'julian_day')
-            standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, download_sql=download_sql, area=area, geostore=geostore, agg=True, agg_by='day', period=period, conf=conf)
+            agg_data = SummaryService.create_time_table('glad', data, agg_by)
+            standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, **kwargs)
+
         else:
+            kwargs['agg_by'] = None
+            kwargs['count'] = "COUNT(julian_day)"
             data = AnalysisService.make_glad_request(sql, geostore)
-            standard_format = ResponseService.standardize_response('Glad', data, datasetID, count="COUNT(julian_day)", download_sql=download_sql, area=area, geostore=geostore, period=period, conf=conf)
+            standard_format = ResponseService.standardize_response('Glad', data, datasetID, **kwargs)
 
     elif request.method == 'POST':
         #get paramters from payload
@@ -94,6 +92,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
 @endpoints.route('/glad-alerts', methods=['GET', 'POST'])
 @validate_glad_period
 @validate_geostore
+@validate_agg
 
 def query_glad():
     """analyze glad by geostore or geojson"""
