@@ -18,6 +18,8 @@ class SummaryService(object):
 
         else:
             df = pd.DataFrame(data['data'])
+            df = df.rename(columns={'COUNT(*)': 'count'})
+
             # create datetime column in pandas so we can pull
             if dataset == 'glad':
                 df['alert_date'] = pd.to_datetime(df.year, format='%Y') + pd.to_timedelta(df.julian_day - 1, unit='d')
@@ -34,8 +36,7 @@ class SummaryService(object):
             if agg_type != 'year':
                 index_list.append(agg_type)
 
-            grouped = df.groupby(index_list).size().reset_index()
-            grouped = grouped.rename(columns={0: 'count'})
+            grouped = df.groupby(index_list).sum()['count'].reset_index()
 
             # format as a dict so we can iterate over it
             output = grouped.set_index(index_list).to_dict(orient='index')

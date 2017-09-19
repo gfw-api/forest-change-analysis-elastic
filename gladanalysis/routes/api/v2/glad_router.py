@@ -44,7 +44,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period=period, datasetID=datasetID, indexID=indexID, value="julian_day")
 
         #get sql and download sql from sql format service
-        sql, download_sql = QueryConstructorService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
+        sql, download_sql = QueryConstructorService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist, agg_values)
 
         kwargs = {'download_sql': download_sql,
                   'area': area,
@@ -61,7 +61,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
             # add agg_by to kwargs
             kwargs['agg_by'] = agg_by
 
-            data = AnalysisService.make_glad_request(download_sql, geostore)
+            data = AnalysisService.make_glad_request(sql, geostore)
             agg_data = SummaryService.create_time_table('glad', data, agg_by)
             standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, **kwargs)
 
@@ -98,7 +98,7 @@ def query_glad():
     """analyze glad by geostore or geojson"""
 
     if request.method == 'GET':
-        logging.info('[ROUTER]: get glad by geosotre')
+        logging.info('[ROUTER]: get glad by geostore')
 
         geostore = request.args.get('geostore', None)
 
