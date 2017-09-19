@@ -1,4 +1,4 @@
-FROM python:2.7-alpine
+FROM chuckus/python-2.7-alpine-pandas
 MAINTAINER Asa Strong astrong@wri.org
 
 ENV NAME forest-change-analysis-elastic

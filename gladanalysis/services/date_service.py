@@ -48,6 +48,7 @@ class DateService(object):
         'uri': uri,
         'method': 'GET'
         }
+        logging.info('Making request to other MS: ' + json.dumps(config))
 
         values = request_to_microservice(config)
         date_value = values['data'][0][value]
