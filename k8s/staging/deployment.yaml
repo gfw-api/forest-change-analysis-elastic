@@ -51,9 +51,9 @@ spec:
                   name: mssecrets
                   key: API_VERSION
           - name: TERRAI_INDEX_ID
-            value: index_67cf7c0373654a1f8401d42c3706b7de
+            value: index_47c17b4fa7624990ba1fc4759aaddd91
           - name: TERRAI_DATASET_ID
-            value: 67cf7c03-7365-4a1f-8401-d42c3706b7de
+            value: 47c17b4f-a762-4990-ba1f-c4759aaddd91
           - name: GLAD_INDEX_ID
             value: index_1c1320f1dd9e42b2b840950a6f43084e
           - name: GLAD_DATASET_ID

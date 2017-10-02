@@ -104,6 +104,8 @@ def query_glad():
 
         #make request to geostore to get area in hectares
         area = GeostoreService.make_area_request(geostore)
+        print area
+        print type(area)
 
         return analyze(area=area, geostore=geostore)
 
