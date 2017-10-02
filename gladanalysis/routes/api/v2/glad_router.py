@@ -5,12 +5,9 @@ import datetime
 from flask import jsonify, request
 
 from . import endpoints
-from gladanalysis.services import GeostoreService
-from gladanalysis.services import DateService
-from gladanalysis.services import QueryConstructorService
-from gladanalysis.services import AnalysisService
-from gladanalysis.services import ResponseService
-from gladanalysis.services import SummaryService
+from gladanalysis.services import GeostoreService, DateService, QueryConstructorService, AnalysisService, ResponseService, SummaryService
+from gladanalysis.errors import GeostoreNotFound
+from gladanalysis.routes.api.v2 import error
 from gladanalysis.validators import validate_geostore, validate_glad_period, validate_agg, validate_admin, validate_use, validate_wdpa
 
 def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=None):
@@ -103,9 +100,11 @@ def query_glad():
         geostore = request.args.get('geostore', None)
 
         #make request to geostore to get area in hectares
-        area = GeostoreService.make_area_request(geostore)
-        print area
-        print type(area)
+        try:
+            area = GeostoreService.make_area_request(geostore)
+        except GeostoreNotFound:
+            logging.error('[ROUTER]: Geostore Not Found')
+            return error(status=404, detail='Geostore not found')
 
         return analyze(area=area, geostore=geostore)
 
