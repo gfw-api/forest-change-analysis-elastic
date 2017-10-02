@@ -30,7 +30,7 @@ class AnalysisService(object):
         uri = "/query/" + os.getenv('GLAD_DATASET_ID')
 
         if not geojson:
-            return error(status=400, detail="Geojson must be inlcuded in body")
+            return error(status=400, detail="Geojson must be included in body")
 
         body = {'sql': sql,
                 'format': 'json',

@@ -41,7 +41,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "day")
 
         #grab query and download sql from sql service
-        sql, download_sql = QueryConstructorService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist, agg_by)
+        sql, download_sql = QueryConstructorService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist, agg_values)
 
         kwargs = {'download_sql': download_sql,
                   'area': area,
