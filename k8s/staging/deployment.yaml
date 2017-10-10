@@ -55,9 +55,9 @@ spec:
           - name: TERRAI_DATASET_ID
             value: 2ee57543-29a8-4830-9826-d030c02434ce
           - name: GLAD_INDEX_ID
-            value: index_1c1320f1dd9e42b2b840950a6f43084e
+            value: index_a228c22ce99a4df3b627a1825e7176f2
           - name: GLAD_DATASET_ID
-            value: 1c1320f1-dd9e-42b2-b840-950a6f43084e
+            value: a228c22c-e99a-4df3-b627-a1825e7176f2
 
         ports:
           - containerPort: 62000
