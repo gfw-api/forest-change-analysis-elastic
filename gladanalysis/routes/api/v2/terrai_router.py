@@ -72,7 +72,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "day")
 
         #get sql and download sql from sql format service
-        sql = QueryConstructorService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist, agg_values)
+        sql = QueryConstructorService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist)
 
         data = AnalysisService.make_terrai_request_post(sql, geojson)
         standard_format = ResponseService.standardize_response('Terrai', data, datasetID, count="COUNT(day)")
