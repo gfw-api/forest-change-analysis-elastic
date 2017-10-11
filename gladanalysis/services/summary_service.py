@@ -26,6 +26,8 @@ class SummaryService(object):
             if agg_type == 'day':
                 agg_type = 'julian_day'
 
+            logging.info(df)
+
             # create datetime column in pandas so we can use its datetime
             # methods to easily summarize our results
             df['alert_date'] = pd.to_datetime(df.year, format='%Y') + pd.to_timedelta(df.julian_day - 1, unit='d')
