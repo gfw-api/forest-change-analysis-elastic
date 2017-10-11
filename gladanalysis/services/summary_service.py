@@ -9,8 +9,6 @@ class SummaryService(object):
     @staticmethod
     def create_time_table(dataset, data, agg_type):
 
-        logging.info(pd.show_versions())
-
         if not data['data']:
             return []
 
@@ -24,8 +22,6 @@ class SummaryService(object):
 
             if agg_type == 'day':
                 agg_type = 'julian_day'
-
-            logging.info(df)
 
             # create datetime column in pandas so we can use its datetime
             # methods to easily summarize our results

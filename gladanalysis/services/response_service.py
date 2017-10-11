@@ -23,8 +23,6 @@ class ResponseService(object):
             standard_format['aggregate_values'] = True
             standard_format["attributes"]["value"] = data
 
-        logging.info("this is data:")
-        logging.info(data)
         if agg_by:
             standard_format['aggregate_by'] = agg_by
         else:

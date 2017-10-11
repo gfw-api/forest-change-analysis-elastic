@@ -1,4 +1,4 @@
-FROM chuckus/python-2.7-alpine-pandas
+FROM amancevice/pandas:0.20.3-python2-alpine
 MAINTAINER Asa Strong astrong@wri.org
 
 ENV NAME forest-change-analysis-elastic
@@ -10,7 +10,7 @@ RUN apk update && apk upgrade && \
 
 RUN addgroup $USER && adduser -s /bin/bash -D -G $USER $USER
 
-RUN easy_install pip && pip install --upgrade pip
+RUN pip install --upgrade pip
 RUN pip install virtualenv gunicorn gevent
 
 RUN mkdir -p /opt/$NAME
