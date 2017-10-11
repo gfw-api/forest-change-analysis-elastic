@@ -61,10 +61,6 @@ class GeostoreService(object):
         uri = "/geostore/%s" %(geostore)
         area_resp = GeostoreService.execute(uri)
 
-        print 'in make geostore request'
-        print area_resp
-        print type(area_resp)
-
         area = area_resp['data']['attributes']['areaHa']
         return area
 

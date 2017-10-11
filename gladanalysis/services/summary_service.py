@@ -9,6 +9,8 @@ class SummaryService(object):
     @staticmethod
     def create_time_table(dataset, data, agg_type):
 
+        logging.info(pd.show_versions())
+
         if not data['data']:
             return []
 
