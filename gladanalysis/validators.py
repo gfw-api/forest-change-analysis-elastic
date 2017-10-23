@@ -19,7 +19,7 @@ def validate_geostore(func):
             geostore = request.get_json().get('geojson', None) if request.get_json() else None
 
         if not geostore:
-            return error(status=400, detail="Geostore must be set")
+            return error(status=400, detail="Geostore or geojson must be set")
 
         return func(*args, **kwargs)
     return wrapper
@@ -62,40 +62,9 @@ def validate_glad_period(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
 
-        if request.method == 'GET':
-            period = request.args.get('period')
-
-            if not period:
-                period = None
-
-        elif request.method == 'POST':
-            period = request.get_json().get('period', None) if request.get_json() else None
-
-            if not period:
-                period = None
-
-        if period:
-            if len(period.split(',')) < 2:
-                return error(status=400, detail="Period needs 2 arguments")
-
-            else:
-                period_from = period.split(',')[0]
-                period_to = period.split(',')[1]
-
-                try:
-                    datetime.datetime.strptime(period_from, '%Y-%m-%d')
-                except ValueError:
-                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
-
-                try:
-                    datetime.datetime.strptime(period_to, '%Y-%m-%d')
-                except ValueError:
-                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
-
-                if int(period_from.split('-')[0]) < 2015:
-                    return error(status=400, detail="start date can't be earlier than 2015-01-01")
-                elif int(period_to.split('-')[0]) > 2017:
-                    return error(status=400, detail="end year can't be later than 2017")
+        error = validate_period(2015)
+        if error:
+            return error
 
         return func(*args, **kwargs)
     return wrapper
@@ -105,43 +74,41 @@ def validate_terrai_period(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
 
-        if request.method == 'GET':
-            period = request.args.get('period')
-
-            if not period:
-                period = None
-
-        elif request.method == 'POST':
-            period = request.get_json().get('period', None) if request.get_json() else None
-
-            if not period:
-                period = None
-
-        if period:
-            if len(period.split(',')) < 2:
-                return error(status=400, detail="Period needs 2 arguments")
-
-            else:
-                period_from = period.split(',')[0]
-                period_to = period.split(',')[1]
-
-                try:
-                    datetime.datetime.strptime(period_from, '%Y-%m-%d')
-                except ValueError:
-                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
-
-                try:
-                    datetime.datetime.strptime(period_to, '%Y-%m-%d')
-                except ValueError:
-                    return error(status=400, detail="incorrect format, should be YYYY-MM-DD")
-
-                if int(period_from.split('-')[0]) < 2004:
-                    return error(status=400, detail="start date can't be earlier than 2004-01-01")
-                elif int(period_to.split('-')[0]) > 2017:
-                    return error(status=400, detail="end year can't be later than 2017")
+        error = validate_period(2004)
+        if error:
+            return error
 
         return func(*args, **kwargs)
     return wrapper
+
+def validate_period(minYear):
+
+    today = datetime.datetime.now()
+    period = request.args.get('period', None)
+
+    if period:
+        if len(period.split(',')) < 2:
+            return error(status=400, detail="Period needs 2 arguments")
+
+        else:
+            period_from = period.split(',')[0]
+            period_to = period.split(',')[1]
+
+            try:
+                period_from = datetime.datetime.strptime(period_from, '%Y-%m-%d')
+                period_to = datetime.datetime.strptime(period_to, '%Y-%m-%d')
+            except ValueError:
+                return error(status=400, detail="Incorrect format, should be YYYY-MM-DD,YYYY-MM-DD")
+
+            if period_from.year < minYear:
+                return error(status=400, detail="Start date can't be earlier than {}-01-01".format(minYear))
+                
+            if period_to.year > today.year:
+                return error(status=400, detail="End year can't be later than {}".format(today.year))
+
+            if period_from > period_to:
+                return error(status=400, detail='Start date must be less than end date')
+
 
 def validate_use(func):
     """Use Validation"""

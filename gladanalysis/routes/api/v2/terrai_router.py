@@ -10,6 +10,9 @@ from gladanalysis.errors import GeostoreNotFound
 from gladanalysis.routes.api.v2 import error
 from gladanalysis.validators import validate_geostore, validate_terrai_period, validate_agg, validate_admin, validate_use, validate_wdpa
 
+datasetID = os.getenv('TERRAI_DATASET_ID')
+indexID = os.getenv('TERRAI_INDEX_ID')
+
 def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=None):
     """Analyze method to execute queries
     This is designed to format the dates of the request, create the sql and download sql queries from
@@ -23,59 +26,43 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
     :param geojson: the geojson inlcuded in the body (if post request)
     :return: returns the response of the API request formatted by the format service"""
 
-    datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    indexID = '{}'.format(os.getenv('TERRAI_INDEX_ID'))
     today = datetime.datetime.today().strftime('%Y-%m-%d')
 
-    if request.method == 'GET':
-        #get parameter from query string
-        period = request.args.get('period', '2004-01-01,{}'.format(today))
-        agg_values = request.args.get('aggregate_values', False)
-        agg_by = request.args.get('aggregate_by', None)
+    #get parameter from query string
+    period = request.args.get('period', '2004-01-01,{}'.format(today))
+    agg_values = request.args.get('aggregate_values', False)
+    agg_by = request.args.get('aggregate_by', None)
 
-        #format period request to julian dates
-        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "day")
+    # grab geojson if it exists
+    geojson = request.get_json().get('geojson', None) if request.get_json() else None
 
-        #grab query and download sql from sql service
-        sql, download_sql = QueryConstructorService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist, agg_values)
+    #format period request to julian dates
+    from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "day")
 
-        kwargs = {'download_sql': download_sql,
-                  'area': area,
-                  'geostore': geostore,
-                  'agg': agg_values,
-                  'period': period}
+    #grab query and download sql from sql service
+    sql, download_sql = QueryConstructorService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist, agg_values)
 
-        if agg_values:
-            logging.info(sql)
+    kwargs = {'download_sql': download_sql,
+              'area': area,
+              'geostore': geostore,
+              'agg': agg_values,
+              'period': period}
 
-            if not agg_by or agg_by == 'julian_day':
-                agg_by = 'day'
+    if agg_values:
+        if not agg_by or agg_by == 'julian_day':
+            agg_by = 'day'
 
-            # add agg_by to kwargs
-            kwargs['agg_by'] = agg_by
+        kwargs['agg_by'] = agg_by
 
-            data = AnalysisService.make_terrai_request(sql, geostore)
-            agg_data = SummaryService.create_time_table('terrai', data, agg_by)
-            standard_format = ResponseService.standardize_response('Terrai', agg_data, datasetID, **kwargs)
+        data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson)
+        agg_data = SummaryService.create_time_table('terrai', data, agg_by)
+        standard_format = ResponseService.standardize_response('Terrai', agg_data, datasetID, **kwargs)
 
-        else:
-            kwargs['agg_by'] = None
-            kwargs['count'] = "COUNT(julian_day)"
-            data = AnalysisService.make_terrai_request(sql, geostore)
-            standard_format = ResponseService.standardize_response('Terrai', data, datasetID, **kwargs)
-
-    elif request.method == 'POST':
-        #get parameter from payload
-        period = request.get_json().get('period', None) if request.get_json() else None
-
-        #format period request to julian dates
-        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "day")
-
-        #get sql and download sql from sql format service
-        sql = QueryConstructorService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state, dist)
-
-        data = AnalysisService.make_terrai_request_post(sql, geojson)
-        standard_format = ResponseService.standardize_response('Terrai', data, datasetID, count="COUNT(day)")
+    else:
+        kwargs['agg_by'] = None
+        kwargs['count'] = "COUNT(julian_day)"
+        data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson)
+        standard_format = ResponseService.standardize_response('Terrai', data, datasetID, **kwargs)
 
     return jsonify({'data': standard_format}), 200
 
@@ -183,10 +170,6 @@ def terrai_date_range():
     """get terrai date range"""
     logging.info('Creating Terra I Date Range')
 
-    #set dataset ids
-    datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    indexID = '{}'.format(os.getenv('TERRAI_INDEX_ID'))
-
     #get min and max date from sql queries
     min_year, min_julian, max_year, max_julian = DateService.get_min_max_date('day', datasetID, indexID)
     min_date, max_date = DateService.format_date_sql(min_year, min_julian, max_year, max_julian)
@@ -200,10 +183,6 @@ def terrai_date_range():
 def terrai_latest():
     """get TerraI latest date"""
     logging.info('Getting latest date')
-
-    #set dataset ID
-    datasetID = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
-    indexID = '{}'.format(os.getenv('TERRAI_INDEX_ID'))
 
     #get max date
     min_year, min_julian, max_year, max_julian = DateService.get_min_max_date('day', datasetID, indexID)
