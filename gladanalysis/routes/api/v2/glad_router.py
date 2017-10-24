@@ -5,13 +5,13 @@ import datetime
 from flask import jsonify, request
 
 from . import endpoints
-from gladanalysis.services import GeostoreService
-from gladanalysis.services import DateService
-from gladanalysis.services import QueryConstructorService
-from gladanalysis.services import AnalysisService
-from gladanalysis.services import ResponseService
-from gladanalysis.services import SummaryService
+from gladanalysis.services import GeostoreService, DateService, QueryConstructorService, AnalysisService, ResponseService, SummaryService
+from gladanalysis.errors import GeostoreNotFound
+from gladanalysis.routes.api.v2 import error
 from gladanalysis.validators import validate_geostore, validate_glad_period, validate_agg, validate_admin, validate_use, validate_wdpa
+
+datasetID = os.getenv('GLAD_DATASET_ID')
+indexID = os.getenv('GLAD_INDEX_ID')
 
 def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=None):
     """Analyze method to execute queries
@@ -26,69 +26,50 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
     :param geojson: the geojson inlcuded in the body (if post request)
     :return: returns the response of the API request formatted by the format service"""
 
-    #set variables
-    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
-
     today = datetime.datetime.today().strftime('%Y-%m-%d')
 
-    #send sql and geostore to analysis service to query elastic database
-    if request.method == 'GET':
-        #get parameters from query string
-        period = request.args.get('period', '2015-01-01,{}'.format(today))
-        conf = request.args.get('gladConfirmOnly', False)
-        agg_values = request.args.get('aggregate_values', False)
-        agg_by = request.args.get('aggregate_by', None)
+    #get parameters from query string
+    period = request.args.get('period', '2015-01-01,{}'.format(today))
+    conf = request.args.get('gladConfirmOnly', False)
+    agg_values = request.args.get('aggregate_values', False)
+    agg_by = request.args.get('aggregate_by', None)
 
-        #format period request to julian dates
-        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period=period, datasetID=datasetID, indexID=indexID, value="julian_day")
+    # grab geojson if it exists
+    geojson = request.get_json().get('geojson', None) if request.get_json() else None
 
-        #get sql and download sql from sql format service
-        sql, download_sql = QueryConstructorService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist, agg_values)
+    #format period request to julian dates
+    from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period=period, datasetID=datasetID, indexID=indexID, value="julian_day")
 
-        kwargs = {'download_sql': download_sql,
-                  'area': area,
-                  'geostore': geostore,
-                  'agg': agg_values,
-                  'period': period,
-                  'conf': conf}
+    sql, download_sql = QueryConstructorService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist, agg_values)
 
-        if agg_values:
+    kwargs = {'download_sql': download_sql,
+              'area': area,
+              'geostore': geostore,
+              'agg': agg_values,
+              'period': period,
+              'conf': conf}
 
-            if not agg_by or agg_by == 'day':
-                agg_by = 'julian_day'
+    if agg_values:
+        if not agg_by or agg_by == 'day':
+            agg_by = 'julian_day'
 
-            # add agg_by to kwargs
-            kwargs['agg_by'] = agg_by
+        # add agg_by to kwargs
+        kwargs['agg_by'] = agg_by
 
-            data = AnalysisService.make_glad_request(sql, geostore)
-            agg_data = SummaryService.create_time_table('glad', data, agg_by)
-            standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, **kwargs)
+        data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson)
+        agg_data = SummaryService.create_time_table('glad', data, agg_by)
+        standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, **kwargs)
 
-        else:
-            kwargs['agg_by'] = None
-            kwargs['count'] = "COUNT(julian_day)"
-            data = AnalysisService.make_glad_request(sql, geostore)
-            standard_format = ResponseService.standardize_response('Glad', data, datasetID, **kwargs)
-
-    elif request.method == 'POST':
-        #get paramters from payload
-        period = request.get_json().get('period', None) if request.get_json() else None
-        conf = request.get_json().get('gladConfirmOnly', None) if request.get_json() else None
-
-        #format period request to julian dates
-        from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period=period, datasetID=datasetID, indexID=indexID, value="julian_day")
-
-        #get sql and download sql from sql format service
-        sql = QueryConstructorService.format_glad_sql(conf, from_year, from_date, to_year, to_date, iso, state, dist)
-
-        data = AnalysisService.make_glad_request_post(sql, geojson)
-        standard_format = ResponseService.standardize_response('Glad', data, datasetID, count="COUNT(julian_day)", period=period, conf=conf)
+    else:
+        kwargs['agg_by'] = None
+        kwargs['count'] = "COUNT(julian_day)"
+        data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson)
+        standard_format = ResponseService.standardize_response('Glad', data, datasetID, **kwargs)
 
     return jsonify({'data': standard_format}), 200
 
-"""GLAD ENDPOINTS"""
 
+"""GLAD ENDPOINTS"""
 @endpoints.route('/glad-alerts', methods=['GET', 'POST'])
 @validate_glad_period
 @validate_geostore
@@ -103,7 +84,11 @@ def query_glad():
         geostore = request.args.get('geostore', None)
 
         #make request to geostore to get area in hectares
-        area = GeostoreService.make_area_request(geostore)
+        try:
+            area = GeostoreService.make_area_request(geostore)
+        except GeostoreNotFound:
+            logging.error('[ROUTER]: Geostore Not Found')
+            return error(status=404, detail='Geostore not found')
 
         return analyze(area=area, geostore=geostore)
 
@@ -191,10 +176,6 @@ def glad_date_range():
     """get glad date range"""
     logging.info('[ROUTER]: Creating Glad Date Range')
 
-    #set dataset ID
-    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
-
     #get min and max date from sql queries
     min_year, min_julian, max_year, max_julian = DateService.get_min_max_date('julian_day', datasetID, indexID)
     min_date, max_date = DateService.format_date_sql(min_year, min_julian, max_year, max_julian)
@@ -208,10 +189,6 @@ def glad_date_range():
 def glad_latest():
     """get glad latest date"""
     logging.info('[ROUTER]: Getting latest date')
-
-    #set dataset ID
-    datasetID = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-    indexID = '{}'.format(os.getenv('GLAD_INDEX_ID'))
 
     #get max date
     min_year, min_julian, max_year, max_julian = DateService.get_min_max_date('julian_day', datasetID, indexID)

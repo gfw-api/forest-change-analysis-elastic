@@ -2,6 +2,7 @@ import json
 from flask import request
 
 from CTRegisterMicroserviceFlask import request_to_microservice
+from gladanalysis.errors import GeostoreNotFound
 
 class GeostoreService(object):
     """Class for sending request to geostore (to fetch area in hectares and geostore id)"""
@@ -14,7 +15,19 @@ class GeostoreService(object):
         'method': 'GET'
         }
 
-        return request_to_microservice(config)
+        try:
+            response = request_to_microservice(config)
+        except Exception as e:
+            raise Exception(str(e))
+
+        if response.get('errors'):
+            error = response.get('errors')[0]
+            if error.get('status') == 404:
+                raise GeostoreNotFound(message='')
+            else:
+                raise Exception(error.get('detail'))
+
+        return response
 
     @staticmethod
     def make_use_request(use_type, use_id):

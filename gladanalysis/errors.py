@@ -2,6 +2,14 @@
 
 class Error(Exception):
 
-    def __init__(self, name, message):
-        self.name = name
+    def __init__(self, message):
         self.message = message
+
+    @property
+    def serialize(self):
+        return {
+            'message': self.message
+        }
+
+class GeostoreNotFound(Error):
+    pass

@@ -95,7 +95,7 @@ class TerraiTest(unittest.TestCase):
         data, status_code = self.make_request('/api/v2/ms/terrai-alerts')
         logging.info('[TEST]: response deserialized: {}'.format(data))
 
-        self.assertions(data, status_code, 400, 'detail', 'Geostore must be set')
+        self.assertions(data, status_code, 400, 'detail', 'Geostore or geojson must be set')
 
     def test_geostore(self):
         '''test request with geostore only'''

@@ -29,7 +29,7 @@ class QueryConstructorService(object):
         where_sql = where_template.format(y1=int(from_year), d1=int(from_date), y1_plus_1=(int(from_year) + 1), y2=int(to_year), d2=int(to_date), y2_minus_1=(int(to_year) - 1), day=day_value)
 
         sql = ''.join(filter(None, [count_sql, from_sql, where_sql, groupby_sql]))
-        download_sql = ''.join([select_sql, from_sql, where_sql, order_sql])
+        download_sql = '?sql=' + ''.join([select_sql, from_sql, where_sql, order_sql])
 
         return sql, download_sql
 
@@ -62,12 +62,7 @@ class QueryConstructorService(object):
 
         sql, download_sql = QueryConstructorService.format_dataset_query("julian_day", confidence, from_year, from_date, to_year, to_date, count_sql, from_sql, select_sql, order_sql, groupby_sql, iso=iso, state=state, dist=dist)
 
-        if request.method == 'GET':
-            sql = '?sql=' + sql
-            download_sql = '?sql=' + download_sql
-            return sql, download_sql
-        elif request.method == 'POST':
-            return sql
+        return sql, download_sql
 
     @staticmethod
     def format_terrai_sql(from_year, from_date, to_year, to_date, iso=None, state=None, dist=None, agg_values=False):
@@ -75,10 +70,10 @@ class QueryConstructorService(object):
         select_sql = 'SELECT lat, long, country_iso, state_id, dist_id, year, day '
 
         if agg_values:
-            count_sql = 'SELECT year, julian_day, count(*)'
+            count_sql = 'SELECT year, day, count(*)'
         else:
             count_sql = 'SELECT count(day) '
-        
+
         from_sql = 'FROM {} '.format(os.getenv('TERRAI_INDEX_ID'))
         order_sql = 'ORDER BY year, day'
 
@@ -89,9 +84,4 @@ class QueryConstructorService(object):
 
         sql, download_sql = QueryConstructorService.format_dataset_query("day", "", from_year, from_date, to_year, to_date, count_sql, from_sql, select_sql, order_sql, groupby_sql, iso=iso, state=state, dist=dist)
 
-        if request.method == 'GET':
-            sql = '?sql=' + sql
-            download_sql = '?sql=' + download_sql
-            return sql, download_sql
-        elif request.method == 'POST':
-            return sql
+        return sql, download_sql

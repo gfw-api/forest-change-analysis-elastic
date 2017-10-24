@@ -1,8 +1,11 @@
 import json
 import os
 import logging
+from flask import request
 
 from CTRegisterMicroserviceFlask import request_to_microservice
+
+from gladanalysis.routes.api.v2 import error
 
 class AnalysisService(object):
     """Class for sending queries to databases and capturing response
@@ -10,71 +13,30 @@ class AnalysisService(object):
     elastic search database and return a response in json"""
 
     @staticmethod
-    def make_glad_request(sql, geostore=None):
+    def make_analysis_request(dataset_id, sql, geostore, geojson):
 
-        uri = "/query/" + os.getenv('GLAD_DATASET_ID') + sql + '&format=json'
+        if request.method == 'GET':
+            uri = "/query/" + dataset_id + '?sql=' + sql + '&format=json'
 
-        if geostore:
-            uri += "&geostore=" + geostore
+            if geostore:
+                uri += "&geostore=" + geostore
 
-        config = {
-        'uri': uri,
-        'method': 'GET'
-        }
+            config = {
+            'uri': uri,
+            'method': 'GET'
+            }
 
-        return request_to_microservice(config)
+        else:
+            uri = "/query/" + dataset_id
 
-    @staticmethod
-    def make_glad_request_post(sql, geojson):
+            body = {'sql': sql,
+                    'format': 'json',
+                    'geojson': geojson}
 
-        uri = "/query/" + os.getenv('GLAD_DATASET_ID')
-
-        if not geojson:
-            return error(status=400, detail="Geojson must be inlcuded in body")
-
-        body = {'sql': sql,
-                'format': 'json',
-                'geojson': geojson}
-
-        config = {
-        'uri': uri,
-        'method': 'POST',
-        'body': body
-        }
-
-        return request_to_microservice(config)
-
-    @staticmethod
-    def make_terrai_request(sql, geostore=None):
-
-        uri = "/query/" + os.getenv('TERRAI_DATASET_ID') + sql + '&format=json'
-
-        if geostore:
-            uri += "&geostore=" + geostore
-
-        config = {
-        'uri': uri,
-        'method': 'GET'
-        }
-
-        return request_to_microservice(config)
-
-    @staticmethod
-    def make_terrai_request_post(sql, geojson):
-
-        uri = "/query/" + os.getenv('TERRAI_DATASET_ID')
-
-        if not geojson:
-            return error(status=400, detail="Geojson must be inlcuded in body")
-
-        body = {'sql': sql,
-                'format': 'json',
-                'geojson': geojson}
-
-        config = {
-        'uri': uri,
-        'method': 'POST',
-        'body': body
-        }
+            config = {
+            'uri': uri,
+            'method': 'POST',
+            'body': body
+            }
 
         return request_to_microservice(config)
