@@ -41,7 +41,7 @@ class AnalysisService(object):
         if v2:
 
             config = {
-                'uri': "/v2/query/123",
+                'uri': "/v2/query/23285d52-a4b9-4f5a-a9d6-158c4bbc0f86",
                 'method': 'POST',
                 'body': {'sql': sql,
                         'format': 'json',
