@@ -44,7 +44,7 @@ class AnalysisService(object):
                 'uri': "/v2/query/23285d52-a4b9-4f5a-a9d6-158c4bbc0f86",
                 'method': 'POST',
                 'ignore_version': True,
-                'body': {'sql': sql,
+                'body': {'sql': 'select count(*) FROM index_d6268f65e4cf4a1a9435fb52a1c7ddd0',
                         'format': 'json',
                         'geojson': geojson}
             }
