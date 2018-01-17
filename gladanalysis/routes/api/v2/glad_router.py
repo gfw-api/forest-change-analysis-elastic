@@ -13,7 +13,7 @@ from gladanalysis.validators import validate_geostore, validate_glad_period, val
 datasetID = os.getenv('GLAD_DATASET_ID')
 indexID = os.getenv('GLAD_INDEX_ID')
 
-def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=None):
+def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=None, v2=False):
     """Analyze method to execute queries
     This is designed to format the dates of the request, create the sql and download sql queries from
     the dates, retrieve the data from the queries and send the data to a formatter service to format
@@ -56,7 +56,11 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
         # add agg_by to kwargs
         kwargs['agg_by'] = agg_by
 
-        data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson)
+        if v2:
+            data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson, v2=True)
+        else:
+            data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson)
+
         agg_data = SummaryService.create_time_table('glad', data, agg_by)
         standard_format = ResponseService.standardize_response('Glad', agg_data, datasetID, **kwargs)
 
@@ -98,6 +102,37 @@ def query_glad():
         geojson = request.get_json().get('geojson', None) if request.get_json() else None
 
         return analyze(geojson=geojson)
+
+    else:
+        return error(status=405, detail="Operation not supported")
+
+@endpoints.route('/glad-alerts-elastic-v2', methods=['GET', 'POST'])
+@validate_glad_period
+@validate_geostore
+@validate_agg
+def query_glad_v2():
+    """analyze glad by geostore or geojson"""
+
+    if request.method == 'GET':
+        logging.info('[ROUTER]: get glad by geostore')
+
+        geostore = request.args.get('geostore', None)
+
+        #make request to geostore to get area in hectares
+        try:
+            area = GeostoreService.make_area_request(geostore)
+        except GeostoreNotFound:
+            logging.error('[ROUTER]: Geostore Not Found')
+            return error(status=404, detail='Geostore not found')
+
+        return analyze(area=area, geostore=geostore, v2=True)
+
+    elif request.method == 'POST':
+        logging.info('[ROUTER]: post geojson to glad')
+
+        geojson = request.get_json().get('geojson', None) if request.get_json() else None
+
+        return analyze(geojson=geojson, v2=True)
 
     else:
         return error(status=405, detail="Operation not supported")
