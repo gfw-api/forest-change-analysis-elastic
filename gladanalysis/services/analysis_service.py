@@ -5,7 +5,6 @@ from flask import request
 
 from CTRegisterMicroserviceFlask import request_to_microservice
 
-from gladanalysis.routes.api.v2 import error
 
 class AnalysisService(object):
     """Class for sending queries to databases and capturing response
@@ -13,7 +12,7 @@ class AnalysisService(object):
     elastic search database and return a response in json"""
 
     @staticmethod
-    def make_analysis_request(dataset_id, sql, geostore, geojson):
+    def make_analysis_request(dataset_id, sql, geostore, geojson, v2=False):
 
         if request.method == 'GET':
             uri = "/query/" + dataset_id + '?sql=' + sql + '&format=json'
@@ -37,6 +36,16 @@ class AnalysisService(object):
             'uri': uri,
             'method': 'POST',
             'body': body
+            }
+
+        if v2:
+
+            config = {
+                'uri': "/v2/query/123",
+                'method': 'POST',
+                'body': {'sql': sql,
+                        'format': 'json',
+                        'geojson': geojson}
             }
 
         return request_to_microservice(config)

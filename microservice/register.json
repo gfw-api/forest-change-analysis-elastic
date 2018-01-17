@@ -38,6 +38,20 @@
             "path": "/api/v2/ms/glad-alerts"
         }]
     }, {
+        "url": "/v2/glad-alerts",
+        "method": "GET",
+        "endpoints": [{
+            "method": "GET",
+            "path": "/api/v2/ms/glad-alerts-elastic-v2"
+        }]
+    }, {
+        "url": "/v2/glad-alerts",
+        "method": "POST",
+        "endpoints": [{
+            "method": "POST",
+            "path": "/api/v2/ms/glad-alerts-elastic-v2"
+        }]
+    }, {
 	       "url": "/v1/terrai-alerts/admin/:iso_code/:admin_id",
 	       "method": "GET",
 	       "endpoints": [{
