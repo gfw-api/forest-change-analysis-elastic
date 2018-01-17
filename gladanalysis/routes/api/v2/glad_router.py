@@ -67,7 +67,10 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
     else:
         kwargs['agg_by'] = None
         kwargs['count'] = "COUNT(julian_day)"
-        data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson)
+        if v2:
+            data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson, v2=True)
+        else:
+            data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson)
         standard_format = ResponseService.standardize_response('Glad', data, datasetID, **kwargs)
 
     return jsonify({'data': standard_format}), 200
@@ -100,7 +103,6 @@ def query_glad():
         logging.info('[ROUTER]: post geojson to glad')
 
         geojson = request.get_json().get('geojson', None) if request.get_json() else None
-
         return analyze(geojson=geojson)
 
     else:
@@ -131,7 +133,6 @@ def query_glad_v2():
         logging.info('[ROUTER]: post geojson to glad')
 
         geojson = request.get_json().get('geojson', None) if request.get_json() else None
-
         return analyze(geojson=geojson, v2=True)
 
     else:
