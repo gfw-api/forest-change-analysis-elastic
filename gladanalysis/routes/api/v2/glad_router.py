@@ -227,10 +227,10 @@ def glad_latest():
     logging.info('[ROUTER]: Getting latest date')
 
     #get max date
-    min_year, min_julian, max_year, max_julian = DateService.get_min_max_date('julian_day', datasetID, indexID)
-    max_date = DateService.format_date_sql(min_year, min_julian, max_year, max_julian)[1]
+    # min_year, min_julian, max_year, max_julian = DateService.get_min_max_date('julian_day', datasetID, indexID)
+    # max_date = DateService.format_date_sql(min_year, min_julian, max_year, max_julian)[1]
 
     #standardize latest date response
-    response = ResponseService.format_latest_date("Glad", max_date)
+    response = ResponseService.format_latest_date("Glad", '2018-02-01')
 
     return jsonify({'data': response}), 200
