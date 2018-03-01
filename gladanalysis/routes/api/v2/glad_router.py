@@ -231,6 +231,6 @@ def glad_latest():
     # max_date = DateService.format_date_sql(min_year, min_julian, max_year, max_julian)[1]
 
     #standardize latest date response
-    response = ResponseService.format_latest_date("Glad", '2018-02-14')
+    response = ResponseService.format_latest_date("Glad", '2018-02-24')
 
     return jsonify({'data': response}), 200
