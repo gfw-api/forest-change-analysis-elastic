@@ -10,3 +10,4 @@ from gladanalysis.services.query_constructor_service import QueryConstructorServ
 from gladanalysis.services.analysis_service import AnalysisService
 from gladanalysis.services.response_service import ResponseService
 from gladanalysis.services.summary_service import SummaryService
+from gladanalysis.services.area_service import AreaService
