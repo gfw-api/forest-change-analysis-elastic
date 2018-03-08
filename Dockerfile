@@ -6,7 +6,12 @@ ENV USER microservice
 
 RUN apk update && apk upgrade && \
    apk add --no-cache --update bash git openssl-dev build-base alpine-sdk \
-   libffi-dev
+   libffi-dev 
+
+# add GEOS for shapely
+RUN echo "http://mirror.leaseweb.com/alpine/edge/testing/" >> /etc/apk/repositories
+RUN cat /etc/apk/repositories
+RUN apk add --no-cache geos
 
 RUN addgroup $USER && adduser -s /bin/bash -D -G $USER $USER
 

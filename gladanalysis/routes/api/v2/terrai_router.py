@@ -5,7 +5,7 @@ import datetime
 from flask import jsonify, request
 
 from . import endpoints
-from gladanalysis.services import GeostoreService, DateService, QueryConstructorService, AnalysisService, ResponseService, SummaryService
+from gladanalysis.services import GeostoreService, DateService, QueryConstructorService, AnalysisService, ResponseService, SummaryService, AreaService
 from gladanalysis.errors import GeostoreNotFound
 from gladanalysis.routes.api.v2 import error
 from gladanalysis.validators import validate_geostore, validate_terrai_period, validate_agg, validate_admin, validate_use, validate_wdpa
@@ -94,8 +94,9 @@ def query_terrai():
         logging.info('[ROUTER]: post geojson to terrai')
 
         geojson = request.get_json().get('geojson', None) if request.get_json() else None
+        area = AreaService.tabulate_area(geojson)
 
-        return analyze(geojson=geojson)
+        return analyze(area=area, geojson=geojson)
 
     else:
         return error(status=405, detail="Operation not supported")
