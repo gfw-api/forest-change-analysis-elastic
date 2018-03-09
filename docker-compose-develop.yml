@@ -15,8 +15,8 @@ develop:
     LOCAL_URL: http://mymachine:62000
     TERRAI_INDEX_ID: index_80a4852d8b2d4641977adacb845acb70
     TERRAI_DATASET_ID: 80a4852d-8b2d-4641-977a-dacb845acb70
-    GLAD_INDEX_ID: index_d6268f65e4cf4a1a9435fb52a1c7ddd0
-    GLAD_DATASET_ID: d6268f65-e4cf-4a1a-9435-fb52a1c7ddd0
+    GLAD_INDEX_ID: index_4d3647ba15c94346be582578d3a656ce
+    GLAD_DATASET_ID: 4d3647ba-15c9-4346-be58-2578d3a656ce
   command: develop
   volumes:
     - ./gladanalysis:/opt/forest-change-analysis-elastic/gladanalysis
