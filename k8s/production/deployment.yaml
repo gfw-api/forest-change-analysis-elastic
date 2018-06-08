@@ -70,7 +70,7 @@ spec:
           - name: TERRAI_DATASET_ID
             value: bb80312e-b514-48ad-9252-336408603591
           - name: GLAD_INDEX_ID
-            value: index_db34c2d977b843eeb101f499e39d1597
+            value: index_c4f8bba2777940abb69f6baf31b79624_1528188053281
           - name: GLAD_DATASET_ID
             value: db34c2d9-77b8-43ee-b101-f499e39d1597
 
