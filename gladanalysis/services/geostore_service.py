@@ -13,7 +13,7 @@ class GeostoreService(object):
         # need to make sure we use /v2/ of the geostore - this had gadm36 data
         config = {
         'ignore_version': True,
-        'uri': '/v2/' + uri,
+        'uri': '/v2' + uri,
         'method': 'GET'
         }
 
