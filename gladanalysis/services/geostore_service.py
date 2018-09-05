@@ -10,8 +10,10 @@ class GeostoreService(object):
     @staticmethod
     def execute(uri):
 
+        # need to make sure we use /v2/ of the geostore - this had gadm36 data
         config = {
-        'uri': uri,
+        'ignore_version': True,
+        'uri': 'v2/' + uri,
         'method': 'GET'
         }
 
