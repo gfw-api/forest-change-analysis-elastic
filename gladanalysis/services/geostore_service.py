@@ -45,7 +45,7 @@ class GeostoreService(object):
     def make_gadm_request(iso_code, admin_id=None, dist_id=None):
 
         if not admin_id and not dist_id:
-            uri = "/geostore/admin/%s" %(iso_code)
+            uri = "/geostore/admin/%s?simplify=0.05" %(iso_code)
 
         elif admin_id and not dist_id:
             uri = "/geostore/admin/%s/%s" %(iso_code, admin_id)
