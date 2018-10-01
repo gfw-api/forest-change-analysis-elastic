@@ -8,7 +8,7 @@ from . import endpoints
 from gladanalysis.services import GeostoreService, DateService, QueryConstructorService, AnalysisService, ResponseService, SummaryService, AreaService
 from gladanalysis.errors import GeostoreNotFound
 from gladanalysis.routes.api.v2 import error
-from gladanalysis.validators import validate_geostore, validate_glad_period, validate_agg, validate_admin, validate_use, validate_wdpa
+from gladanalysis.validators import validate_geostore, validate_glad_period, validate_agg, validate_admin, validate_wdpa
 
 datasetID = os.getenv('GLAD_DATASET_ID')
 indexID = os.getenv('GLAD_INDEX_ID')
@@ -183,7 +183,6 @@ def glad_dist(iso_code, admin_id, dist_id):
     return analyze(area=area, iso=iso_code, state=admin_id, dist=dist_id)
 
 @endpoints.route('/glad-alerts/use/<use_type>/<use_id>', methods=['GET'])
-@validate_use
 @validate_glad_period
 
 def glad_use(use_type, use_id):

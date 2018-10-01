@@ -8,7 +8,7 @@ from . import endpoints
 from gladanalysis.services import GeostoreService, DateService, QueryConstructorService, AnalysisService, ResponseService, SummaryService, AreaService
 from gladanalysis.errors import GeostoreNotFound
 from gladanalysis.routes.api.v2 import error
-from gladanalysis.validators import validate_geostore, validate_terrai_period, validate_agg, validate_admin, validate_use, validate_wdpa
+from gladanalysis.validators import validate_geostore, validate_terrai_period, validate_agg, validate_admin, validate_wdpa
 
 datasetID = os.getenv('TERRAI_DATASET_ID')
 indexID = os.getenv('TERRAI_INDEX_ID')
@@ -141,7 +141,6 @@ def terrai_dist(iso_code, admin_id, dist_id):
     return analyze(area, iso=iso_code, state=admin_id, dist=dist_id)
 
 @endpoints.route('/terrai-alerts/use/<use_type>/<use_id>', methods=['GET'])
-@validate_use
 @validate_terrai_period
 
 def terrai_use(use_type, use_id):
