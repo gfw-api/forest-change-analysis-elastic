@@ -1,6 +1,8 @@
-# GLAD and Terra I Analysis API Microservice Overview
+# Terra I Analysis API Microservice Overview
 
-Query the GLAD and Terra I forest loss datasets with the [Global Forest Watch (GFW)](http://globalforestwatch.org) API
+Query the Terra I forest loss dataset with the [Global Forest Watch (GFW)](http://globalforestwatch.org) API
+
+NB: This repo used to handle GLAD analysis requests as well - this functionality has been moved [here](https://github.com/gfw-api/glad-analysis-tiled/).
 
 - Analyze datasets by a custom area of interest using the [GFW Geostore API](https://github.com/gfw-api/gfw-geostore-api) or by sending GeoJson in Post
 - Analyze datasets by Country, State and Districts (defined by the [GADM Database](http://www.gadm.org/))
@@ -11,7 +13,7 @@ Query the GLAD and Terra I forest loss datasets with the [Global Forest Watch (G
 - Get dataset date range/ latest date
 
 ## API Endpoints
-For endpoint documentation, please visit our [API documentation page for GLAD](https://production-api.globalforestwatch.org/documentation/#/?tags=GLAD) and our
+For endpoint documentation, please visit our
 [API documentation page for TerraI](https://production-api.globalforestwatch.org/documentation/#/?tags=TERRAI)
 
 # Getting Started
@@ -51,25 +53,25 @@ Example:
     "name": "#(service.name)",
     "tags": ["gfw"],
     "urls": [{
-        "url": "/v1/glad-alerts/admin/:iso_code",
+        "url": "/v1/terrai-alerts/admin/:iso_code",
         "method": "GET",
         "endpoints": [{
             "method": "GET",
-            "path": "/api/v2/ms/glad-alerts/admin/:iso_code"
+            "path": "/api/v2/ms/terrai-alerts/admin/:iso_code"
         }]
     }, {
-        "url": "/v1/glad-alerts/admin/:iso_code/:admin_id",
+        "url": "/v1/terrai-alerts/admin/:iso_code/:admin_id",
         "method": "GET",
         "endpoints": [{
             "method": "GET",
-            "path": "/api/v2/ms/glad-alerts/admin/:iso_code/:admin_id"
+            "path": "/api/v2/ms/terrai-alerts/admin/:iso_code/:admin_id"
         }]
     }, {
-        "url": "/v1/glad-alerts/admin/:iso_code/:admin_id/:dist_id",
+        "url": "/v1/terrai-alerts/admin/:iso_code/:admin_id/:dist_id",
         "method": "GET",
         "endpoints": [{
             "method": "GET",
-            "path": "/api/v2/ms/glad-alerts/admin/:iso_code/:admin_id/:dist_id"
+            "path": "/api/v2/ms/terrai-alerts/admin/:iso_code/:admin_id/:dist_id"
         }]
     }]
 }

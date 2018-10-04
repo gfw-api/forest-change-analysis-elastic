@@ -9,7 +9,5 @@ test:
     LOCAL_URL: http://192.168.80.200:62000
     TERRAI_INDEX_ID: index_1dca5597d6ac406482cf9f02b178f424
     TERRAI_DATASET_ID: 1dca5597-d6ac-4064-82cf-9f02b178f424
-    GLAD_INDEX_ID: index_f1dd79c3e6d44d8cb164b4bd66f311ee
-    GLAD_DATASET_ID: f1dd79c3-e6d4-4d8c-b164-b4bd66f311ee
     DEBUG: "True"
   command: test

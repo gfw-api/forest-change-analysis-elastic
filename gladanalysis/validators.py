@@ -57,18 +57,6 @@ def validate_agg(func):
         return func(*args, **kwargs)
     return wrapper
 
-def validate_glad_period(func):
-    """validate period argument"""
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-
-        error = validate_period(2015)
-        if error:
-            return error
-
-        return func(*args, **kwargs)
-    return wrapper
-
 def validate_terrai_period(func):
     """validate period argument"""
     @wraps(func)
