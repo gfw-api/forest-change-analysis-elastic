@@ -5,19 +5,13 @@ class ResponseService(object):
     """Class for standardizing api responses"""
 
     @staticmethod
-    def standardize_response(name, data, datasetID, count=None, download_sql=None, area=None, geostore=None, agg=None, agg_by=None, period=None, conf=None):
+    def standardize_response(name, data, datasetID, count=None, download_sql=None, area=None, geostore=None, agg=None, agg_by=None, period=None):
         #Helper function to standardize API responses
         standard_format = {}
-        if name == 'Glad':
-            standard_format["type"] = "glad-alerts"
-            standard_format["id"] = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-        elif name == 'Terrai':
-            standard_format["type"] = "terrai-alerts"
-            standard_format["id"] = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
+        standard_format["type"] = "terrai-alerts"
+        standard_format["id"] = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
         if period:
             standard_format['period'] = period
-        if conf:
-            standard_format['gladConfirmOnly'] = conf
         standard_format["attributes"] = {}
         if agg:
             standard_format['aggregate_values'] = True
@@ -44,12 +38,8 @@ class ResponseService(object):
     @staticmethod
     def format_date_range(name, min_date, max_date):
         response = {}
-        if name == 'Glad':
-            response['type'] = 'glad-alerts'
-            response['id'] = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-        elif name == 'Terrai':
-            response['type'] = 'terrai-alerts'
-            response['id'] = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
+        response['type'] = 'terrai-alerts'
+        response['id'] = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
         response['attributes'] = {}
         response['attributes']['minDate'] = min_date
         response['attributes']['maxDate'] = max_date
@@ -60,12 +50,8 @@ class ResponseService(object):
     def format_latest_date(name, max_date):
         response = []
         info = {}
-        if name == 'Glad':
-            info['type'] = 'glad-alerts'
-            info['id'] = '{}'.format(os.getenv('GLAD_DATASET_ID'))
-        elif name == 'Terrai':
-            info['type'] = 'terrai-alerts'
-            info['id'] = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
+        info['type'] = 'terrai-alerts'
+        info['id'] = '{}'.format(os.getenv('TERRAI_DATASET_ID'))
         info['attributes'] = {}
         info['attributes']['date'] = max_date
 

@@ -34,37 +34,6 @@ class QueryConstructorService(object):
         return sql, download_sql
 
     @staticmethod
-    def format_glad_sql(conf, from_year, from_date, to_year, to_date, iso=None, state=None, dist=None, agg_values=False):
-
-        """set sql variables for glad"""
-        select_sql = 'SELECT lat, long, confidence_text, country_iso, state_id, dist_id, year, julian_day '
-
-        if agg_values:
-            count_sql = 'SELECT year, julian_day, count(*)'
-        else:
-            count_sql = 'SELECT count(julian_day) '
-
-        from_sql = 'FROM {} '.format(os.getenv('GLAD_INDEX_ID'))
-        order_sql = 'ORDER BY year, julian_day'
-
-        if agg_values:
-            groupby_sql = 'GROUP BY year, julian_day'
-        else:
-            groupby_sql = None
-
-        """set confidence variable for glad"""
-        if conf == 'false' or conf == 'False':
-            confidence = ""
-        elif conf or conf == 'true' or conf == 'True':
-            confidence = "and confidence = '3'"
-        else:
-            confidence = ""
-
-        sql, download_sql = QueryConstructorService.format_dataset_query("julian_day", confidence, from_year, from_date, to_year, to_date, count_sql, from_sql, select_sql, order_sql, groupby_sql, iso=iso, state=state, dist=dist)
-
-        return sql, download_sql
-
-    @staticmethod
     def format_terrai_sql(from_year, from_date, to_year, to_date, iso=None, state=None, dist=None, agg_values=False):
 
         select_sql = 'SELECT lat, long, country_iso, state_id, dist_id, year, day '

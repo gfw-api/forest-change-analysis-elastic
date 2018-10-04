@@ -3,55 +3,6 @@
     "name": "#(service.name)",
     "tags": ["gfw"],
     "urls": [{
-        "url": "/v1/glad-alerts-old/admin/:iso_code",
-        "method": "GET",
-        "endpoints": [{
-            "method": "GET",
-            "path": "/api/v2/ms/glad-alerts/admin/:iso_code"
-        }]
-    }, {
-        "url": "/v1/glad-alerts-old/admin/:iso_code/:admin_id",
-        "method": "GET",
-        "endpoints": [{
-            "method": "GET",
-            "path": "/api/v2/ms/glad-alerts/admin/:iso_code/:admin_id"
-        }]
-    }, {
-        "url": "/v1/glad-alerts-old/admin/:iso_code/:admin_id/:dist_id",
-        "method": "GET",
-        "endpoints": [{
-            "method": "GET",
-            "path": "/api/v2/ms/glad-alerts/admin/:iso_code/:admin_id/:dist_id"
-        }]
-    }, {
-        "url": "/v1/glad-alerts-old",
-        "method": "GET",
-        "endpoints": [{
-            "method": "GET",
-            "path": "/api/v2/ms/glad-alerts"
-        }]
-    }, {
-        "url": "/v1/glad-alerts-old",
-        "method": "POST",
-        "endpoints": [{
-            "method": "POST",
-            "path": "/api/v2/ms/glad-alerts"
-        }]
-    }, {
-        "url": "/v2/glad-alerts-old",
-        "method": "GET",
-        "endpoints": [{
-            "method": "GET",
-            "path": "/api/v2/ms/glad-alerts-elastic-v2"
-        }]
-    }, {
-        "url": "/v2/glad-alerts-old",
-        "method": "POST",
-        "endpoints": [{
-            "method": "POST",
-            "path": "/api/v2/ms/glad-alerts-elastic-v2"
-        }]
-    }, {
 	       "url": "/v1/terrai-alerts/admin/:iso_code/:admin_id",
 	       "method": "GET",
 	       "endpoints": [{
@@ -79,40 +30,12 @@
 	           "method": "GET",
 	           "path": "/api/v2/ms/terrai-alerts/use/:use_type/:use_id"
 	        }]
-		}, {
-	       "url": "/v1/glad-alerts-old/use/:use_type/:use_id",
-	       "method": "GET",
-	       "endpoints": [{
-	           "method": "GET",
-	           "path": "/api/v2/ms/glad-alerts/use/:use_type/:use_id"
-	        }]
-		}, {
+		},{
 	       "url": "/v1/terrai-alerts/wdpa/:wdpa_id",
 	       "method": "GET",
 	       "endpoints": [{
 	           "method": "GET",
 	           "path": "/api/v2/ms/terrai-alerts/wdpa/:wdpa_id"
-	        }]
-		}, {
-	       "url": "/v1/glad-alerts-old/wdpa/:wdpa_id",
-	       "method": "GET",
-	       "endpoints": [{
-	           "method": "GET",
-	           "path": "/api/v2/ms/glad-alerts/wdpa/:wdpa_id"
-	        }]
-		}, {
-	       "url": "/v1/glad-alerts-old/date-range",
-	       "method": "GET",
-	       "endpoints": [{
-	           "method": "GET",
-	           "path": "/api/v2/ms/glad-alerts/date-range"
-	        }]
-		}, {
-	       "url": "/v1/glad-alerts-old/latest",
-	       "method": "GET",
-	       "endpoints": [{
-	           "method": "GET",
-	           "path": "/api/v2/ms/glad-alerts/latest"
 	        }]
 		}, {
 	       "url": "/v1/terrai-alerts/date-range",
