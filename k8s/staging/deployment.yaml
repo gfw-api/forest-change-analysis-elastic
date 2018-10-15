@@ -51,9 +51,9 @@ spec:
                   name: mssecrets
                   key: API_VERSION
           - name: TERRAI_INDEX_ID
-            value: index_e477990192c2457b932863aea708a012
+            value: index_bb80312eb51448ad9252336408603591_1536262007962
           - name: TERRAI_DATASET_ID
-            value: e4779901-92c2-457b-9328-63aea708a012
+            value: bb80312e-b514-48ad-9252-336408603591
 
         ports:
           - containerPort: 62000
