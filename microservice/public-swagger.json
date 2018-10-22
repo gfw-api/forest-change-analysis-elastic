@@ -1,8 +1,8 @@
 {
     "swagger": "1.0",
     "info": {
-        "title": "GLAD SQL ANALYSIS",
-        "description": "Micrservice to analyze glad",
+        "title": "Terra-I SQL ANALYSIS",
+        "description": "Micrservice to analyze terrai",
         "version": "1.0.0"
     },
     "host": "production-api.globalforestwatch.org",
