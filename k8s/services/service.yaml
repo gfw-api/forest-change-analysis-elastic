@@ -4,6 +4,7 @@ metadata:
   namespace: gfw
   labels:
     name: {name}
+  name: {name}
 spec:
   ports:
     - port: 62000
