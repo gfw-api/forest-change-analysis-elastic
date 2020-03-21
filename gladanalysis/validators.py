@@ -2,14 +2,16 @@
 
 import datetime
 import re
-
 from functools import wraps
+
 from flask import request
 
 from gladanalysis.routes.api.v2 import error
 
+
 def validate_geostore(func):
     """validate geostore argument"""
+
     @wraps(func)
     def wrapper(*args, **kwargs):
 
@@ -22,10 +24,13 @@ def validate_geostore(func):
             return error(status=400, detail="Geostore or geojson must be set")
 
         return func(*args, **kwargs)
+
     return wrapper
+
 
 def validate_agg(func):
     """validate aggregate_by argument"""
+
     @wraps(func)
     def wrapper(*args, **kwargs):
 
@@ -39,7 +44,7 @@ def validate_agg(func):
         if agg_values:
             if agg_values.lower() not in ['true', 'false']:
                 return error(status=400, detail="aggregate_values parameter not "
-                             "must be either true or false")
+                                                "must be either true or false")
 
             agg_values = eval(agg_values.title())
 
@@ -48,29 +53,32 @@ def validate_agg(func):
 
             if agg_by.lower() not in agg_list:
                 return error(status=400, detail="aggregate_by parameter not "
-                             "in: {}".format(agg_list))
+                                                "in: {}".format(agg_list))
 
         if agg_by and not agg_values:
             return error(status=400, detail="aggregate_values parameter must be "
                                             "true in order to aggregate data")
 
         return func(*args, **kwargs)
+
     return wrapper
+
 
 def validate_terrai_period(func):
     """validate period argument"""
+
     @wraps(func)
     def wrapper(*args, **kwargs):
-
         error = validate_period(2004)
         if error:
             return error
 
         return func(*args, **kwargs)
+
     return wrapper
 
-def validate_period(minYear):
 
+def validate_period(minYear):
     today = datetime.datetime.now()
     period = request.args.get('period', None)
 
@@ -90,7 +98,7 @@ def validate_period(minYear):
 
             if period_from.year < minYear:
                 return error(status=400, detail="Start date can't be earlier than {}-01-01".format(minYear))
-                
+
             if period_to.year > today.year:
                 return error(status=400, detail="End year can't be later than {}".format(today.year))
 
@@ -100,6 +108,7 @@ def validate_period(minYear):
 
 def validate_use(func):
     """Use Validation"""
+
     @wraps(func)
     def wrapper(*args, **kwargs):
 
@@ -117,10 +126,13 @@ def validate_use(func):
             return error(status=400, detail="Use ID should be numeric")
 
         return func(*args, **kwargs)
+
     return wrapper
+
 
 def validate_admin(func):
     """validate admin arguments"""
+
     @wraps(func)
     def wrapper(*args, **kwargs):
 
@@ -149,10 +161,13 @@ def validate_admin(func):
                 pass
 
         return func(*args, **kwargs)
+
     return wrapper
+
 
 def validate_wdpa(func):
     """validate geostore argument"""
+
     @wraps(func)
     def wrapper(*args, **kwargs):
 
@@ -165,4 +180,5 @@ def validate_wdpa(func):
             return error(status=400, detail="WDPA ID should be numeric")
 
         return func(*args, **kwargs)
+
     return wrapper

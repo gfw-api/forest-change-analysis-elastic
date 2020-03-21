@@ -1,4 +1,5 @@
 CTRegisterMicroserviceFlask==0.5.1
+coverage==5.0.3
 Flask==1.0.2
 httmock==1.2.6
 hyp==0.6.0

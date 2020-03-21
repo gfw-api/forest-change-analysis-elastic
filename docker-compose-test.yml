@@ -1,13 +1,16 @@
-test:
-  extends:
-    file: base.yml
-    service: base
-  container_name: forest-change-analysis-elastic-test
-  environment:
-    CT_URL: http://192.168.80.200:9000
-    CT_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4MjBhZDk0NjlhMDI4Nzk4MmY0Y2QxOCIsInByb3ZpZGVyIjoibG9jYWwiLCJwcm92aWRlcklkIjpudWxsLCJlbWFpbCI6InNlcmdpby5nb3JkaWxsb0B2aXp6dWFsaXR5LmNvbSIsInJvbGUiOiJBRE1JTiIsImNyZWF0ZWRBdCI6IjIwMTYtMTEtMDdUMTY6MzY6MzYuODY4WiIsImV4dHJhVXNlckRhdGEiOnsiYXBwcyI6WyJnZnciLCJwcmVwIiwiYXF1ZWR1Y3QiLCJmb3Jlc3QtYXRsYXMiLCJydyIsImRhdGE0c2RnIl19fQ.3GzuhG8wD4gI5Fo6NTqHC_Dq6ChKPPWXygga2mAuKZw
-    LOCAL_URL: http://192.168.80.200:62000
-    TERRAI_INDEX_ID: index_1dca5597d6ac406482cf9f02b178f424
-    TERRAI_DATASET_ID: 1dca5597-d6ac-4064-82cf-9f02b178f424
-    DEBUG: "True"
-  command: test
+version: "3"
+services:
+  develop:
+    build: .
+    ports:
+      - "62000:62000"
+    container_name: forest-change-analysis-elastic-test
+    environment:
+      PORT: 62000
+      CT_URL: http://192.168.80.200:9000
+      CT_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4MjBhZDk0NjlhMDI4Nzk4MmY0Y2QxOCIsInByb3ZpZGVyIjoibG9jYWwiLCJwcm92aWRlcklkIjpudWxsLCJlbWFpbCI6InNlcmdpby5nb3JkaWxsb0B2aXp6dWFsaXR5LmNvbSIsInJvbGUiOiJBRE1JTiIsImNyZWF0ZWRBdCI6IjIwMTYtMTEtMDdUMTY6MzY6MzYuODY4WiIsImV4dHJhVXNlckRhdGEiOnsiYXBwcyI6WyJnZnciLCJwcmVwIiwiYXF1ZWR1Y3QiLCJmb3Jlc3QtYXRsYXMiLCJydyIsImRhdGE0c2RnIl19fQ.3GzuhG8wD4gI5Fo6NTqHC_Dq6ChKPPWXygga2mAuKZw
+      LOCAL_URL: http://192.168.80.200:62000
+      TERRAI_INDEX_ID: index_1dca5597d6ac406482cf9f02b178f424
+      TERRAI_DATASET_ID: 1dca5597-d6ac-4064-82cf-9f02b178f424
+      DEBUG: "True"
+    command: test

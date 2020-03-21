@@ -1,5 +1,4 @@
-
-settings={
+settings = {
     'logging': {
         'level': 'WARN'
     }

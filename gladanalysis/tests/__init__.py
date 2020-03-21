@@ -1,1 +1,1 @@
-from gladanalysis.tests.terrai_test import TerraiTest
+from gladanalysis.tests.test_terrai import TerraiTest

@@ -1,5 +1,7 @@
 # Terra I Analysis API Microservice Overview
 
+[![Test Coverage](https://api.codeclimate.com/v1/badges/d86e27f2918b5cb53fdb/test_coverage)](https://codeclimate.com/github/gfw-api/forest-change-analysis-elastic/test_coverage)
+
 Query the Terra I forest loss dataset with the [Global Forest Watch (GFW)](http://globalforestwatch.org) API
 
 NB: This repo used to handle GLAD analysis requests as well - this functionality has been moved [here](https://github.com/gfw-api/glad-analysis-tiled/).

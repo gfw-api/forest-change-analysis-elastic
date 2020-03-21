@@ -19,7 +19,6 @@ RUN cd /opt/$NAME && pip install -r requirements.txt
 
 COPY entrypoint.sh /opt/$NAME/entrypoint.sh
 COPY main.py /opt/$NAME/main.py
-COPY test.py /opt/$NAME/test.py
 COPY gunicorn.py /opt/$NAME/gunicorn.py
 
 # Copy the application folder inside the container
