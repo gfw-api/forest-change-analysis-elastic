@@ -1,5 +1,6 @@
 # Terra I Analysis API Microservice Overview
 
+[![Build Status](https://travis-ci.org/gfw-api/forest-change-analysis-elastic.svg?branch=develop)](https://travis-ci.org/gfw-api/forest-change-analysis-elastic)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/d86e27f2918b5cb53fdb/test_coverage)](https://codeclimate.com/github/gfw-api/forest-change-analysis-elastic/test_coverage)
 
 Query the Terra I forest loss dataset with the [Global Forest Watch (GFW)](http://globalforestwatch.org) API
