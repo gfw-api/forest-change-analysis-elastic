@@ -3,8 +3,8 @@ kind: Deployment
 metadata:
   namespace: gfw
   labels:
-    name: {name}
-  name: {name}
+    name: forest-change
+  name: forest-change
 spec:
   revisionHistoryLimit: 0
   template:
@@ -12,11 +12,11 @@ spec:
       annotations:
         chaos.alpha.kubernetes.io/enabled: "true"
       labels:
-        name: {name}
+        name: forest-change
     spec:
       containers:
-      - name: {name}
-        image: vizzuality/{name}
+      - name: forest-change
+        image: vizzuality/forest-change
         imagePullPolicy: Always
         resources:
           requests:
@@ -33,7 +33,7 @@ spec:
           - name: ENVIRONMENT
             value: staging
           - name: LOCAL_URL
-            value: http://{name}.gfw.svc.cluster.local:62000
+            value: http://forest-change.gfw.svc.cluster.local:62000
           - name: CT_URL
             valueFrom:
                 secretKeyRef:
