@@ -3,15 +3,15 @@ kind: Deployment
 metadata:
   namespace: gfw
   labels:
-    name: {name}
+    name: forest-change
     app: gfw
-  name: {name}
+  name: forest-change
 spec:
   revisionHistoryLimit: 2
   template:
     metadata:
       labels:
-        name: {name}
+        name: forest-change
     spec:
       tolerations:
       - key: "type"
@@ -28,14 +28,16 @@ spec:
                 values:
                 - gfw    
       containers:
-      - name: {name}
-        image: vizzuality/{name}
+      - name: forest-change
+        image: vizzuality/forest-change
         imagePullPolicy: Always
         resources:
           requests:
-            memory: "128Mi"
+            cpu: "0.5"
+            memory: "256M"
           limits:
-            memory: "512Mi"
+            cpu: "1"
+            memory: "512M"
         args:
           - start
         env:
@@ -44,7 +46,7 @@ spec:
           - name: ENVIRONMENT
             value: prod
           - name: LOCAL_URL
-            value: http://{name}.gfw.svc.cluster.local:62000
+            value: http://forest-change.gfw.svc.cluster.local:62000
           - name: CT_URL
             valueFrom:
                 secretKeyRef:

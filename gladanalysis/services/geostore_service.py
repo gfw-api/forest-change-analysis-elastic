@@ -1,8 +1,7 @@
-import json
-from flask import request
-
 from CTRegisterMicroserviceFlask import request_to_microservice
+
 from gladanalysis.errors import GeostoreNotFound
+
 
 class GeostoreService(object):
     """Class for sending request to geostore (to fetch area in hectares and geostore id)"""
@@ -12,9 +11,9 @@ class GeostoreService(object):
 
         # need to make sure we use /v2/ of the geostore - this had gadm36 data
         config = {
-        'ignore_version': True,
-        'uri': '/v2' + uri,
-        'method': 'GET'
+            'ignore_version': True,
+            'uri': '/v2' + uri,
+            'method': 'GET'
         }
 
         try:
@@ -34,7 +33,7 @@ class GeostoreService(object):
     @staticmethod
     def make_use_request(use_type, use_id):
 
-        uri = "/geostore/use/%s/%s" %(use_type, use_id)
+        uri = "/geostore/use/%s/%s" % (use_type, use_id)
         geostore_data = GeostoreService.execute(uri)
 
         geostore = geostore_data['data']['id']
@@ -45,13 +44,13 @@ class GeostoreService(object):
     def make_gadm_request(iso_code, admin_id=None, dist_id=None):
 
         if not admin_id and not dist_id:
-            uri = "/geostore/admin/%s?simplify=0.05" %(iso_code)
+            uri = "/geostore/admin/%s?simplify=0.05" % (iso_code)
 
         elif admin_id and not dist_id:
-            uri = "/geostore/admin/%s/%s" %(iso_code, admin_id)
+            uri = "/geostore/admin/%s/%s" % (iso_code, admin_id)
 
         elif admin_id and dist_id:
-            uri = "/geostore/admin/%s/%s/%s" %(iso_code, admin_id, dist_id)
+            uri = "/geostore/admin/%s/%s/%s" % (iso_code, admin_id, dist_id)
 
         geostore_data = GeostoreService.execute(uri)
         area_ha = geostore_data['data']['attributes']['areaHa']
@@ -60,7 +59,7 @@ class GeostoreService(object):
     @staticmethod
     def make_area_request(geostore):
 
-        uri = "/geostore/%s" %(geostore)
+        uri = "/geostore/%s" % (geostore)
         area_resp = GeostoreService.execute(uri)
 
         area = area_resp['data']['attributes']['areaHa']
@@ -69,7 +68,7 @@ class GeostoreService(object):
     @staticmethod
     def make_wdpa_request(wdpa_id):
 
-        uri = "/geostore/wdpa/%s" %(wdpa_id)
+        uri = "/geostore/wdpa/%s" % (wdpa_id)
         geostore_data = GeostoreService.execute(uri)
 
         geostore = geostore_data['data']['id']

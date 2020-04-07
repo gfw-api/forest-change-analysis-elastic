@@ -3,10 +3,10 @@ kind: Service
 metadata:
   namespace: gfw
   labels:
-    name: {name}
-  name: {name}
+    name: forest-change
+  name: forest-change
 spec:
   ports:
     - port: 62000
   selector:
-    name: {name}
+    name: forest-change

@@ -1,4 +1,5 @@
 from hyp.marshmallow import Responder
+
 from gladanalysis.schemas import ErrorSchema
 
 

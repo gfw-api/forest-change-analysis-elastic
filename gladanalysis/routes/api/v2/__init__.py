@@ -4,6 +4,7 @@ from __future__ import print_function
 
 from flask import Blueprint, jsonify
 
+
 # GENERIC Error
 
 def error(status=400, detail='Bad Request'):
@@ -11,6 +12,7 @@ def error(status=400, detail='Bad Request'):
         'status': status,
         'detail': detail
     }]), status
+
 
 endpoints = Blueprint('endpoints', __name__)
 import gladanalysis.routes.api.v2.terrai_router

@@ -1,6 +1,4 @@
-from gladanalysis.utils.files import BASE_DIR
-
-settings={
+settings = {
     'logging': {
         'level': 'DEBUG'
     },

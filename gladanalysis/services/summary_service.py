@@ -1,5 +1,5 @@
 import pandas as pd
-import logging
+
 
 class SummaryService(object):
     """Class for creating summary stats on terrai data

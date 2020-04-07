@@ -1,11 +1,12 @@
-from flask import jsonify, request
 import os
+
 
 class QueryConstructorService(object):
     """Class for formatting query and donwload sql"""
 
     @staticmethod
-    def format_dataset_query(day_value, confidence, from_year, from_date, to_year, to_date, count_sql, from_sql, select_sql, order_sql, groupby_sql, iso=None, state=None, dist=None):
+    def format_dataset_query(day_value, confidence, from_year, from_date, to_year, to_date, count_sql, from_sql,
+                             select_sql, order_sql, groupby_sql, iso=None, state=None, dist=None):
 
         if (int(from_year) == int(to_year)):
             where_template = 'WHERE ((year = {y1} and {day} >= {d1} and {day} <= {d2}))' + confidence
@@ -26,7 +27,9 @@ class QueryConstructorService(object):
                 else:
                     where_template += ' AND ({} = {})'.format(geog_name, geog_value)
 
-        where_sql = where_template.format(y1=int(from_year), d1=int(from_date), y1_plus_1=(int(from_year) + 1), y2=int(to_year), d2=int(to_date), y2_minus_1=(int(to_year) - 1), day=day_value)
+        where_sql = where_template.format(y1=int(from_year), d1=int(from_date), y1_plus_1=(int(from_year) + 1),
+                                          y2=int(to_year), d2=int(to_date), y2_minus_1=(int(to_year) - 1),
+                                          day=day_value)
 
         sql = ''.join(filter(None, [count_sql, from_sql, where_sql, groupby_sql]))
         download_sql = '?sql=' + ''.join([select_sql, from_sql, where_sql, order_sql])
@@ -51,6 +54,9 @@ class QueryConstructorService(object):
         else:
             groupby_sql = None
 
-        sql, download_sql = QueryConstructorService.format_dataset_query("day", "", from_year, from_date, to_year, to_date, count_sql, from_sql, select_sql, order_sql, groupby_sql, iso=iso, state=state, dist=dist)
+        sql, download_sql = QueryConstructorService.format_dataset_query("day", "", from_year, from_date, to_year,
+                                                                         to_date, count_sql, from_sql, select_sql,
+                                                                         order_sql, groupby_sql, iso=iso, state=state,
+                                                                         dist=dist)
 
         return sql, download_sql
