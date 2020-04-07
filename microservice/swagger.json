@@ -1,809 +1,814 @@
 {
-    "swagger": "1.0",
-    "info": {
-        "title": "Terra I Analysis Microservice",
-        "description": "Microservice for analyzing Terra I within selected geometries",
-        "version": "1.0.0"
+  "swagger": "1.0",
+  "info": {
+    "title": "Terra I Analysis Microservice",
+    "description": "Microservice for analyzing Terra I within selected geometries",
+    "version": "1.0.0"
+  },
+  "host": "production-api.globalforestwatch.org",
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "basePath": "/api/v2",
+  "produces": [
+    "application/vnd.api+json"
+  ],
+  "paths": {
+    "/terrai-alerts": {
+      "get": {
+        "description": "Retrieves total number of Terra I alerts for your custom geometry and time period",
+        "operationId": "getGladByGeostore",
+        "produces": [
+          "application/vnd.api+json"
+        ],
+        "tags": [
+          "TERRAI"
+        ],
+        "parameters": [
+          {
+            "name": "geostore",
+            "in": "query",
+            "description": "A unique hash assigned to a geographic area\n```3203370361b3d2d087d282507a1746a1```",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "aggregate_values",
+            "in": "query",
+            "description": "aggregate values by date, defaults to julian_day aggregation",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "aggregate_by",
+            "in": "query",
+            "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Alerts obtained successfully",
+            "schema": {
+              "$ref": "#/definitions/GladandTerraIAPI"
+            }
+          },
+          "404": {
+            "description": "endpoint not found",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "400": {
+            "description": "parameter not set correctly",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Retrieves total number of Terrai alerts for a GeoJson",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/vnd.api+json"
+        ],
+        "tags": [
+          "Terrai"
+        ],
+        "operationId": "GladGeojson",
+        "parameters": [
+          {
+            "name": "GeoJson",
+            "in": "body",
+            "description": "A GeoJson polygon feature",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GeoJsonBodyRequest"
+            }
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "aggregate_values",
+            "in": "query",
+            "description": "aggregate values by date, defaults to julian_day aggregation",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "aggregate_by",
+            "in": "query",
+            "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Alerts obtained successfully",
+            "schema": {
+              "$ref": "#/definitions/GladandTerraIAPI"
+            }
+          },
+          "404": {
+            "description": "endpoint not found",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "400": {
+            "description": "parameter not set correctly",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          }
+        }
+      }
     },
-    "host": "production-api.globalforestwatch.org",
-    "schemes": [
-        "https",
-        "http"
-    ],
-    "basePath": "/api/v2",
-    "produces": [
-        "application/vnd.api+json"
-    ],
-    "paths": {
-      "/terrai-alerts": {
-        "get": {
-          "description": "Retrieves total number of Terra I alerts for your custom geometry and time period",
-          "operationId": "getGladByGeostore",
-          "produces": [
-            "application/vnd.api+json"
-          ],
-          "tags": [
-            "TERRAI"
-          ],
-          "parameters": [
-            {
-              "name": "geostore",
-              "in": "query",
-              "description": "A unique hash assigned to a geographic area\n```3203370361b3d2d087d282507a1746a1```",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "name": "period",
-              "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "aggregate_values",
-              "in": "query",
-              "description": "aggregate values by date, defaults to julian_day aggregation",
-              "required": false,
-              "type": "boolean"
-            },
-            {
-              "name": "aggregate_by",
-              "in": "query",
-              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
-              "required": false,
-              "type": "string"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Alerts obtained successfully",
-              "schema": {
-                "$ref": "#/definitions/GladandTerraIAPI"
-              }
-            },
-            "404": {
-              "description": "endpoint not found",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "400": {
-              "description": "parameter not set correctly",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "default": {
-              "description": "unexpected error",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            }
+    "/terrai-alerts/admin/{country_iso}": {
+      "get": {
+        "description": "Retrieves total number of Terra I alerts for a country and time period of interest",
+        "operationId": "getTerraiByGeostore",
+        "produces": [
+          "application/vnd.api+json"
+        ],
+        "tags": [
+          "TERRAI"
+        ],
+        "parameters": [
+          {
+            "name": "period",
+            "in": "query",
+            "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "country_iso",
+            "in": "path",
+            "description": "A Country's 3-letter ISO code\n```BRA```",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "aggregate_values",
+            "in": "query",
+            "description": "aggregate values by date, defaults to julian_day aggregation",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "aggregate_by",
+            "in": "query",
+            "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+            "required": false,
+            "type": "string"
           }
-        },
-        "post":{
-          "description": "Retrieves total number of Terrai alerts for a GeoJson",
-          "consumes": [
-            "application/json"
-          ],
-          "produces": [
-            "application/vnd.api+json"
-          ],
-          "tags": [
-            "Terrai"
-          ],
-          "operationId": "GladGeojson",
-          "parameters": [
-            {
-              "name": "GeoJson",
-              "in": "body",
-              "description": "A GeoJson polygon feature",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "name": "period",
-              "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "aggregate_values",
-              "in": "query",
-              "description": "aggregate values by date, defaults to julian_day aggregation",
-              "required": false,
-              "type": "boolean"
-            },
-            {
-              "name": "aggregate_by",
-              "in": "query",
-              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
-              "required": false,
-              "type": "string"
+        ],
+        "responses": {
+          "200": {
+            "description": "Alerts obtained successfully",
+            "schema": {
+              "$ref": "#/definitions/GladandTerraIAPI"
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "Alerts obtained successfully",
-              "schema": {
-                "$ref": "#/definitions/GladandTerraIAPI"
-              }
-            },
-            "404": {
-              "description": "endpoint not found",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "400": {
-              "description": "parameter not set correctly",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "default": {
-              "description": "unexpected error",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
+          },
+          "404": {
+            "description": "endpoint not found",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "400": {
+            "description": "parameter not set correctly",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Errors"
             }
           }
         }
-      },
-      "/terrai-alerts/admin/{country_iso}": {
-        "get": {
-          "description": "Retrieves total number of Terra I alerts for a country and time period of interest",
-          "operationId": "getTerraiByGeostore",
-          "produces": [
-            "application/vnd.api+json"
-          ],
-          "tags": [
-            "TERRAI"
-          ],
-          "parameters": [
-            {
-              "name": "period",
-              "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "country_iso",
-              "in": "path",
-              "description": "A Country's 3-letter ISO code\n```BRA```",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "name": "aggregate_values",
-              "in": "query",
-              "description": "aggregate values by date, defaults to julian_day aggregation",
-              "required": false,
-              "type": "boolean"
-            },
-            {
-              "name": "aggregate_by",
-              "in": "query",
-              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
-              "required": false,
-              "type": "string"
+      }
+    },
+    "/terrai-alerts/admin/{country_iso}/{admin_id}": {
+      "get": {
+        "description": "Retrieves total number of Terra I alerts for GADM Level 2 in a country and within a time period of interest",
+        "operationId": "getTerraiByAdmin",
+        "produces": [
+          "application/vnd.api+json"
+        ],
+        "tags": [
+          "TERRAI"
+        ],
+        "parameters": [
+          {
+            "name": "period",
+            "in": "query",
+            "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "country_iso",
+            "in": "path",
+            "description": "A Country's 3-letter ISO code\n```BRA```",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "admin_id",
+            "in": "path",
+            "description": "Admin 1 region code based on GADM 2\n```2```",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "aggregate_values",
+            "in": "query",
+            "description": "aggregate values by date, defaults to julian_day aggregation",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "aggregate_by",
+            "in": "query",
+            "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Alerts obtained successfully",
+            "schema": {
+              "$ref": "#/definitions/GladandTerraIAPI"
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "Alerts obtained successfully",
-              "schema": {
-                "$ref": "#/definitions/GladandTerraIAPI"
-              }
-            },
-            "404": {
-              "description": "endpoint not found",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "400": {
-              "description": "parameter not set correctly",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "default": {
-              "description": "unexpected error",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
+          },
+          "404": {
+            "description": "endpoint not found",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "400": {
+            "description": "parameter not set correctly",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Errors"
             }
           }
         }
-      },
-      "/terrai-alerts/admin/{country_iso}/{admin_id}": {
-        "get": {
-          "description": "Retrieves total number of Terra I alerts for GADM Level 2 in a country and within a time period of interest",
-          "operationId": "getTerraiByAdmin",
-          "produces": [
-            "application/vnd.api+json"
-          ],
-          "tags": [
-            "TERRAI"
-          ],
-          "parameters": [
-            {
-              "name": "period",
-              "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "country_iso",
-              "in": "path",
-              "description": "A Country's 3-letter ISO code\n```BRA```",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "name": "admin_id",
-              "in": "path",
-              "description": "Admin 1 region code based on GADM 2\n```2```",
-              "required": true,
-              "type": "integer"
-            },
-            {
-              "name": "aggregate_values",
-              "in": "query",
-              "description": "aggregate values by date, defaults to julian_day aggregation",
-              "required": false,
-              "type": "boolean"
-            },
-            {
-              "name": "aggregate_by",
-              "in": "query",
-              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
-              "required": false,
-              "type": "string"
+      }
+    },
+    "/terrai-alerts/admin/{country_iso}/{admin_id}/{dist_id}": {
+      "get": {
+        "description": "Retrieves total number of Terra I alerts for GADM Level 3 in a country and within a time period of interest",
+        "operationId": "getTerraiByDist",
+        "produces": [
+          "application/vnd.api+json"
+        ],
+        "tags": [
+          "TERRAI"
+        ],
+        "parameters": [
+          {
+            "name": "period",
+            "in": "query",
+            "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "country_iso",
+            "in": "path",
+            "description": "A Country's 3-letter ISO code\n```BRA```",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "admin_id",
+            "in": "path",
+            "description": "Admin 1 region code based on GADM 2\n```2```",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "dist_id",
+            "in": "path",
+            "description": "Admin 2 region code based on GADM 2\n```2```",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "aggregate_values",
+            "in": "query",
+            "description": "aggregate values by date, defaults to julian_day aggregation",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "aggregate_by",
+            "in": "query",
+            "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Alerts obtained successfully",
+            "schema": {
+              "$ref": "#/definitions/GladandTerraIAPI"
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "Alerts obtained successfully",
-              "schema": {
-                "$ref": "#/definitions/GladandTerraIAPI"
-              }
-            },
-            "404": {
-              "description": "endpoint not found",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "400": {
-              "description": "parameter not set correctly",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "default": {
-              "description": "unexpected error",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
+          },
+          "404": {
+            "description": "endpoint not found",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "400": {
+            "description": "parameter not set correctly",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Errors"
             }
           }
         }
-      },
-      "/terrai-alerts/admin/{country_iso}/{admin_id}/{dist_id}": {
-        "get": {
-          "description": "Retrieves total number of Terra I alerts for GADM Level 3 in a country and within a time period of interest",
-          "operationId": "getTerraiByDist",
-          "produces": [
-            "application/vnd.api+json"
-          ],
-          "tags": [
-            "TERRAI"
-          ],
-          "parameters": [
-            {
-              "name": "period",
-              "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "country_iso",
-              "in": "path",
-              "description": "A Country's 3-letter ISO code\n```BRA```",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "name": "admin_id",
-              "in": "path",
-              "description": "Admin 1 region code based on GADM 2\n```2```",
-              "required": true,
-              "type": "integer"
-            },
-            {
-              "name": "dist_id",
-              "in": "path",
-              "description": "Admin 2 region code based on GADM 2\n```2```",
-              "required": true,
-              "type": "integer"
-            },
-            {
-              "name": "aggregate_values",
-              "in": "query",
-              "description": "aggregate values by date, defaults to julian_day aggregation",
-              "required": false,
-              "type": "boolean"
-            },
-            {
-              "name": "aggregate_by",
-              "in": "query",
-              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
-              "required": false,
-              "type": "string"
+      }
+    },
+    "/terrai-alerts/use/{use_type}/{use_id}": {
+      "get": {
+        "description": "Retrieves total number of Terra I alerts for a feature within a land use dataset and time period of interest",
+        "operationId": "getTerraiByUse",
+        "produces": [
+          "application/vnd.api+json"
+        ],
+        "tags": [
+          "TERRAI"
+        ],
+        "parameters": [
+          {
+            "name": "period",
+            "in": "query",
+            "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "use_type",
+            "in": "path",
+            "description": "Land use dataset, one of\n````(logging, oilpalm, mining, fiber)```",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "use_id",
+            "in": "path",
+            "description": "Numeric id for a feature within a land use dataset\n```100```",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "aggregate_values",
+            "in": "query",
+            "description": "aggregate values by date, defaults to julian_day aggregation",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "aggregate_by",
+            "in": "query",
+            "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Alerts obtained successfully",
+            "schema": {
+              "$ref": "#/definitions/GladandTerraIAPI"
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "Alerts obtained successfully",
-              "schema": {
-                "$ref": "#/definitions/GladandTerraIAPI"
-              }
-            },
-            "404": {
-              "description": "endpoint not found",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "400": {
-              "description": "parameter not set correctly",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "default": {
-              "description": "unexpected error",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
+          },
+          "404": {
+            "description": "endpoint not found",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "400": {
+            "description": "parameter not set correctly",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Errors"
             }
           }
         }
-      },
-      "/terrai-alerts/use/{use_type}/{use_id}": {
-        "get": {
-          "description": "Retrieves total number of Terra I alerts for a feature within a land use dataset and time period of interest",
-          "operationId": "getTerraiByUse",
-          "produces": [
-            "application/vnd.api+json"
-          ],
-          "tags": [
-            "TERRAI"
-          ],
-          "parameters": [
-            {
-              "name": "period",
-              "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "use_type",
-              "in": "path",
-              "description": "Land use dataset, one of\n````(logging, oilpalm, mining, fiber)```",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "name": "use_id",
-              "in": "path",
-              "description": "Numeric id for a feature within a land use dataset\n```100```",
-              "required": true,
-              "type": "integer"
-            },
-            {
-              "name": "aggregate_values",
-              "in": "query",
-              "description": "aggregate values by date, defaults to julian_day aggregation",
-              "required": false,
-              "type": "boolean"
-            },
-            {
-              "name": "aggregate_by",
-              "in": "query",
-              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
-              "required": false,
-              "type": "string"
+      }
+    },
+    "/terrai-alerts/wdpa/{wdpa_id}": {
+      "get": {
+        "description": "Retrieves total number of Terra I alerts for a protected area within the WDPA dataabse and time-period",
+        "operationId": "getTerraiByWdpa",
+        "produces": [
+          "application/vnd.api+json"
+        ],
+        "tags": [
+          "TERRAI"
+        ],
+        "parameters": [
+          {
+            "name": "period",
+            "in": "query",
+            "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "wdpa_id",
+            "in": "path",
+            "description": "The numeric ID for a feature within the WDPA dataset\n```56670``",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "aggregate_values",
+            "in": "query",
+            "description": "aggregate values by date, defaults to julian_day aggregation",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "aggregate_by",
+            "in": "query",
+            "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Alerts obtained successfully",
+            "schema": {
+              "$ref": "#/definitions/GladandTerraIAPI"
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "Alerts obtained successfully",
-              "schema": {
-                "$ref": "#/definitions/GladandTerraIAPI"
-              }
-            },
-            "404": {
-              "description": "endpoint not found",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "400": {
-              "description": "parameter not set correctly",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "default": {
-              "description": "unexpected error",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
+          },
+          "404": {
+            "description": "endpoint not found",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "400": {
+            "description": "parameter not set correctly",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Errors"
             }
           }
         }
-      },
-      "/terrai-alerts/wdpa/{wdpa_id}": {
-        "get": {
-          "description": "Retrieves total number of Terra I alerts for a protected area within the WDPA dataabse and time-period",
-          "operationId": "getTerraiByWdpa",
-          "produces": [
-            "application/vnd.api+json"
-          ],
-          "tags": [
-            "TERRAI"
-          ],
-          "parameters": [
-            {
-              "name": "period",
-              "in": "query",
-              "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "wdpa_id",
-              "in": "path",
-              "description": "The numeric ID for a feature within the WDPA dataset\n```56670``",
-              "required": true,
-              "type": "integer"
-            },
-            {
-              "name": "aggregate_values",
-              "in": "query",
-              "description": "aggregate values by date, defaults to julian_day aggregation",
-              "required": false,
-              "type": "boolean"
-            },
-            {
-              "name": "aggregate_by",
-              "in": "query",
-              "description": "aggregate values by date type\n```[day, week, month, year, quarter]```",
-              "required": false,
-              "type": "string"
+      }
+    },
+    "/terrai-alerts/date-range": {
+      "get": {
+        "description": "Retrieves min and max date for the Terra I Alerts database",
+        "operationId": "getTerraiDate",
+        "produces": [
+          "application/vnd.api+json"
+        ],
+        "tags": [
+          "TERRAI"
+        ],
+        "responses": {
+          "200": {
+            "description": "Dates obtained successfully",
+            "schema": {
+              "$ref": "#/definitions/DateCalls"
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "Alerts obtained successfully",
-              "schema": {
-                "$ref": "#/definitions/GladandTerraIAPI"
-              }
-            },
-            "404": {
-              "description": "endpoint not found",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "400": {
-              "description": "parameter not set correctly",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "default": {
-              "description": "unexpected error",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
+          },
+          "404": {
+            "description": "endpoint not found",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Errors"
             }
           }
         }
-      },
-      "/terrai-alerts/date-range": {
-        "get": {
-          "description": "Retrieves min and max date for the Terra I Alerts database",
-          "operationId": "getTerraiDate",
-          "produces": [
-            "application/vnd.api+json"
-          ],
-          "tags": [
-            "TERRAI"
-          ],
-          "responses": {
-            "200": {
-              "description": "Dates obtained successfully",
-              "schema": {
-                "$ref": "#/definitions/DateCalls"
-              }
-            },
-            "404": {
-              "description": "endpoint not found",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "default": {
-              "description": "unexpected error",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
+      }
+    },
+    "/terrai-alerts/latest": {
+      "get": {
+        "description": "Retrieves latest (or max) date of Terra I",
+        "operationId": "getTerraiDate",
+        "produces": [
+          "application/vnd.api+json"
+        ],
+        "tags": [
+          "TERRAI"
+        ],
+        "responses": {
+          "200": {
+            "description": "Date obtained successfully",
+            "schema": {
+              "$ref": "#/definitions/LatestCalls"
+            }
+          },
+          "404": {
+            "description": "endpoint not found",
+            "schema": {
+              "$ref": "#/definitions/Errors"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Errors"
             }
           }
         }
-      },
-      "/terrai-alerts/latest": {
-        "get": {
-          "description": "Retrieves latest (or max) date of Terra I",
-          "operationId": "getTerraiDate",
-          "produces": [
-            "application/vnd.api+json"
-          ],
-          "tags": [
-            "TERRAI"
-          ],
-          "responses": {
-            "200": {
-              "description": "Date obtained successfully",
-              "schema": {
-                "$ref": "#/definitions/LatestCalls"
-              }
-            },
-            "404": {
-              "description": "endpoint not found",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            },
-            "default": {
-              "description": "unexpected error",
-              "schema": {
-                "$ref": "#/definitions/Errors"
-              }
-            }
-          }
       }
     }
   },
   "definitions": {
-      "Errors": {
+    "Errors": {
+      "type": "object",
+      "description": "Errors",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "A unique identifier for this particular occurrence of the problem."
+        },
+        "links": {
           "type": "object",
-          "description": "Errors",
+          "description": "A links object",
           "properties": {
-              "errors": {
-                  "type": "array",
-                  "items": {
-                      "$ref": "#/definitions/Error"
-                    }
-                  }
-                }
-              },
-              "Error": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                      "type": "integer",
-                      "format": "int32",
-                      "description": "A unique identifier for this particular occurrence of the problem."
-                    },
-                    "links": {
-                      "type": "object",
-                      "description": "A links object",
-                      "properties": {
-                          "about": {
-                              "type": "string",
-                              "description": "A link that leads to further details about this particular occurrence of the problem."
-                            }
-                        }
-                    },
-                    "status": {
-                      "type": "string",
-                      "description": "The HTTP status code applicable to this problem, expressed as a string value"
-                    },
-                    "code": {
-                      "type": "string",
-                      "description": "An application-specific error code, expressed as a string value"
-                    },
-                    "title": {
-                      "type": "string",
-                      "description": "A short, human-readable summary of the problem that SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization."
-                    },
-                    "detail": {
-                      "type": "string",
-                      "description": "A human-readable explanation specific to this occurrence of the problem. Like title, this field's value can be localized"
-                    },
-                    "source": {
-                      "type": "object",
-                      "description": "An object containing references to the source of the error, optionally including any of the following members",
-                        "properties": {
-                          "pointer": {
-                            "type": "string",
-                            "description": "A JSON Pointer [RFC6901] to the associated entity in the request document"
-                        },
-                        "parameter": {
-                            "type": "string",
-                            "description": "A string indicating which URI query parameter caused the error."
-                        }
-                      }
-                    },
-                    "meta": {
-                      "type": "object",
-                      "description": "A meta object containing non-standard meta-information about the error."
-                    }
-                }
-              },
-              "GladandTerraIAPI": {
-                  "type": "object",
-                  "properties": {
-                      "data": {
-                          "type": "array",
-                          "items": {
-                              "$ref": "#/definitions/Result"
-                          }
-                      }
-                  }
-              },
-              "Result": {
-                  "type": "object",
-                  "properties": {
-                      "type": {
-                          "type": "string",
-                          "description": "Dataset Name"
-                      },
-                      "id": {
-                          "type": "string",
-                          "description": "Dataset ID"
-                      },
-                      "aggregate_values": {
-                          "type": "string",
-                          "description": "aggregate values true"
-                      },
-                      "aggregate_by": {
-                          "type": "string",
-                          "description": "aggregation type (day, week, etc...)"
-                      },
-                      "geostore": {
-                          "type": "string",
-                          "description": "geostore ID"
-                      },
-                      "attributes": {
-                          "properties": {
-                              "schema": {
-                                  "$ref": "#/definitions/Data"
-                              }
-                          }
-                      }
-                  }
-              },
-              "Data": {
-                  "type": "object",
-                  "properties": {
-                      "areaHA": {
-                          "type": "string",
-                          "description": "Total area in hectares"
-                      },
-                      "value": {
-                          "type": "integer",
-                          "description": "total count of alerts for requested area"
-                              },
-                      "downloadUrls": {
-                        "type": "object",
-                        "properties": {
-                          "csv": {
-                            "type": "string",
-                            "description": "download link to access data as csv"
-                          },
-                          "json": {
-                            "type": "string",
-                            "description": "download link to access data as json"
-                          }
-                      }
-                  }
-              },
-              "DateCalls": {
-                  "type": "object",
-                  "properties": {
-                      "data": {
-                          "type": "array",
-                          "items": {
-                              "$ref": "#/definitions/DateResult"
-                              }
-                         }
-                    }
-              },
-              "DateResult": {
-                  "type": "object",
-                  "properties": {
-                      "type": {
-                          "type": "string",
-                          "description": "Dataset Name"
-                      },
-                      "id": {
-                          "type": "string",
-                          "description": "Dataset ID"
-                      },
-                      "attributes": {
-                          "properties": {
-                              "schema": {
-                                  "$ref": "#/definitions/DateData"
-                                }
-                            }
-                        }
-                    }
-              },
-              "DateData": {
-                  "type": "object",
-                  "properties": {
-                      "maxDate": {
-                          "type": "string",
-                          "description": "Max date in dataset"
-                      },
-                      "minDate": {
-                          "type": "integer",
-                          "description": "Min date in dataset"
-                      }
-                    }
-                 }
-              },
-              "LatestCalls": {
-                  "type": "object",
-                  "properties": {
-                      "data": {
-                          "type": "array",
-                          "items": {
-                              "$ref": "#/definitions/LatestResult"
-                              }
-                          }
-                    }
-              },
-              "LatestResult": {
-                  "type": "object",
-                  "properties": {
-                      "type": {
-                          "type": "string",
-                          "description": "Dataset Name"
-                      },
-                      "id": {
-                          "type": "string",
-                          "description": "Dataset ID"
-                      },
-                      "attributes": {
-                          "properties": {
-                              "schema": {
-                                  "$ref": "#/definitions/LatestData"
-                                }
-                            }
-                        }
-                  }
-              },
-              "LatestData": {
-                  "type": "object",
-                  "properties": {
-                      "date": {
-                          "type": "string",
-                          "description": "Latest (or Max) date in dataset"
-                      }
-                    }
-                  }
-                }
-              }
+            "about": {
+              "type": "string",
+              "description": "A link that leads to further details about this particular occurrence of the problem."
+            }
+          }
+        },
+        "status": {
+          "type": "string",
+          "description": "The HTTP status code applicable to this problem, expressed as a string value"
+        },
+        "code": {
+          "type": "string",
+          "description": "An application-specific error code, expressed as a string value"
+        },
+        "title": {
+          "type": "string",
+          "description": "A short, human-readable summary of the problem that SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization."
+        },
+        "detail": {
+          "type": "string",
+          "description": "A human-readable explanation specific to this occurrence of the problem. Like title, this field's value can be localized"
+        },
+        "source": {
+          "type": "object",
+          "description": "An object containing references to the source of the error, optionally including any of the following members",
+          "properties": {
+            "pointer": {
+              "type": "string",
+              "description": "A JSON Pointer [RFC6901] to the associated entity in the request document"
+            },
+            "parameter": {
+              "type": "string",
+              "description": "A string indicating which URI query parameter caused the error."
+            }
+          }
+        },
+        "meta": {
+          "type": "object",
+          "description": "A meta object containing non-standard meta-information about the error."
+        }
+      }
+    },
+    "GladandTerraIAPI": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Result"
+          }
+        }
+      }
+    },
+    "Result": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Dataset Name"
+        },
+        "id": {
+          "type": "string",
+          "description": "Dataset ID"
+        },
+        "aggregate_values": {
+          "type": "string",
+          "description": "aggregate values true"
+        },
+        "aggregate_by": {
+          "type": "string",
+          "description": "aggregation type (day, week, etc...)"
+        },
+        "geostore": {
+          "type": "string",
+          "description": "geostore ID"
+        },
+        "attributes": {
+          "properties": {
+            "schema": {
+              "$ref": "#/definitions/Data"
+            }
+          }
+        }
+      }
+    },
+    "Data": {
+      "type": "object",
+      "properties": {
+        "areaHA": {
+          "type": "string",
+          "description": "Total area in hectares"
+        },
+        "value": {
+          "type": "integer",
+          "description": "total count of alerts for requested area"
+        },
+        "downloadUrls": {
+          "type": "object",
+          "properties": {
+            "csv": {
+              "type": "string",
+              "description": "download link to access data as csv"
+            },
+            "json": {
+              "type": "string",
+              "description": "download link to access data as json"
+            }
+          }
+        }
+      }
+    },
+    "DateCalls": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DateResult"
+          }
+        }
+      }
+    },
+    "DateResult": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Dataset Name"
+        },
+        "id": {
+          "type": "string",
+          "description": "Dataset ID"
+        },
+        "attributes": {
+          "properties": {
+            "schema": {
+              "$ref": "#/definitions/DateData"
+            }
+          }
+        }
+      }
+    },
+    "DateData": {
+      "type": "object",
+      "properties": {
+        "maxDate": {
+          "type": "string",
+          "description": "Max date in dataset"
+        },
+        "minDate": {
+          "type": "integer",
+          "description": "Min date in dataset"
+        }
+      }
+    },
+    "LatestCalls": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LatestResult"
+          }
+        }
+      }
+    },
+    "LatestResult": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Dataset Name"
+        },
+        "id": {
+          "type": "string",
+          "description": "Dataset ID"
+        },
+        "attributes": {
+          "properties": {
+            "schema": {
+              "$ref": "#/definitions/LatestData"
+            }
+          }
+        }
+      }
+    },
+    "LatestData": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "description": "Latest (or Max) date in dataset"
+        }
+      }
+    },
+    "GeoJsonBodyRequest": {
+      "type": "string"
+    }
+  }
+}
