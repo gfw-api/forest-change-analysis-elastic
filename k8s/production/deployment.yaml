@@ -13,11 +13,6 @@ spec:
       labels:
         name: forest-change
     spec:
-      tolerations:
-      - key: "type"
-        operator: "Equal"
-        value: "gfw"
-        effect: "NoSchedule"
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
