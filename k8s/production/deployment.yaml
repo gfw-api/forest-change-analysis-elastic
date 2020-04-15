@@ -63,7 +63,7 @@ spec:
                   name: mssecrets
                   key: API_VERSION
           - name: TERRAI_INDEX_ID
-            value: index_bb80312eb51448ad9252336408603591
+            value: index_bb80312eb51448ad9252336408603591_1536262007962
           - name: TERRAI_DATASET_ID
             value: bb80312e-b514-48ad-9252-336408603591
 
