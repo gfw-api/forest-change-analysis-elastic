@@ -15,6 +15,12 @@ NB: This repo used to handle GLAD analysis requests as well - this functionality
 - Summarize analysis results by day, week, month, quarter or year
 - Get dataset date range/ latest date
 
+## Dependencies
+
+Dependencies on other Microservices:
+- [Geostore](https://github.com/gfw-api/gfw-geostore-api)
+- [Query](https://github.com/resource-watch/query/)
+
 ## API Endpoints
 For endpoint documentation, please visit our
 [API documentation page for TerraI](https://production-api.globalforestwatch.org/documentation/#/?tags=TERRAI)
