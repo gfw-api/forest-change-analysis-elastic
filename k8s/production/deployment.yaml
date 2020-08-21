@@ -21,14 +21,14 @@ spec:
               - key: type
                 operator: In
                 values:
-                - gfw    
+                - gfw
       containers:
       - name: forest-change
         image: vizzuality/forest-change
         imagePullPolicy: Always
         resources:
           requests:
-            cpu: "0.5"
+            cpu: "0.25"
             memory: "256M"
           limits:
             cpu: "1"
