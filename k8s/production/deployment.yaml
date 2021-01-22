@@ -1,13 +1,23 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: gfw
   labels:
-    name: forest-change
     app: gfw
+    name: forest-change
   name: forest-change
+  namespace: gfw
 spec:
+  progressDeadlineSeconds: 2147483647
+  replicas: 1
   revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      name: forest-change
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -17,57 +27,64 @@ spec:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            - matchExpressions:
-              - key: type
-                operator: In
-                values:
-                - gfw
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - gfw
       containers:
-      - name: forest-change
-        image: vizzuality/forest-change
-        imagePullPolicy: Always
-        resources:
-          requests:
-            cpu: "0.25"
-            memory: "256M"
-          limits:
-            cpu: "1"
-            memory: "512M"
-        args:
-          - start
-        env:
-          - name: PORT
-            value: "62000"
-          - name: ENVIRONMENT
-            value: prod
-          - name: LOCAL_URL
-            value: http://forest-change.gfw.svc.cluster.local:62000
-          - name: CT_URL
-            valueFrom:
+        - args:
+            - start
+          env:
+            - name: PORT
+              value: "62000"
+            - name: ENVIRONMENT
+              value: prod
+            - name: LOCAL_URL
+              value: http://forest-change.gfw.svc.cluster.local:62000
+            - name: CT_URL
+              valueFrom:
                 secretKeyRef:
-                  name: mssecrets
                   key: CT_URL
-          - name: CT_TOKEN
-            valueFrom:
-                secretKeyRef:
                   name: mssecrets
+            - name: CT_TOKEN
+              valueFrom:
+                secretKeyRef:
                   key: CT_TOKEN
-          - name: CT_REGISTER_MODE
-            valueFrom:
-                secretKeyRef:
                   name: mssecrets
+            - name: CT_REGISTER_MODE
+              valueFrom:
+                secretKeyRef:
                   key: CT_REGISTER_MODE
-          - name: API_VERSION
-            valueFrom:
-                secretKeyRef:
                   name: mssecrets
+            - name: API_VERSION
+              valueFrom:
+                secretKeyRef:
                   key: API_VERSION
-          - name: TERRAI_INDEX_ID
-            value: index_bb80312eb51448ad9252336408603591_1536262007962
-          - name: TERRAI_DATASET_ID
-            value: bb80312e-b514-48ad-9252-336408603591
-
-        ports:
-          - containerPort: 62000
-
+                  name: mssecrets
+            - name: TERRAI_INDEX_ID
+              value: index_bb80312eb51448ad9252336408603591_1536262007962
+            - name: TERRAI_DATASET_ID
+              value: bb80312e-b514-48ad-9252-336408603591
+          image: vizzuality/forest-change
+          imagePullPolicy: Always
+          name: forest-change
+          ports:
+            - containerPort: 62000
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512M
+            requests:
+              cpu: 250m
+              memory: 256M
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+        - name: regcred
       restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: { }
+      terminationGracePeriodSeconds: 30
