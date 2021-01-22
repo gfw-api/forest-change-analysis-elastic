@@ -1,4 +1,4 @@
-from CTRegisterMicroserviceFlask import request_to_microservice
+from RWAPIMicroservicePython import request_to_microservice
 
 from gladanalysis.errors import GeostoreNotFound
 
