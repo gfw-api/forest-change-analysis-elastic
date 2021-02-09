@@ -65,7 +65,7 @@ spec:
               value: index_bb80312eb51448ad9252336408603591_1536262007962
             - name: TERRAI_DATASET_ID
               value: bb80312e-b514-48ad-9252-336408603591
-          image: vizzuality/forest-change
+          image: gfwdockerhub/forest-change
           imagePullPolicy: Always
           name: forest-change
           ports:
