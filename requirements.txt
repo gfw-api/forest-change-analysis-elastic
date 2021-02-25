@@ -1,4 +1,4 @@
-RWAPIMicroservicePython==0.1.0
+RWAPIMicroservicePython==0.2.0
 coverage==5.0.3
 Flask==1.0.2
 httmock==1.2.6
