@@ -30,7 +30,7 @@ spec:
                   - key: type
                     operator: In
                     values:
-                      - apps
+                      - gfw
       containers:
         - args:
             - start
