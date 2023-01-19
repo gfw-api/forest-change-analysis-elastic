@@ -3,7 +3,7 @@ coverage==7.0.5
 Flask==2.2.2
 httmock==1.4.0
 hyp==0.6.0
-marshmallow==2.11.1
+marshmallow==2.15.1
 pandas==1.5.1
 cryptography==39.0.0
 pyproj==3.4.1
