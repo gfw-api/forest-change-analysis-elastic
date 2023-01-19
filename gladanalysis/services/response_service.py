@@ -5,7 +5,7 @@ class ResponseService(object):
     """Class for standardizing api responses"""
 
     @staticmethod
-    def standardize_response(name, data, datasetID, count=None, download_sql=None, area=None, geostore=None, agg=None,
+    def standardize_response(data, datasetID, count=None, download_sql=None, area=None, geostore=None, agg=None,
                              agg_by=None, period=None):
         # Helper function to standardize API responses
         standard_format = {}

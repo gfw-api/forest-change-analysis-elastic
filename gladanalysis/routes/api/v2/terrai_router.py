@@ -37,7 +37,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
     agg_by = request.args.get('aggregate_by', None)
 
     # grab geojson if it exists
-    geojson = request.get_json().get('geojson', None) if request.is_json else None
+    geojson = request.get_json(False, True).get('geojson', None) if request.get_json(False, True) else None
 
     # format period request to julian dates
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "day")
@@ -60,13 +60,13 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
 
         data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson)
         agg_data = SummaryService.create_time_table('terrai', data, agg_by)
-        standard_format = ResponseService.standardize_response('Terrai', agg_data, datasetID, **kwargs)
+        standard_format = ResponseService.standardize_response(agg_data, datasetID, **kwargs)
 
     else:
         kwargs['agg_by'] = None
         kwargs['count'] = "COUNT(julian_day)"
         data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson)
-        standard_format = ResponseService.standardize_response('Terrai', data, datasetID, **kwargs)
+        standard_format = ResponseService.standardize_response(data, datasetID, **kwargs)
 
     return jsonify({'data': standard_format}), 200
 
