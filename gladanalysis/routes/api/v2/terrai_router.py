@@ -37,7 +37,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
     agg_by = request.args.get('aggregate_by', None)
 
     # grab geojson if it exists
-    geojson = request.get_json().get('geojson', None) if request.get_json() else None
+    geojson = request.get_json().get('geojson', None) if request.is_json else None
 
     # format period request to julian dates
     from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "day")

@@ -31,9 +31,9 @@ class TerraiTest(unittest.TestCase):
 
     def setUp(self):
         app = create_application()
-        app.testing = True
-        app.config['TESTING'] = True
-        app.config['DEBUG'] = False
+        app.config.update({
+            "TESTING": True,
+        })
         self.app = app.test_client()
 
     def tearDown(self):

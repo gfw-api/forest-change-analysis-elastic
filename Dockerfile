@@ -1,4 +1,4 @@
-FROM python:2.7-stretch
+FROM python:3.11-bullseye
 MAINTAINER info@vizzuality.com
 
 ENV NAME forest-change-analysis-elastic
@@ -6,11 +6,11 @@ ENV USER microservice
 
 RUN apt-get -y update && apt-get -y upgrade && \
    apt-get install -y bash git openssl \
-   libffi-dev gcc musl-dev libgeos-3.5.1
+   libffi-dev gcc musl-dev libgeos-dev python3-pip
 
 RUN addgroup $USER && adduser --shell /bin/bash --disabled-login --ingroup $USER $USER
 
-RUN easy_install pip && pip install --upgrade pip
+RUN pip install --upgrade pip
 RUN pip install gunicorn gevent
 
 RUN mkdir -p /opt/$NAME
@@ -24,7 +24,6 @@ COPY gunicorn.py /opt/$NAME/gunicorn.py
 # Copy the application folder inside the container
 WORKDIR /opt/$NAME
 COPY ./gladanalysis /opt/$NAME/gladanalysis
-COPY ./microservice /opt/$NAME/microservice
 
 RUN chown -R $USER:$USER /opt/$NAME
 
