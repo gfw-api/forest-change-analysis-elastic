@@ -5,7 +5,7 @@ httmock==1.4.0
 hyp==0.6.0
 marshmallow==2.15.1
 pandas==1.5.1
-cryptography==39.0.0
+cryptography==39.0.1
 pyproj==3.4.1
 requests==2.28.2
 shapely==2.0.0
