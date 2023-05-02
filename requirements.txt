@@ -1,6 +1,6 @@
 RWAPIMicroservicePython==2.0.0
 coverage==7.0.5
-Flask==2.2.2
+Flask==2.3.2
 httmock==1.4.0
 hyp==0.6.0
 marshmallow==2.15.1
