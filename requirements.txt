@@ -1,4 +1,6 @@
-RWAPIMicroservicePython==2.0.0
+RWAPIMicroservicePython==3.0.0rc2
+moto==4.1.14
+requests_mock==1.11.0
 coverage==7.0.5
 Flask==2.2.2
 httmock==1.4.0

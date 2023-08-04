@@ -13,4 +13,6 @@ services:
       TERRAI_INDEX_ID: index_1dca5597d6ac406482cf9f02b178f424
       TERRAI_DATASET_ID: 1dca5597-d6ac-4064-82cf-9f02b178f424
       DEBUG: "True"
+      AWS_REGION: "us-east-1"
+
     command: test

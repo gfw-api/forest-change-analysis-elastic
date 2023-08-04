@@ -2,31 +2,14 @@ import json
 import logging
 import os
 import unittest
-
-from httmock import urlmatch, response, HTTMock
-
+import requests_mock
+from moto import mock_logs
 from gladanalysis import create_application
+from gladanalysis.tests.mocks import mock_geostore, mock_geostore_not_found, mock_query
+from RWAPIMicroservicePython.test_utils import mock_request_validation
 
 
-@urlmatch(path=r'.*/geostore.*')
-def geostore_mock(url, request):
-    headers = {'content-type': 'application/json'}
-    content = {"data": {"attributes": {"areaHa": 231065643.70829132, "downloadUrls": {
-        "csv": "/download/1dca5597-d6ac-4064-82cf-9f02b178f424?sql=SELECT lat, long, country_iso, state_id, dist_id, year, day FROM index_1dca5597d6ac406482cf9f02b178f424 WHERE ((year = 2004 and day >= 161) or (year >= 2005 and year <= 2016) or (year = 2017 and day <= 81))ORDER BY year, day&format=csv&geostore=141cba8b4aadde4a5b981917214666e0",
-        "json": "/download/1dca5597-d6ac-4064-82cf-9f02b178f424?sql=SELECT lat, long, country_iso, state_id, dist_id, year, day FROM index_1dca5597d6ac406482cf9f02b178f424 WHERE ((year = 2004 and day >= 161) or (year >= 2005 and year <= 2016) or (year = 2017 and day <= 81))ORDER BY year, day&format=json&geostore=141cba8b4aadde4a5b981917214666e0"},
-                                       "value": 1000}, "geostore": "141cba8b4aadde4a5b981917214666e0",
-                        "id": "1dca5597-d6ac-4064-82cf-9f02b178f424", "type": "terrai-alerts"}}
-    return response(200, content, headers, None, 5, request)
-
-
-@urlmatch(path=r'.*/query.*')
-def query_mock(url, request):
-    headers = {'content-type': 'application/json'}
-    content = content = {
-        "data": [{"MAX(year)": 123, "MAX(day)": 123, "MIN(year)": 123, "MIN(day)": 123, "COUNT(day)": 123}]}
-    return response(200, content, headers, None, 5, request)
-
-
+@mock_logs
 class TerraiTest(unittest.TestCase):
 
     def setUp(self):
@@ -39,8 +22,8 @@ class TerraiTest(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def terrai_query_params(self):
-
+    @staticmethod
+    def terrai_query_params():
         agg_values = ['day', 'week', 'month', 'year', 'quarter']
 
         terrai_periods = [
@@ -62,25 +45,25 @@ class TerraiTest(unittest.TestCase):
 
         return agg_values, terrai_periods
 
-    def terrai_path_params(self):
-
+    @staticmethod
+    def terrai_path_params():
         land_uses = ['logging', 'mining', 'oilpalm', 'fiber']
-
         return land_uses
 
     def make_request(self, request):
-        '''general method to make request using HTTMock'''
+        try:
+            response = self.app.get(request, follow_redirects=True, headers={'x-api-key': 'api-key-test'})
+            status_code = response.status_code
+            data = self.deserialize(response, status_code)
 
-        with HTTMock(query_mock):
-            with HTTMock(geostore_mock):
-                response = self.app.get(request, follow_redirects=True)
-                status_code = response.status_code
-                data = self.deserialize(response, status_code)
+            return data, status_code
+        except Exception as e:
+            logging.error(e)
+            raise e
 
-                return data, status_code
-
-    def deserialize(self, response, status_code):
-        '''get json from request/ separate by status code'''
+    @staticmethod
+    def deserialize(response, status_code):
+        """get json from request/ separate by status code"""
 
         if status_code == 200:
             return json.loads(response.data).get('data', None)
@@ -96,8 +79,11 @@ class TerraiTest(unittest.TestCase):
         else:
             self.assertEqual(data.get(key), value)
 
-    def test_geostore_notfound(self):
-        '''test geostore error message'''
+    @requests_mock.mock(kw='mocker')
+    def test_geostore_notfound(self, mocker):
+        """test geostore error message"""
+        mock_request_validation(mocker, microservice_token=os.getenv('MICROSERVICE_TOKEN'))
+        mock_geostore_not_found(mocker)
 
         logging.info('[TEST]: Beginning terrai Geostore NotFound Test')
         data, status_code = self.make_request('/api/v2/ms/terrai-alerts')
@@ -105,21 +91,26 @@ class TerraiTest(unittest.TestCase):
 
         self.assertions(data, status_code, 400, 'detail', 'Geostore or geojson must be set')
 
-    def test_geostore(self):
-        '''test request with geostore only'''
-
+    @requests_mock.mock(kw='mocker')
+    def test_geostore(self, mocker):
+        """test request with geostore only"""
+        mock_request_validation(mocker, microservice_token=os.getenv('MICROSERVICE_TOKEN'))
+        mock_query(mocker)
+        mock_geostore(mocker)
         logging.info('[TEST]: Beginning terrai Geostore Test')
-        local_url = '{}'.format(os.getenv('LOCAL_URL'))
         data, status_code = self.make_request('/api/v2/ms/terrai-alerts?geostore=beb8e2f26bd26406fcf2018d343a62c5')
         logging.info('[TEST]: response deserialized: {}'.format(data))
 
         self.assertions(data, status_code, 200, 'geostore', 'beb8e2f26bd26406fcf2018d343a62c5')
 
-    def test_geostore_and_periods(self):
-        '''test request with geostore and Terrai periods'''
+    @requests_mock.mock(kw='mocker')
+    def test_geostore_and_periods(self, mocker):
+        """test request with geostore and Terrai periods"""
+        mock_request_validation(mocker, microservice_token=os.getenv('MICROSERVICE_TOKEN'))
+        mock_query(mocker)
+        mock_geostore(mocker)
 
         logging.info('[TEST]: Beginning Terrai Geostore Test')
-        local_url = '{}'.format(os.getenv('LOCAL_URL'))
         for period in self.terrai_query_params()[1]:
             data, status_code = self.make_request(
                 '/api/v2/ms/terrai-alerts?geostore=beb8e2f26bd26406fcf2018d343a62c5&period={}'.format(period))
@@ -127,22 +118,27 @@ class TerraiTest(unittest.TestCase):
 
             self.assertions(data, status_code, 200, 'geostore', 'beb8e2f26bd26406fcf2018d343a62c5')
 
-    def test_admin_and_periods(self):
-        '''test request with admin and periods'''
-
+    @requests_mock.mock(kw='mocker')
+    def test_admin_and_periods(self, mocker):
+        """test request with admin and periods"""
+        mock_query(mocker)
+        mock_geostore(mocker)
+        mock_request_validation(mocker, microservice_token=os.getenv('MICROSERVICE_TOKEN'))
         logging.info('[TEST]: Beginning terrai Admin Test')
-        local_url = '{}'.format(os.getenv('LOCAL_URL'))
         for period in self.terrai_query_params()[1]:
             data, status_code = self.make_request('/api/v2/ms/terrai-alerts/admin/per/1?period={}'.format(period))
             logging.info('[TEST]: response deserialized: {}'.format(data))
 
             self.assertions(data, status_code, 200, 'type', 'terrai-alerts')
 
-    def test_use_and_periods(self):
-        '''test request land use and terrai periods'''
+    @requests_mock.mock(kw='mocker')
+    def test_use_and_periods(self, mocker):
+        """test request land use and terrai periods"""
+        mock_request_validation(mocker, microservice_token=os.getenv('MICROSERVICE_TOKEN'))
+        mock_query(mocker)
+        mock_geostore(mocker)
 
         logging.info('[TEST]: Beginning terrai Use Test')
-        local_url = '{}'.format(os.getenv('LOCAL_URL'))
         for period in self.terrai_query_params()[1]:
             for use in self.terrai_path_params():
                 data, status_code = self.make_request(
@@ -151,11 +147,14 @@ class TerraiTest(unittest.TestCase):
 
                 self.assertions(data, status_code, 200, 'type', 'terrai-alerts')
 
-    def test_wdpa_and_periods(self):
-        '''test request with wdpa and terrai periods'''
+    @requests_mock.mock(kw='mocker')
+    def test_wdpa_and_periods(self, mocker):
+        """test request with wdpa and terrai periods"""
+        mock_request_validation(mocker, microservice_token=os.getenv('MICROSERVICE_TOKEN'))
+        mock_query(mocker)
+        mock_geostore(mocker)
 
         logging.info('[TEST]: Beginning terrai WDPA Test')
-        local_url = '{}'.format(os.getenv('LOCAL_URL'))
         for period in self.terrai_query_params()[1]:
             data, status_code = self.make_request('/api/v2/ms/terrai-alerts/wdpa/100?period={}'.format(period))
             logging.info('[TEST]: response deserialized: {}'.format(data))

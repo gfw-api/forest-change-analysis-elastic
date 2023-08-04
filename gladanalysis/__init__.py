@@ -29,6 +29,9 @@ def create_application():
         app=application,
         gateway_url=os.getenv('GATEWAY_URL'),
         token=os.getenv('MICROSERVICE_TOKEN'),
+        aws_cloud_watch_log_stream_name=settings.get('service', {}).get('name'),
+        aws_region=os.getenv('AWS_REGION'),
+        require_api_key=(os.getenv('REQUIRE_API_KEY', 'False').lower() == 'true')
     )
 
     return application

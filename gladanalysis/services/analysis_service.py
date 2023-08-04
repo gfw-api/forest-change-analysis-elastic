@@ -8,7 +8,7 @@ class AnalysisService(object):
     elastic search database and return a response in json"""
 
     @staticmethod
-    def make_analysis_request(dataset_id, sql, geostore, geojson, v2=False):
+    def make_analysis_request(dataset_id, sql, geostore, geojson, api_key, v2=False):
 
         if request.method == 'GET':
             uri = "/query/" + dataset_id + '?sql=' + sql + '&format=json'
@@ -18,7 +18,8 @@ class AnalysisService(object):
 
             config = {
                 'uri': uri,
-                'method': 'GET'
+                'method': 'GET',
+                'api_key': api_key
             }
 
         else:
@@ -31,17 +32,18 @@ class AnalysisService(object):
             config = {
                 'uri': uri,
                 'method': 'POST',
-                'body': body
+                'body': body,
+                'api_key': api_key
             }
 
         if v2:
             config = {
                 'uri': "/v2/query/23285d52-a4b9-4f5a-a9d6-158c4bbc0f86",
                 'method': 'POST',
-                'ignore_version': True,
                 'body': {'sql': 'select count(*) FROM index_d6268f65e4cf4a1a9435fb52a1c7ddd0',
                          'format': 'json',
-                         'geojson': geojson}
+                         'geojson': geojson},
+                'api_key': api_key
             }
 
-        return request_to_microservice(config)
+        return request_to_microservice(**config)
