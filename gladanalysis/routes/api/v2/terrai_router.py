@@ -26,7 +26,7 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
     :param iso: the country iso if specified
     :param dist: the district ID based on gadm
     :param state: the state ID based on gadm
-    :param geojson: the geojson inlcuded in the body (if post request)
+    :param geojson: the geojson included in the body (if post request)
     :return: returns the response of the API request formatted by the format service"""
 
     today = datetime.datetime.today().strftime('%Y-%m-%d')
@@ -40,7 +40,8 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
     geojson = request.get_json(False, True).get('geojson', None) if request.get_json(False, True) else None
 
     # format period request to julian dates
-    from_year, from_date, to_year, to_date = DateService.date_to_julian_day(period, datasetID, indexID, "day")
+    from_year, from_date, to_year, to_date = DateService.date_to_julian_day(request.headers.get('x-api-key'), period,
+                                                                            datasetID, indexID, "day")
 
     # grab query and download sql from sql service
     sql, download_sql = QueryConstructorService.format_terrai_sql(from_year, from_date, to_year, to_date, iso, state,
@@ -58,14 +59,16 @@ def analyze(area=None, geostore=None, iso=None, state=None, dist=None, geojson=N
 
         kwargs['agg_by'] = agg_by
 
-        data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson)
+        data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson,
+                                                     request.headers.get('x-api-key'))
         agg_data = SummaryService.create_time_table('terrai', data, agg_by)
         standard_format = ResponseService.standardize_response(agg_data, datasetID, **kwargs)
 
     else:
         kwargs['agg_by'] = None
         kwargs['count'] = "COUNT(julian_day)"
-        data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson)
+        data = AnalysisService.make_analysis_request(datasetID, sql, geostore, geojson,
+                                                     request.headers.get('x-api-key'))
         standard_format = ResponseService.standardize_response(data, datasetID, **kwargs)
 
     return jsonify({'data': standard_format}), 200
@@ -88,7 +91,7 @@ def query_terrai():
 
         # get area of request in hectares from geostore
         try:
-            area = GeostoreService.make_area_request(geostore)
+            area = GeostoreService.make_area_request(geostore, request.headers.get('x-api-key'))
         except GeostoreNotFound:
             logging.error('[ROUTER]: Geostore Not Found')
             return error(status=404, detail='Geostore not found')
@@ -115,7 +118,7 @@ def terrai_country(iso_code):
     logging.info('Running Terra I country analysis')
 
     # get area in hectares of response from geostore
-    area = GeostoreService.make_gadm_request(iso_code)
+    area = GeostoreService.make_gadm_request(iso_code, request.headers.get('x-api-key'))
 
     return analyze(area, iso=iso_code)
 
@@ -128,7 +131,7 @@ def terrai_admin(iso_code, admin_id):
     logging.info('Running Terra I state analysis')
 
     # get area in hectares of request from geostore
-    area = GeostoreService.make_gadm_request(iso_code, admin_id)
+    area = GeostoreService.make_gadm_request(iso_code, request.headers.get('x-api-key'), admin_id)
 
     return analyze(area, iso=iso_code, state=admin_id)
 
@@ -141,7 +144,7 @@ def terrai_dist(iso_code, admin_id, dist_id):
     logging.info('Running Terra I Analysis on District')
 
     # get area in hectares of request from geostore
-    area = GeostoreService.make_gadm_request(iso_code, admin_id, dist_id)
+    area = GeostoreService.make_gadm_request(iso_code, request.headers.get('x-api-key'), admin_id, dist_id)
 
     return analyze(area, iso=iso_code, state=admin_id, dist=dist_id)
 
@@ -153,7 +156,7 @@ def terrai_use(use_type, use_id):
     logging.info('Intersect Terra I and Land Use data')
 
     # get geostore ID and area in hectares of request from geostore
-    geostore, area = GeostoreService.make_use_request(use_type, use_id)
+    geostore, area = GeostoreService.make_use_request(use_type, use_id, request.headers.get('x-api-key'))
 
     return analyze(area, geostore)
 
@@ -166,7 +169,7 @@ def terrai_wdpa(wdpa_id):
     logging.info('Intersect Terra I and WDPA')
 
     # get geostore id and area in hectares of request from geostore
-    geostore, area = GeostoreService.make_wdpa_request(wdpa_id)
+    geostore, area = GeostoreService.make_wdpa_request(wdpa_id, request.headers.get('x-api-key'))
 
     return analyze(area, geostore)
 
@@ -177,7 +180,8 @@ def terrai_date_range():
     logging.info('Creating Terra I Date Range')
 
     # get min and max date from sql queries
-    min_year, min_julian, max_year, max_julian = DateService.get_min_max_date('day', datasetID, indexID)
+    min_year, min_julian, max_year, max_julian = DateService.get_min_max_date('day', datasetID, indexID,
+                                                                              request.headers.get('x-api-key'))
     min_date, max_date = DateService.format_date_sql(min_year, min_julian, max_year, max_julian)
 
     # standardize response
@@ -192,7 +196,8 @@ def terrai_latest():
     logging.info('Getting latest date')
 
     # get max date
-    min_year, min_julian, max_year, max_julian = DateService.get_min_max_date('day', datasetID, indexID)
+    min_year, min_julian, max_year, max_julian = DateService.get_min_max_date('day', datasetID, indexID,
+                                                                              request.headers.get('x-api-key'))
     max_date = DateService.format_date_sql(min_year, min_julian, max_year, max_julian)[1]
 
     # standardize latest date response

@@ -11,10 +11,10 @@ class DateService(object):
     Contains a number of methods for converting the period param to useful formats"""
 
     @staticmethod
-    def date_to_julian_day(period=None, datasetID=None, indexID=None, value=None):
+    def date_to_julian_day(api_key, period=None, dataset_id=None, index_id=None, value=None):
         # Helper function to transform dates
-        if period == None:
-            from_year, from_date, to_year, to_date = DateService.get_min_max_date(value, datasetID, indexID)
+        if period is None:
+            from_year, from_date, to_year, to_date = DateService.get_min_max_date(value, dataset_id, index_id, api_key)
             return from_year, from_date, to_year, to_date
         else:
             try:
@@ -34,49 +34,49 @@ class DateService(object):
     @staticmethod
     def julian_day_to_date(year, jd):
         month = 1
-        day = 0
         while jd - calendar.monthrange(year, month)[1] > 0 and month < 12:
             jd = jd - calendar.monthrange(year, month)[1]
             month = month + 1
         return year, month, jd
 
     @staticmethod
-    def get_date(datasetID, sql, value):
+    def get_date(dataset_id, sql, value, api_key):
 
-        uri = "/query/%s" % (datasetID) + sql + '&format=json'
+        uri = "/query/%s" % dataset_id + sql + '&format=json'
 
         config = {
             'uri': uri,
-            'method': 'GET'
+            'method': 'GET',
+            'api_key': api_key
         }
         logging.info('Making request to other MS: ' + json.dumps(config))
 
-        values = request_to_microservice(config)
+        values = request_to_microservice(**config)
         date_value = values['data'][0][value]
         return date_value
 
     @staticmethod
-    def get_min_max_date(value, datasetID, indexID):
+    def get_min_max_date(value, dataset_id, index_id, api_key):
 
         # set variables for alert values
         max_value = 'MAX({})'.format(value)
         min_value = 'MIN({})'.format(value)
 
         # Get max year from database
-        max_year_sql = '?sql=select MAX(year)from {}'.format(indexID)
-        max_year = DateService.get_date(datasetID, max_year_sql, 'MAX(year)')
+        max_year_sql = '?sql=select MAX(year)from {}'.format(index_id)
+        max_year = DateService.get_date(dataset_id, max_year_sql, 'MAX(year)', api_key)
 
         # Get max julian date from database
-        max_sql = '?sql=select {}from {} where year = {}'.format(max_value, indexID, max_year)
-        max_julian = DateService.get_date(datasetID, max_sql, max_value)
+        max_sql = '?sql=select {}from {} where year = {}'.format(max_value, index_id, max_year)
+        max_julian = DateService.get_date(dataset_id, max_sql, max_value, api_key)
 
         # Get min year from database
-        min_year_sql = '?sql=select MIN(year)from {} WHERE year > 2000'.format(indexID)
-        min_year = DateService.get_date(datasetID, min_year_sql, 'MIN(year)')
+        min_year_sql = '?sql=select MIN(year)from {} WHERE year > 2000'.format(index_id)
+        min_year = DateService.get_date(dataset_id, min_year_sql, 'MIN(year)', api_key)
 
         # Get min date from database
-        min_day_sql = '?sql=select {}from {} where year = {}'.format(min_value, indexID, min_year)
-        min_julian = DateService.get_date(datasetID, min_day_sql, min_value)
+        min_day_sql = '?sql=select {}from {} where year = {}'.format(min_value, index_id, min_year)
+        min_julian = DateService.get_date(dataset_id, min_day_sql, min_value, api_key)
 
         return min_year, min_julian, max_year, max_julian
 
