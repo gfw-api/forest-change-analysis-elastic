@@ -14,5 +14,6 @@ services:
       TERRAI_DATASET_ID: 1dca5597-d6ac-4064-82cf-9f02b178f424
       DEBUG: "True"
       AWS_REGION: "us-east-1"
+      REQUIRE_API_KEY: "True"
 
     command: test
