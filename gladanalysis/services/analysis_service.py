@@ -11,7 +11,7 @@ class AnalysisService(object):
     def make_analysis_request(dataset_id, sql, geostore, geojson, api_key, v2=False):
 
         if request.method == 'GET':
-            uri = "/query/" + dataset_id + '?sql=' + sql + '&format=json'
+            uri = "/v1/query/" + dataset_id + '?sql=' + sql + '&format=json'
 
             if geostore:
                 uri += "&geostore=" + geostore
@@ -23,7 +23,7 @@ class AnalysisService(object):
             }
 
         else:
-            uri = "/query/" + dataset_id
+            uri = "/v1/query/" + dataset_id
 
             body = {'sql': sql,
                     'format': 'json',

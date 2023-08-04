@@ -5,7 +5,7 @@ class ResponseService(object):
     """Class for standardizing api responses"""
 
     @staticmethod
-    def standardize_response(data, datasetID, count=None, download_sql=None, area=None, geostore=None, agg=None,
+    def standardize_response(data, dataset_id, count=None, download_sql=None, area=None, geostore=None, agg=None,
                              agg_by=None, period=None):
         # Helper function to standardize API responses
         standard_format = {}
@@ -26,9 +26,9 @@ class ResponseService(object):
         if download_sql:
             standard_format["attributes"]["downloadUrls"] = {}
             standard_format["attributes"]["downloadUrls"][
-                "csv"] = "/download/" + datasetID + download_sql + "&format=csv"
+                "csv"] = "/download/" + dataset_id + download_sql + "&format=csv"
             standard_format["attributes"]["downloadUrls"][
-                "json"] = "/download/" + datasetID + download_sql + "&format=json"
+                "json"] = "/download/" + dataset_id + download_sql + "&format=json"
         if geostore:
             standard_format["geostore"] = geostore
             standard_format["attributes"]["downloadUrls"]["csv"] += "&geostore=" + geostore
