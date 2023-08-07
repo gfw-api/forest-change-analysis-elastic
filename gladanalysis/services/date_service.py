@@ -42,7 +42,7 @@ class DateService(object):
     @staticmethod
     def get_date(dataset_id, sql, value, api_key):
 
-        uri = "/query/%s" % dataset_id + sql + '&format=json'
+        uri = "/v1/query/%s" % dataset_id + sql + '&format=json'
 
         config = {
             'uri': uri,

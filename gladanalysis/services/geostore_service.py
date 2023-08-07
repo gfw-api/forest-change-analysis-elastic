@@ -34,7 +34,6 @@ class GeostoreService(object):
 
     @staticmethod
     def make_gadm_request(iso_code, api_key, admin_id=None, dist_id=None):
-
         if not admin_id and not dist_id:
             uri = "/v2/geostore/admin/%s?simplify=0.05" % iso_code
 
@@ -50,7 +49,6 @@ class GeostoreService(object):
 
     @staticmethod
     def make_area_request(geostore, api_key):
-
         uri = "/v2/geostore/%s" % geostore
         area_resp = GeostoreService.execute(uri, api_key)
 
@@ -59,7 +57,6 @@ class GeostoreService(object):
 
     @staticmethod
     def make_wdpa_request(wdpa_id, api_key):
-
         uri = "/v2/geostore/wdpa/%s" % (wdpa_id)
         geostore_data = GeostoreService.execute(uri, api_key)
 
