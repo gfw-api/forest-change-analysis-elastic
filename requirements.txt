@@ -2,7 +2,7 @@ Flask==2.2.2
 RWAPIMicroservicePython==3.0.0
 Werkzeug==2.2.2
 coverage==7.0.5
-cryptography==39.0.0
+cryptography==41.0.4
 httmock==1.4.0
 hyp==0.6.0
 marshmallow==2.15.1
